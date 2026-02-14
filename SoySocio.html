@@ -6,178 +6,76 @@
     <title>Panel de Socio - C.S.D. Constitución</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
-        :root { --amarillo: #fbc02d; --negro: #1a1d23; --blanco: #ffffff; --gris: #f4f4f4; --rojo: #d32f2f; --verde: #4caf50; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--gris); }
-        header { background: var(--amarillo); padding: 15px 0; text-align: center; border-bottom: 4px solid var(--negro); }
-        nav a { text-decoration: none; color: var(--negro); font-weight: 800; text-transform: uppercase; margin: 0 15px; }
-        .container { max-width: 800px; margin: 40px auto; padding: 20px; }
-        
-        /* Alarma de Deuda */
-        .alarma-deuda { display: none; background: #ffebee; color: var(--rojo); border: 2px solid var(--rojo); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: center; font-weight: bold; }
-
-        /* Carnet */
-        .carnet { background: var(--negro); color: white; border-radius: 20px; overflow: hidden; position: relative; box-shadow: 0 15px 30px rgba(0,0,0,0.3); display: flex; flex-wrap: wrap; border: 3px solid var(--amarillo); }
-        .carnet-header { background: var(--amarillo); width: 100%; padding: 15px; color: var(--negro); text-align: center; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
-        .carnet-foto { flex: 1; min-width: 200px; padding: 30px; text-align: center; background: rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
-        .foto-usuario { width: 150px; height: 180px; background: #333; border-radius: 15px; border: 3px solid var(--amarillo); display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .foto-usuario img { width: 100%; height: 100%; object-fit: cover; }
-        .foto-usuario i { font-size: 4rem; color: var(--amarillo); }
-        .btn-subir { margin-top: 10px; font-size: 0.8rem; color: var(--amarillo); cursor: pointer; text-decoration: underline; }
-        
-        .status-badge { background: var(--verde); color: white; padding: 5px 15px; border-radius: 50px; font-size: 0.9rem; font-weight: bold; display: inline-block; margin-top: 15px; }
-        .status-badge.deuda { background: var(--rojo); }
-
-        .carnet-info { flex: 2; padding: 30px; display: flex; flex-direction: column; justify-content: center; }
-        .dato-socio { margin: 10px 0; font-size: 1.1rem; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        .label { color: var(--amarillo); font-size: 0.8rem; display: block; text-transform: uppercase; }
-
-        /* Botones */
-        .acciones { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .btn-panel { background: white; padding: 20px; border-radius: 15px; text-align: center; color: var(--negro); font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; border: none; cursor: pointer; font-size: 1rem; }
-        .btn-panel:hover { transform: translateY(-5px); background: var(--amarillo); }
-        .btn-panel i { display: block; font-size: 2rem; margin-bottom: 10px; }
-
-        .cerrar-sesion { display: block; text-align: center; margin-top: 40px; color: #888; text-decoration: none; font-weight: bold; }
-        #inputFoto { display: none; }
+        :root { --amarillo: #fbc02d; --negro: #1a1d23; --blanco: #ffffff; --rojo: #ff4d4d; --verde: #4cd137; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f4f4; }
+        header { background: var(--amarillo); padding: 15px; text-align: center; border-bottom: 4px solid var(--negro); }
+        .container { max-width: 600px; margin: 30px auto; padding: 20px; }
+        .carnet { background: var(--negro); color: white; border-radius: 20px; padding: 25px; position: relative; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        .carnet::before { content: ""; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: var(--amarillo); transform: rotate(45deg); }
+        .foto-perfil { width: 120px; height: 120px; border-radius: 15px; border: 3px solid var(--amarillo); background: #333; margin-bottom: 15px; object-fit: cover; }
+        .datos-socio h2 { margin: 0; color: var(--amarillo); text-transform: uppercase; }
+        .estado-box { margin-top: 20px; padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.1); font-weight: bold; text-align: center; }
+        .btn-logout { display: block; width: 100%; padding: 15px; margin-top: 20px; background: #ddd; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <header>
-        <nav>
-            <a href="index.html">Inicio</a>
-            <a href="el_club.html">El Club</a>
-            <a href="liga.html">Fixture</a>
-        </nav>
+        <h1 style="margin:0;">MI CARNET DIGITAL</h1>
     </header>
 
     <div class="container">
-        <div id="alarmaDeuda" class="alarma-deuda">⚠️ ATENCIÓN: Debes la cuota del mes. Por favor regulariza tu situación.</div>
-
-        <h1 style="text-align: center; text-transform: uppercase;">Mi Panel de Socio</h1>
-
         <div class="carnet" id="areaCarnet">
-            <div class="carnet-header">Socio Oficial - C.S.D. Constitución</div>
-            <div class="carnet-foto">
-                <div class="foto-usuario">
-                    <i class="fas fa-user" id="iconoDefecto"></i>
-                    <img src="" id="fotoPerfil" style="display:none;">
-                </div>
-                <label for="inputFoto" class="btn-subir">Subir Foto de Perfil</label>
-                <input type="file" id="inputFoto" accept="image/*" onchange="subirFoto(event)">
-                <div id="badgeEstado" class="status-badge">AL DÍA</div>
+            <img src="img/logo.jpg" style="width:60px; position:absolute; top:20px; right:20px;">
+            <div style="text-align: center;">
+                <img id="fotoPerfil" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="foto-perfil">
             </div>
-            <div class="carnet-info">
-                <div class="dato-socio"><span class="label">Nombre y Apellido</span><strong id="nombreSocio">---</strong></div>
-                <div class="dato-socio"><span class="label">DNI</span><strong id="dniSocio">---</strong></div>
-                <div class="dato-socio"><span class="label">Nro de Socio</span><strong id="nroSocio">---</strong></div>
-                <div class="dato-socio"><span class="label">Categoría</span><strong id="categoriaSocio">Activo</strong></div>
-                <div style="text-align: right;"><i class="fas fa-qrcode" style="font-size: 3rem; opacity: 0.7;"></i></div>
+            <div class="datos-socio">
+                <h2 id="nombreSocio">CARGANDO...</h2>
+                <p>DNI: <span id="dniSocio">---</span></p>
+                <p>SOCIO NRO: <span id="nroSocio">---</span></p>
             </div>
+            <div class="estado-box" id="estadoPago">VERIFICANDO ESTADO...</div>
         </div>
 
-        <div class="acciones">
-            <button class="btn-panel" onclick="window.location.href='cuotas.html'"><i class="fas fa-money-check-alt"></i>Pagar Cuota</button>
-            <button class="btn-panel" onclick="window.location.href='ticket.html'"><i class="fas fa-ticket-alt"></i>Comprar Entrada</button>
-            <button class="btn-panel" onclick="descargarCarnet()"><i class="fas fa-id-card"></i>Descargar Carnet</button>
-            <button class="btn-panel" onclick="location.reload()"><i class="fas fa-sync"></i>Actualizar Datos</button>
-        </div>
-        <a href="#" class="cerrar-sesion" onclick="cerrarSesion()">Cerrar Sesión</a>
+        <button class="btn-logout" onclick="cerrarSesion()">CERRAR SESIÓN</button>
     </div>
 
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE",
+            authDomain: "csydconstitucion-8b8bb.firebaseapp.com",
+            projectId: "csydconstitucion-8b8bb",
+            storageBucket: "csydconstitucion-8b8bb.firebasestorage.app",
+            messagingSenderId: "363486272350",
+            appId: "1:363486272350:web:e937e924c4371a3db74dcf"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         const dniLogueado = sessionStorage.getItem('socioLogueado');
 
-        function cargarSocio() {
-            if (!dniLogueado) { 
-                window.location.href = "socios.html"; // O el nombre de tu archivo de login de socios
-                return; 
-            }
-            
-            // CORRECCIÓN: Buscamos dentro de la lista única de socios del club
-            const listaSocios = JSON.parse(localStorage.getItem('listaSocios')) || [];
-            const socio = listaSocios.find(s => s.dni === dniLogueado);
-            
-            if (socio) {
-                document.getElementById('nombreSocio').innerText = socio.nombre || "Socio";
-                document.getElementById('dniSocio').innerText = socio.dni || "---";
-                document.getElementById('nroSocio').innerText = socio.nroSocio || "---";
-                document.getElementById('categoriaSocio').innerText = socio.categoria || "Activo";
+        async function cargarSocio() {
+            if(!dniLogueado) { window.location.href = "socios.html"; return; }
 
-                if (socio.foto) {
-                    mostrarFotoEnPantalla(socio.foto);
-                }
-
-                // Sincronización con el estado que pone el Administrador
-                const badge = document.getElementById('badgeEstado');
-                if (socio.estado === "deudor") {
-                    document.getElementById('alarmaDeuda').style.display = "block";
-                    badge.innerText = "DEBE CUOTA";
-                    badge.classList.add('deuda');
-                } else {
-                    document.getElementById('alarmaDeuda').style.display = "none";
-                    badge.innerText = "AL DÍA";
-                    badge.classList.remove('deuda');
-                }
-            } else {
-                alert("No se encontraron datos de socio. Por favor, regístrese.");
-                cerrarSesion();
-            }
-        }
-
-        function subirFoto(event) {
-            const archivo = event.target.files[0];
-            if (!archivo) return;
-
-            const lector = new FileReader();
-            lector.onload = function(e) {
-                const imgRaiz = new Image();
-                imgRaiz.src = e.target.result;
-
-                imgRaiz.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = 300; 
-                    canvas.height = 400;
-                    ctx.drawImage(imgRaiz, 0, 0, 300, 400);
+            // Traer datos en tiempo real de Firebase
+            db.collection("socios").doc(dniLogueado).onSnapshot((doc) => {
+                if(doc.exists) {
+                    const s = doc.data();
+                    document.getElementById('nombreSocio').innerText = s.nombre;
+                    document.getElementById('dniSocio').innerText = s.dni;
+                    document.getElementById('nroSocio').innerText = s.nroSocio || "000" + s.dni.substring(0,2);
                     
-                    const fotoComprimida = canvas.toDataURL('image/jpeg', 0.7);
-
-                    // Guardar en la lista general para que el Admin también la vea
-                    let lista = JSON.parse(localStorage.getItem('listaSocios')) || [];
-                    let idx = lista.findIndex(s => s.dni === dniLogueado);
-                    
-                    if (idx !== -1) {
-                        lista[idx].foto = fotoComprimida;
-                        localStorage.setItem('listaSocios', JSON.stringify(lista));
-                        mostrarFotoEnPantalla(fotoComprimida);
-                        alert("✅ ¡Foto de perfil actualizada!");
-                    }
-                };
-            };
-            lector.readAsDataURL(archivo);
-        }
-
-        function mostrarFotoEnPantalla(src) {
-            const img = document.getElementById('fotoPerfil');
-            img.src = src;
-            img.style.display = "block";
-            document.getElementById('iconoDefecto').style.display = "none";
-        }
-
-        function descargarCarnet() {
-            const area = document.getElementById('areaCarnet');
-            // Agregamos un pequeño delay para asegurar que la imagen esté renderizada
-            html2canvas(area, { 
-                scale: 2, 
-                backgroundColor: "#1a1d23",
-                useCORS: true 
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'Carnet-Constitucion-' + dniLogueado + '.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
+                    const estadoEl = document.getElementById('estadoPago');
+                    const esPago = s.estado === 'pago';
+                    estadoEl.innerText = esPago ? "CUOTA AL DÍA" : "DEUDA PENDIENTE";
+                    estadoEl.style.color = esPago ? "var(--verde)" : "var(--rojo)";
+                }
             });
         }
 

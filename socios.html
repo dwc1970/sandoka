@@ -5,247 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Socios - C.S.D. Constitución</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
-        :root { 
-            --amarillo: #fbc02d; 
-            --amarillo-brillante: #ffeb3b;
-            --negro: #1a1d23; 
-            --gris: #f4f4f4; 
-            --blanco: #ffffff; 
-        }
-        
-        body { 
-            margin: 0; 
-            font-family: 'Segoe UI', sans-serif; 
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('img/cancha.jfif'); 
-            background-size: cover;
-            background-attachment: fixed;
-            color: var(--negro); 
-        }
-
-        /* NAVBAR */
-        header { 
-            background: var(--amarillo); 
-            padding: 15px 0; 
-            text-align: center; 
-            border-bottom: 4px solid var(--negro);
-            position: sticky; top: 0; z-index: 1000;
-        }
-        
-        nav { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        nav a { 
-            text-decoration: none; color: var(--negro); font-weight: 800; 
-            text-transform: uppercase; font-size: 0.85rem; padding: 10px 22px;
-            border-radius: 50px; transition: 0.3s;
-        }
-        nav a:hover { background: var(--negro); color: var(--amarillo); }
-
-        /* CONTENEDOR PRINCIPAL */
-        .auth-container {
-            max-width: 450px;
-            margin: 50px auto;
-            background: var(--blanco);
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            text-align: center;
-        }
-
-        .logo-socio {
-            width: 100px; height: 100px; border-radius: 50%;
-            border: 4px solid var(--amarillo); margin-bottom: 20px;
-        }
-
-        h2 { text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px; }
-
-        /* FORMULARIOS */
-        .form-group { text-align: left; margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
-        
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 50px; 
-            border: 2px solid #ddd;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        input:focus { border-color: var(--amarillo); }
-
-        .btn-auth {
-            width: 100%;
-            padding: 15px;
-            background: var(--amarillo);
-            border: none;
-            border-radius: 50px;
-            font-weight: 900;
-            text-transform: uppercase;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(251, 192, 45, 0.3);
-        }
-
-        .btn-auth:hover { background: var(--negro); color: var(--amarillo); transform: translateY(-3px); }
-
-        .toggle-link {
-            margin-top: 20px;
-            display: block;
-            color: #666;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .toggle-link b { color: var(--negro); border-bottom: 2px solid var(--amarillo); }
-
-        .hidden { display: none; }
+        :root { --amarillo: #fbc02d; --negro: #1a1d23; --gris: #f4f4f4; --blanco: #ffffff; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('img/cancha.jfif'); background-size: cover; background-attachment: fixed; color: var(--negro); }
+        header { background: var(--amarillo); padding: 15px 0; text-align: center; border-bottom: 4px solid var(--negro); }
+        .form-container { max-width: 450px; margin: 50px auto; background: var(--blanco); padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .form-container h2 { text-align: center; color: var(--negro); margin-top: 0; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-accion { width: 100%; padding: 15px; background: var(--negro); color: var(--amarillo); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+        .toggle-link { text-align: center; margin-top: 15px; cursor: pointer; color: #555; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
     <header>
-        <nav>
-            <a href="index.html">Inicio</a>
-            <a href="el_club.html">El Club</a>
-            <a href="liga/liga.html"><i class="fas fa-futbol"></i> Próximo Partido</a>
-            <a href="socios.html">Socios</a>
-            <a href="contacto.html">Contacto</a>
-        </nav>
+        <h1 style="margin:0; font-weight:900;">C.S.D. CONSTITUCIÓN</h1>
     </header>
 
-    <div class="auth-container">
-        <img src="img/logo.jpg" alt="Logo Club" class="logo-socio">
+    <div class="form-container" id="reg-box">
+        <h2>SOLICITUD DE SOCIO</h2>
+        <input type="text" id="regNombre" placeholder="Nombre Completo">
+        <input type="number" id="regDni" placeholder="DNI (Será tu usuario)">
+        <input type="text" id="regTel" placeholder="Teléfono">
+        <input type="password" id="regPass" placeholder="Crea una contraseña">
+        <button class="btn-accion" onclick="registrarSocio()">ENVIAR SOLICITUD</button>
+        <div class="toggle-link" onclick="mostrarLogin()">¿Ya sos socio? Iniciá sesión acá</div>
+    </div>
 
-        <div id="loginForm">
-            <h2>Ingreso Socios</h2>
-            <div class="form-group">
-                <label>DNI (Usuario)</label>
-                <input type="text" id="loginDni" placeholder="Tu DNI">
-            </div>
-            <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" id="loginPass" placeholder="********">
-            </div>
-            <button class="btn-auth" onclick="iniciarSesion()">Ingresar</button>
-            <a href="#" class="toggle-link" onclick="mostrarRegistro()">¿No tenés cuenta? <b>Registrate acá</b></a>
-        </div>
-
-        <div id="registroForm" class="hidden">
-            <h2>Registro de Socio</h2>
-            <div class="form-group">
-                <label>Nombre y Apellido</label>
-                <input type="text" id="regNombre" placeholder="Juan Pérez">
-            </div>
-            <div class="form-group">
-                <label>DNI (Será tu usuario)</label>
-                <input type="text" id="regDni" placeholder="Ej: 12345678">
-            </div>
-            <div class="form-group">
-                <label>Dirección</label>
-                <input type="text" id="regDir" placeholder="Tu calle y nro">
-            </div>
-            <div class="form-group">
-                <label>Teléfono</label>
-                <input type="text" id="regTel" placeholder="2604-000000">
-            </div>
-            <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" id="regPass" placeholder="********">
-            </div>
-            <div class="form-group">
-                <label>Validar Contraseña</label>
-                <input type="password" id="regPassConfirm" placeholder="********">
-            </div>
-            <button class="btn-auth" onclick="registrarSocio()">Registrarse</button>
-            <a href="#" class="toggle-link" onclick="mostrarLogin()">¿Ya sos socio? <b>Iniciá Sesión</b></a>
-        </div>
+    <div class="form-container" id="login-box" style="display:none;">
+        <h2>ACCESO SOCIOS</h2>
+        <input type="number" id="loginDni" placeholder="Tu DNI">
+        <input type="password" id="loginPass" placeholder="Tu Contraseña">
+        <button class="btn-accion" onclick="iniciarSesion()">INGRESAR AL PANEL</button>
+        <div class="toggle-link" onclick="mostrarReg()">¿No sos socio? Registrate acá</div>
     </div>
 
     <script>
-        function mostrarRegistro() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('registroForm').classList.remove('hidden');
-        }
+        // CONFIGURACIÓN FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE",
+            authDomain: "csydconstitucion-8b8bb.firebaseapp.com",
+            projectId: "csydconstitucion-8b8bb",
+            storageBucket: "csydconstitucion-8b8bb.firebasestorage.app",
+            messagingSenderId: "363486272350",
+            appId: "1:363486272350:web:e937e924c4371a3db74dcf"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        function mostrarLogin() {
-            document.getElementById('registroForm').classList.add('hidden');
-            document.getElementById('loginForm').classList.remove('hidden');
-        }
+        function mostrarLogin() { document.getElementById('reg-box').style.display = 'none'; document.getElementById('login-box').style.display = 'block'; }
+        function mostrarReg() { document.getElementById('reg-box').style.display = 'block'; document.getElementById('login-box').style.display = 'none'; }
 
-        function registrarSocio() {
+        async function registrarSocio() {
             const nombre = document.getElementById('regNombre').value;
             const dni = document.getElementById('regDni').value;
-            const dir = document.getElementById('regDir').value;
-            const tel = document.getElementById('regTel').value;
             const pass = document.getElementById('regPass').value;
-            const passConfirm = document.getElementById('regPassConfirm').value;
 
-            if(!nombre || !dni || !pass) {
-                alert("Por favor completá los campos obligatorios");
-                return;
-            }
+            if(!nombre || !dni || !pass) return alert("Completá todos los campos");
 
-            if(pass !== passConfirm) {
-                alert("Las contraseñas no coinciden");
-                return;
-            }
-
-            // 1. OBTENER LISTA CENTRAL PARA EL ADMIN
-            let listaCentral = JSON.parse(localStorage.getItem('listaSocios')) || [];
-
-            // Verificar si el DNI ya existe en la lista
-            if (listaCentral.some(s => s.dni === dni)) {
-                alert("Este DNI ya está registrado.");
-                return;
-            }
-
-            // 2. LÓGICA DE NÚMERO DE SOCIO
-            let ultimoNumero = localStorage.getItem('ultimoNumeroSocio') || 0;
-            let nuevoNumero = parseInt(ultimoNumero) + 1;
-            localStorage.setItem('ultimoNumeroSocio', nuevoNumero);
-            const nroSocioFormateado = nuevoNumero.toString().padStart(5, '0');
-
-            // 3. CREAR OBJETO SOCIO (Compatible con el Dashboard)
-            const nuevoSocio = { 
-                nombre: nombre, 
-                dni: dni, 
-                dir: dir, 
-                tel: tel, 
-                pass: pass, 
-                nroSocio: nroSocioFormateado,
-                estado: 'deuda', // Estado inicial
-                categoria: 'Activo'
-            };
-            
-            // 4. GUARDADO DOBLE
-            // Guardado para login individual
-            localStorage.setItem(dni, JSON.stringify(nuevoSocio));
-            
-            // Guardado en el array central que lee el Dashboard
-            listaCentral.push(nuevoSocio);
-            localStorage.setItem('listaSocios', JSON.stringify(listaCentral));
-
-            alert("¡Registro exitoso! Bienvenido al Club Constitución. Tu número de socio es: " + nroSocioFormateado);
-            mostrarLogin();
+            try {
+                // Guardamos en Firebase
+                await db.collection("socios").doc(dni).set({
+                    nombre: nombre,
+                    dni: dni,
+                    pass: pass,
+                    estado: 'deuda',
+                    fechaRegistro: new Date().toLocaleDateString()
+                });
+                alert("¡Registro exitoso! Ya podés iniciar sesión.");
+                mostrarLogin();
+            } catch (e) { alert("Error al registrar: " + e.message); }
         }
 
-        function iniciarSesion() {
+        async function iniciarSesion() {
             const dni = document.getElementById('loginDni').value;
             const pass = document.getElementById('loginPass').value;
-            const datosSocio = localStorage.getItem(dni);
 
-            if(datosSocio) {
-                const socio = JSON.parse(datosSocio);
-                if(socio.pass === pass) {
-                    sessionStorage.setItem('socioLogueado', dni);
-                    window.location.href = "soysocio.html";
-                } else {
-                    alert("Contraseña incorrecta");
-                }
+            const doc = await db.collection("socios").doc(dni).get();
+            if(doc.exists && doc.data().pass === pass) {
+                sessionStorage.setItem('socioLogueado', dni);
+                window.location.href = "SoySocio.html";
             } else {
-                alert("El usuario no existe.");
+                alert("Datos incorrectos o el socio no existe.");
             }
         }
     </script>
