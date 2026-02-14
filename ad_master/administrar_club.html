@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Admin Pro - C.S.D. Constitución</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
         :root { --oro: #fbc02d; --fondo: #0a0c10; --card: #161b22; --borde: #30363d; --texto-gris: #8b949e; --verde: #4cd137; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--fondo); color: white; display: flex; }
@@ -25,6 +29,11 @@
         .grid-galeria { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .gal-card { background: #000; padding: 10px; border-radius: 10px; border: 1px solid var(--borde); }
         .gal-card img { width: 100%; height: 80px; object-fit: cover; border-radius: 5px; }
+        
+        /* Estilo para la tabla de socios que estaba vacía */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; color: var(--oro); padding: 10px; border-bottom: 1px solid var(--borde); }
+        td { padding: 10px; border-bottom: 1px solid var(--borde); font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -41,19 +50,17 @@
         <div id="dash" class="content-view active">
             <h1>Resumen del Club</h1>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div class="card-admin"><h3>Recaudación Total</h3><h2 id="dash-recauda" style="color:var(--verde)">$ 0</h2></div>
+                <div class="card-admin"><h3>Socios Activos</h3><h2 id="dash-recauda" style="color:var(--verde)">0</h2></div>
                 <div class="card-admin"><h3>Próximo Rival</h3><h2 id="dash-rival" style="color:var(--oro)">--</h2></div>
             </div>
         </div>
 
         <div id="club" class="content-view">
             <h1>Editar "El Club"</h1>
-            
             <div class="card-admin">
                 <label>Nuestra Historia</label>
                 <textarea id="historia-input" rows="4" placeholder="Escribe la historia del club aquí..."></textarea>
             </div>
-
             <div class="card-admin">
                 <h3>Comisión Directiva</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
@@ -74,28 +81,51 @@
                     </div>
                 </div>
             </div>
-
             <div class="card-admin">
                 <h3>Galería de Imágenes (6 Fotos)</h3>
-                <div class="grid-galeria" id="grid-fotos">
-                    </div>
+                <div class="grid-galeria" id="grid-fotos"></div>
             </div>
-            <button class="btn-principal" onclick="guardarTodoClub()">PUBLICAR CAMBIOS EN EL CLUB</button>
+            <button class="btn-principal" onclick="guardarTodoClub()">PUBLICAR CAMBIOS EN LA NUBE</button>
         </div>
 
         <div id="partido" class="content-view">
             <h1>Ajustes de Liga</h1>
             <div class="card-admin" style="max-width: 500px;">
-                <label>Rival</label><input type="text" id="rival">
+                <label>Rival</label><input type="text" id="rival-input">
                 <label>Fecha</label><input type="date" id="fecha">
                 <label>Hora</label><input type="time" id="hora">
                 <label>Lugar</label><input type="text" id="lugar">
-                <button class="btn-principal" onclick="guardarPartido()">ACTUALIZAR LIGA.HTML</button>
+                <button class="btn-principal" onclick="guardarPartido()">ACTUALIZAR PARTIDO EN LA NUBE</button>
+            </div>
+        </div>
+
+        <div id="socios" class="content-view">
+            <h1>Listado de Socios</h1>
+            <div class="card-admin">
+                <table>
+                    <thead>
+                        <tr><th>DNI</th><th>Nombre</th><th>Estado</th></tr>
+                    </thead>
+                    <tbody id="tabla-socios-body">
+                        </tbody>
+                </table>
             </div>
         </div>
     </div>
 
     <script>
+        // CONFIGURACIÓN DE TU FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE",
+            authDomain: "csydconstitucion-8b8bb.firebaseapp.com",
+            projectId: "csydconstitucion-8b8bb",
+            storageBucket: "csydconstitucion-8b8bb.firebasestorage.app",
+            messagingSenderId: "363486272350",
+            appId: "1:363486272350:web:e937e924c4371a3db74dcf"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         function ver(id, el) {
             document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
@@ -111,61 +141,69 @@
             }
         }
 
-        // --- CARGA INICIAL DE DATOS ---
+        // CARGA INICIAL DESDE FIREBASE (Sustituye localStorage)
         window.onload = () => {
-            // Cargar Historia y Nombres
-            const config = JSON.parse(localStorage.getItem('configClubWeb')) || {};
-            document.getElementById('historia-input').value = config.historia || "";
-            document.getElementById('nom-p').value = config.pNom || "";
-            document.getElementById('nom-v').value = config.vNom || "";
-            document.getElementById('nom-s').value = config.sNom || "";
-
-            // Cargar Fotos Autoridades
-            const fotosA = JSON.parse(localStorage.getItem('fotosAutoridades')) || {};
-            document.getElementById('img-p').src = fotosA.p || "";
-            document.getElementById('img-v').src = fotosA.v || "";
-            document.getElementById('img-s').src = fotosA.s || "";
-
-            // Generar y cargar Galería (6 fotos)
-            const fotosG = JSON.parse(localStorage.getItem('fotosGaleria')) || [];
+            // Cargar Galería (6 fotos en el DOM)
             const containerG = document.getElementById('grid-fotos');
             for(let i=0; i<6; i++) {
-                const f = fotosG[i] || {url: '', titulo: '', desc: ''};
                 containerG.innerHTML += `
                     <div class="gal-card">
-                        <img id="g-img-${i}" src="${f.url}">
+                        <img id="g-img-${i}" src="">
                         <input type="file" onchange="leerImg(this, 'g-img-${i}')" style="font-size:0.6rem">
-                        <input type="text" id="g-tit-${i}" value="${f.titulo}" placeholder="Título">
-                        <input type="text" id="g-desc-${i}" value="${f.desc}" placeholder="Desc.">
+                        <input type="text" id="g-tit-${i}" placeholder="Título">
+                        <input type="text" id="g-desc-${i}" placeholder="Desc.">
                     </div>
                 `;
             }
 
-            // Datos Partido
-            const p = JSON.parse(localStorage.getItem('proximoPartido'));
-            if(p) document.getElementById('dash-rival').innerText = p.rival;
+            // Traer datos de "El Club"
+            db.collection("config").doc("club").get().then((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('historia-input').value = data.historia || "";
+                    document.getElementById('nom-p').value = data.pNom || "";
+                    document.getElementById('nom-v').value = data.vNom || "";
+                    document.getElementById('nom-s').value = data.sNom || "";
+                    document.getElementById('img-p').src = data.imgP || "";
+                    document.getElementById('img-v').src = data.imgV || "";
+                    document.getElementById('img-s').src = data.imgS || "";
+                    
+                    if(data.galeria) {
+                        data.galeria.forEach((f, i) => {
+                            if(document.getElementById(`g-img-${i}`)) {
+                                document.getElementById(`g-img-${i}`).src = f.url || "";
+                                document.getElementById(`g-tit-${i}`).value = f.titulo || "";
+                                document.getElementById(`g-desc-${i}`).value = f.desc || "";
+                            }
+                        });
+                    }
+                }
+            });
+
+            // Traer datos del Partido
+            db.collection("config").doc("partido").onSnapshot((doc) => {
+                if(doc.exists) {
+                    const p = doc.data();
+                    document.getElementById('dash-rival').innerText = p.rival || "--";
+                    document.getElementById('rival-input').value = p.rival || "";
+                    document.getElementById('lugar').value = p.lugar || "";
+                }
+            });
+
+            // ESCUCHAR SOCIOS EN TIEMPO REAL
+            db.collection("socios").onSnapshot((snapshot) => {
+                const tabla = document.getElementById('tabla-socios-body');
+                document.getElementById('dash-recauda').innerText = snapshot.size;
+                tabla.innerHTML = "";
+                snapshot.forEach((doc) => {
+                    const s = doc.data();
+                    tabla.innerHTML += `<tr><td>${s.dni}</td><td>${s.nombre}</td><td style="color:var(--verde)">ACTIVO</td></tr>`;
+                });
+            });
         };
 
-        // --- GUARDADO COMPATIBLE CON EL_CLUB.HTML ---
-        function guardarTodoClub() {
-            // 1. configClubWeb (Texto)
-            const config = {
-                historia: document.getElementById('historia-input').value,
-                pNom: document.getElementById('nom-p').value,
-                vNom: document.getElementById('nom-v').value,
-                sNom: document.getElementById('nom-s').value
-            };
-            localStorage.setItem('configClubWeb', JSON.stringify(config));
-
-            // 2. fotosAutoridades (Base64)
-            const fotosA = {
-                p: document.getElementById('img-p').src,
-                v: document.getElementById('img-v').src,
-                s: document.getElementById('img-s').src
-            };
-            localStorage.setItem('fotosAutoridades', JSON.stringify(fotosA));
-
-            // 3. fotosGaleria (Array de 6 objetos)
+        // GUARDAR EN FIREBASE
+        async function guardarTodoClub() {
             let fotosG = [];
             for(let i=0; i<6; i++) {
                 fotosG.push({
@@ -174,22 +212,28 @@
                     desc: document.getElementById('g-desc-'+i).value
                 });
             }
-            localStorage.setItem('fotosGaleria', JSON.stringify(fotosG));
 
-            alert("✅ ¡EL_CLUB.HTML actualizado correctamente!");
+            await db.collection("config").doc("club").set({
+                historia: document.getElementById('historia-input').value,
+                pNom: document.getElementById('nom-p').value,
+                vNom: document.getElementById('nom-v').value,
+                sNom: document.getElementById('nom-s').value,
+                imgP: document.getElementById('img-p').src,
+                imgV: document.getElementById('img-v').src,
+                imgS: document.getElementById('img-s').src,
+                galeria: fotosG
+            });
+            alert("✅ Datos del Club sincronizados en la Nube");
         }
 
-        function guardarPartido() {
-            const f = document.getElementById('fecha').value.split('-');
-            const obj = {
-                rival: document.getElementById('rival').value.toUpperCase(),
-                fecha: `${f[2]}/${f[1]}/${f[0]}`,
+        async function guardarPartido() {
+            await db.collection("config").doc("partido").set({
+                rival: document.getElementById('rival-input').value.toUpperCase(),
+                fecha: document.getElementById('fecha').value,
                 hora: document.getElementById('hora').value,
-                lugar: document.getElementById('lugar').value.toUpperCase(),
-                fechaOriginal: document.getElementById('fecha').value
-            };
-            localStorage.setItem('proximoPartido', JSON.stringify(obj));
-            alert("✅ Liga Actualizada");
+                lugar: document.getElementById('lugar').value.toUpperCase()
+            });
+            alert("✅ Liga Actualizada en Firebase");
         }
     </script>
 </body>
