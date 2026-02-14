@@ -1,0 +1,225 @@
+/* PALETA DE COLORES CLAROS Y ACCESIBLES - C.S.D. CONSTITUCIÓN */
+:root {
+    --blanco-puro: #ffffff;
+    --gris-fondo: #f8fafc;        /* Gris casi blanco para el fondo general */
+    --gris-claro: #f1f5f9;        /* Para fondos de tarjetas secundarias */
+    --gris-borde: #e2e8f0;        /* Bordes suaves */
+    --texto-principal: #334155;   /* Azul grisáceo oscuro */
+    --amarillo-brillante: #facc15; /* Amarillo Canary más vivo */
+    --amarillo-oro: #a89007;      /* Para acentos y botones */
+    --verde-claro: #dcfce7;       /* Fondo meses pagados */
+    --verde-texto: #166534;       /* Texto meses pagados */
+    --rojo-claro: #fee2e2;        /* Fondo meses pendientes */
+    --rojo-texto: #991b1b;        /* Texto meses pendientes */
+}
+
+body {
+    background-color: var(--gris-fondo);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--texto-principal);
+    margin: 0;
+}
+
+.container-principal {
+    display: flex;
+    justify-content: center;
+    padding: 60px 20px;
+}
+
+/* --- ESTILOS DE LA TARJETA DE REGISTRO / HACETE SOCIO --- */
+.registro-card {
+    background: var(--blanco-puro);
+    max-width: 950px;
+    display: flex;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--gris-borde);
+    margin: 0 auto;
+}
+
+.registro-content {
+    padding: 50px;
+    flex: 1;
+}
+
+.registro-imagen {
+    background: #fffef0; 
+    flex: 0 0 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid var(--gris-borde);
+}
+
+.amigo-img {
+    width: 85%;
+    /* mix-blend-mode ayuda a integrar fotos con fondo blanco */
+    mix-blend-mode: multiply; 
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
+}
+
+.instruccion-clara {
+    font-size: 1.2rem;
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+/* --- INPUTS Y FORMULARIO --- */
+.input-group {
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: var(--texto-principal);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.1rem;
+    border: 2px solid var(--gris-borde);
+    border-radius: 12px;
+    background-color: #ffffff;
+    color: var(--texto-principal);
+    box-sizing: border-box;
+    transition: all 0.2s;
+}
+
+.input-group input:focus {
+    border-color: var(--amarillo-oro);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.1);
+}
+
+.btn-primario-xl {
+    width: 100%;
+    padding: 20px;
+    background: var(--amarillo-oro);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(168, 144, 7, 0.2);
+    transition: all 0.2s;
+}
+
+.btn-primario-xl:hover {
+    background: #8b7706;
+    transform: translateY(-2px);
+}
+
+/* --- PANEL DE SOCIO (CONSULTA DE CUOTAS) --- */
+.panel-socio {
+    background: var(--blanco-puro);
+    width: 100%;
+    max-width: 1000px;
+    padding: 50px;
+    border-radius: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--gris-borde);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--gris-claro);
+    padding-bottom: 30px;
+    margin-bottom: 40px;
+}
+
+.avatar-icono {
+    font-size: 4.5rem;
+    color: var(--amarillo-oro);
+    margin-right: 20px;
+}
+
+#display-nombre {
+    font-size: 2.5rem;
+    color: var(--texto-principal);
+    font-weight: 800;
+    margin: 0;
+}
+
+.carnet-info {
+    text-align: right;
+    background: var(--gris-claro);
+    padding: 15px 25px;
+    border-radius: 18px;
+}
+
+#display-numero {
+    font-size: 2rem;
+    color: var(--amarillo-oro);
+    font-weight: 900;
+}
+
+/* --- GRILLA DE MESES --- */
+.grid-meses-accesible {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.tarjeta-mes {
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    background: var(--blanco-puro);
+    border: 2px solid var(--gris-claro);
+    transition: transform 0.2s;
+}
+
+.tarjeta-mes:hover { transform: scale(1.03); }
+
+.tarjeta-mes h4 { margin: 0 0 10px 0; color: var(--texto-principal); }
+
+.tarjeta-mes.pagado {
+    background: var(--verde-claro);
+    border-color: #bbf7d0;
+}
+
+.tarjeta-mes.pendiente {
+    background: var(--rojo-claro);
+    border-color: #fecaca;
+}
+
+/* --- BOTONES Y ALERTAS --- */
+.btn-pago-grande {
+    width: 100%;
+    margin-top: 40px;
+    padding: 22px;
+    background: var(--verde-texto);
+    color: white;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 18px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-logout {
+    margin-top: 40px;
+    background: transparent;
+    border: 2px solid var(--gris-borde);
+    color: #94a3b8;
+    padding: 15px;
+    width: 100%;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+/* RESPONSIVE */
+@media (max-width: 850px) {
+    .registro-card { flex-direction: column; }
+    .registro-imagen { flex: none; width: 100%; border-left: none; border-bottom: 1px solid var(--gris-borde); }
+    .panel-header { flex-direction: column; text-align: center; gap: 20px; }
+}

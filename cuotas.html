@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Cuotas | Club Constitución</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --oro: #fbc02d; --fondo: #0a0c10; --card: #161b22; --borde: #30363d; --rojo: #ff4444; --verde: #4caf50; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--fondo); color: white; margin: 0; padding: 20px; padding-bottom: 120px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        
+        /* Estilo para el botón Volver */
+        .btn-volver {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--oro);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            transition: 0.3s;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+        .btn-volver:hover {
+            background: rgba(251, 192, 45, 0.1);
+            transform: translateX(-5px);
+        }
+
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--borde); padding-bottom: 20px; }
+        .logo-club { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--oro); background: white; margin-bottom: 10px; }
+        
+        .cuotas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+        .mes-card { background: var(--card); border: 1px solid var(--borde); border-radius: 15px; padding: 20px; text-align: center; transition: 0.3s; }
+        
+        .impaga { border-top: 5px solid var(--rojo); box-shadow: 0 4px 15px rgba(255, 68, 68, 0.1); }
+        .paga { border-top: 5px solid var(--verde); opacity: 0.8; background: rgba(76, 175, 80, 0.05); }
+        
+        .mes-nombre { color: var(--oro); font-size: 1.3rem; font-weight: bold; margin: 0; text-transform: uppercase; }
+        .vencimiento { font-size: 0.75rem; color: #888; display: block; margin-bottom: 10px; }
+        .monto { font-size: 1.8rem; font-weight: 900; margin: 15px 0; display: block; }
+        
+        .btn-accion { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-pagar { background: var(--oro); color: black; }
+        .btn-pagar:hover { background: #fff; transform: translateY(-2px); }
+        .btn-pagado { background: rgba(76, 175, 80, 0.1); color: var(--verde); cursor: default; border: 1px solid var(--verde); }
+
+        .barra-pago { 
+            position: fixed; bottom: 0; left: 0; right: 0; 
+            background: #111; border-top: 2px solid var(--oro); 
+            padding: 20px; display: flex; justify-content: space-around; 
+            align-items: center; z-index: 1000; box-shadow: 0 -10px 30px rgba(0,0,0,0.8); 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="javascript:history.back()" class="btn-volver">
+        <i class="fas fa-arrow-left"></i> VOLVER
+    </a>
+
+    <div class="header">
+        <img src="logo.jpg" alt="Logo Club" class="logo-club" onerror="this.src='https://via.placeholder.com/90'">
+        <h2 style="margin:0;">MI ESTADO DE CUOTAS</h2>
+        <p id="nombre-socio" style="color: var(--oro); font-weight: bold; margin-top: 5px;">CARGANDO...</p>
+    </div>
+
+    <div class="cuotas-grid" id="grid-anual"></div>
+</div>
+
+<div class="barra-pago">
+    <div style="text-align: left;">
+        <small style="color: var(--oro); font-weight: bold;">TOTAL SELECCIONADO:</small>
+        <div id="monto-total" style="font-size: 2.2rem; font-weight: 900; color: white;">$ 0</div>
+    </div>
+    <button class="btn-accion btn-pagar" style="width: auto; padding: 15px 50px; font-size: 1.1rem;" onclick="irAPagar()">
+        IR A PAGAR AHORA <i class="fas fa-shopping-cart"></i>
+    </button>
+</div>
+
+<script>
+    const dniLogueado = sessionStorage.getItem('socioLogueado');
+    let acumulado = 0;
+    let mesesSeleccionados = [];
+
+    const mesesDelAño = [
+        { nombre: "Enero", vence: "10/01/26", monto: 7000 },
+        { nombre: "Febrero", vence: "10/02/26", monto: 7000 },
+        { nombre: "Marzo", vence: "10/03/26", monto: 7500 },
+        { nombre: "Abril", vence: "10/04/26", monto: 7500 },
+        { nombre: "Mayo", vence: "10/05/26", monto: 7500 },
+        { nombre: "Junio", vence: "10/06/26", monto: 7500 },
+        { nombre: "Julio", vence: "10/07/26", monto: 8000 },
+        { nombre: "Agosto", vence: "10/08/26", monto: 8000 },
+        { nombre: "Septiembre", vence: "10/09/26", monto: 8000 },
+        { nombre: "Octubre", vence: "10/10/26", monto: 8000 },
+        { nombre: "Noviembre", vence: "10/11/26", monto: 8000 },
+        { nombre: "Diciembre", vence: "10/12/26", monto: 8000 }
+    ];
+
+    function cargarCuotas() {
+        if (!dniLogueado) { window.location.href = "index.html"; return; }
+
+        const listaSocios = JSON.parse(localStorage.getItem('listaSocios')) || [];
+        const historialPagos = JSON.parse(localStorage.getItem('historialPagos')) || [];
+        
+        const socio = listaSocios.find(s => s.dni === dniLogueado);
+        
+        if (socio) {
+            document.getElementById('nombre-socio').innerText = `SOCIO: ${socio.nombre.toUpperCase()}`;
+            const grid = document.getElementById('grid-anual');
+            grid.innerHTML = ""; 
+            
+            mesesDelAño.forEach((m, i) => {
+                const yaPagoEsteMes = historialPagos.some(pago => pago.dni === dniLogueado && pago.mes === m.nombre);
+                
+                const card = document.createElement('div');
+                card.className = `mes-card ${yaPagoEsteMes ? 'paga' : 'impaga'}`;
+                card.innerHTML = `
+                    <p class="mes-nombre">${m.nombre}</p>
+                    <span class="vencimiento">Vence el: ${m.vence}</span>
+                    <span class="monto">$ ${m.monto.toLocaleString()}</span>
+                    <button class="btn-accion ${yaPagoEsteMes ? 'btn-pagado' : 'btn-pagar'}" 
+                            onclick="${yaPagoEsteMes ? '' : `seleccionar(${i}, this)`}"
+                            ${yaPagoEsteMes ? 'disabled' : ''}>
+                        ${yaPagoEsteMes ? '<i class="fas fa-check-circle"></i> PAGADA' : 'PAGAR MES'}
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+    }
+
+    function seleccionar(index, btn) {
+        const mes = mesesDelAño[index].nombre;
+        
+        if (mesesSeleccionados.includes(mes)) {
+            acumulado -= mesesDelAño[index].monto;
+            mesesSeleccionados = mesesSeleccionados.filter(m => m !== mes);
+            btn.innerText = "PAGAR MES";
+            btn.style.background = "var(--oro)";
+            btn.style.color = "black";
+        } else {
+            acumulado += mesesDelAño[index].monto;
+            mesesSeleccionados.push(mes);
+            btn.innerText = "✓ SELECCIONADO";
+            btn.style.background = "#333";
+            btn.style.color = "white";
+        }
+        
+        document.getElementById('monto-total').innerText = `$ ${acumulado.toLocaleString()}`;
+    }
+
+    function irAPagar() {
+        if(acumulado === 0) {
+            alert("Por favor, selecciona al menos un mes.");
+            return;
+        }
+        sessionStorage.setItem('montoAPagar', acumulado);
+        sessionStorage.setItem('tipoPago', 'cuota');
+        sessionStorage.setItem('mesesAProcesar', JSON.stringify(mesesSeleccionados));
+        window.location.href = "p_pago.html";
+    }
+
+    window.onload = cargarCuotas;
+</script>
+</body>
+</html>

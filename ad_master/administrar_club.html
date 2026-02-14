@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Admin Pro - C.S.D. Constitución</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --oro: #fbc02d; --fondo: #0a0c10; --card: #161b22; --borde: #30363d; --texto-gris: #8b949e; --verde: #4cd137; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--fondo); color: white; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: #0d1117; border-right: 1px solid var(--borde); position: fixed; }
+        .brand { padding: 30px; text-align: center; border-bottom: 1px solid var(--borde); }
+        .brand img { width: 80px; border-radius: 50%; border: 2px solid var(--oro); }
+        .menu-item { padding: 15px 25px; display: flex; align-items: center; gap: 15px; cursor: pointer; color: var(--texto-gris); transition: 0.3s; font-size: 0.9rem; }
+        .menu-item:hover, .menu-item.active { background: var(--oro); color: black; font-weight: bold; }
+        .main-content { margin-left: 260px; padding: 40px; width: calc(100% - 260px); }
+        .content-view { display: none; }
+        .content-view.active { display: block; }
+        .card-admin { background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid var(--borde); margin-top: 20px; }
+        label { display: block; font-size: 0.8rem; color: var(--oro); margin: 10px 0 5px; text-transform: uppercase; font-weight: bold; }
+        input, textarea { width: 100%; padding: 12px; background: #0d1117; border: 1px solid var(--borde); color: white; border-radius: 8px; box-sizing: border-box; }
+        .btn-principal { background: var(--oro); color: black; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; text-transform: uppercase; }
+        .preview-box { background: #000; border: 1px solid var(--borde); padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 10px; }
+        .preview-box img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 2px solid var(--oro); margin-bottom: 10px; }
+        .grid-galeria { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .gal-card { background: #000; padding: 10px; border-radius: 10px; border: 1px solid var(--borde); }
+        .gal-card img { width: 100%; height: 80px; object-fit: cover; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand"><img src="../img/logo.jpg"><h3>ADMIN</h3></div>
+        <div class="menu-item active" onclick="ver('dash', this)"><i class="fas fa-chart-line"></i> Dashboard</div>
+        <div class="menu-item" onclick="ver('club', this)"><i class="fas fa-building"></i> Editar El Club</div>
+        <div class="menu-item" onclick="ver('partido', this)"><i class="fas fa-futbol"></i> Próximo Partido</div>
+        <div class="menu-item" onclick="ver('socios', this)"><i class="fas fa-users"></i> Socios</div>
+    </div>
+
+    <div class="main-content">
+        <div id="dash" class="content-view active">
+            <h1>Resumen del Club</h1>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="card-admin"><h3>Recaudación Total</h3><h2 id="dash-recauda" style="color:var(--verde)">$ 0</h2></div>
+                <div class="card-admin"><h3>Próximo Rival</h3><h2 id="dash-rival" style="color:var(--oro)">--</h2></div>
+            </div>
+        </div>
+
+        <div id="club" class="content-view">
+            <h1>Editar "El Club"</h1>
+            
+            <div class="card-admin">
+                <label>Nuestra Historia</label>
+                <textarea id="historia-input" rows="4" placeholder="Escribe la historia del club aquí..."></textarea>
+            </div>
+
+            <div class="card-admin">
+                <h3>Comisión Directiva</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                    <div class="preview-box">
+                        <img id="img-p" src=""><label>Presidente</label>
+                        <input type="text" id="nom-p" placeholder="Nombre">
+                        <input type="file" onchange="leerImg(this, 'img-p')" style="font-size:0.7rem">
+                    </div>
+                    <div class="preview-box">
+                        <img id="img-v" src=""><label>Vicepresidente</label>
+                        <input type="text" id="nom-v" placeholder="Nombre">
+                        <input type="file" onchange="leerImg(this, 'img-v')" style="font-size:0.7rem">
+                    </div>
+                    <div class="preview-box">
+                        <img id="img-s" src=""><label>Secretario</label>
+                        <input type="text" id="nom-s" placeholder="Nombre">
+                        <input type="file" onchange="leerImg(this, 'img-s')" style="font-size:0.7rem">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-admin">
+                <h3>Galería de Imágenes (6 Fotos)</h3>
+                <div class="grid-galeria" id="grid-fotos">
+                    </div>
+            </div>
+            <button class="btn-principal" onclick="guardarTodoClub()">PUBLICAR CAMBIOS EN EL CLUB</button>
+        </div>
+
+        <div id="partido" class="content-view">
+            <h1>Ajustes de Liga</h1>
+            <div class="card-admin" style="max-width: 500px;">
+                <label>Rival</label><input type="text" id="rival">
+                <label>Fecha</label><input type="date" id="fecha">
+                <label>Hora</label><input type="time" id="hora">
+                <label>Lugar</label><input type="text" id="lugar">
+                <button class="btn-principal" onclick="guardarPartido()">ACTUALIZAR LIGA.HTML</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function ver(id, el) {
+            document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
+        }
+
+        function leerImg(input, idDestino) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => document.getElementById(idDestino).src = e.target.result;
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // --- CARGA INICIAL DE DATOS ---
+        window.onload = () => {
+            // Cargar Historia y Nombres
+            const config = JSON.parse(localStorage.getItem('configClubWeb')) || {};
+            document.getElementById('historia-input').value = config.historia || "";
+            document.getElementById('nom-p').value = config.pNom || "";
+            document.getElementById('nom-v').value = config.vNom || "";
+            document.getElementById('nom-s').value = config.sNom || "";
+
+            // Cargar Fotos Autoridades
+            const fotosA = JSON.parse(localStorage.getItem('fotosAutoridades')) || {};
+            document.getElementById('img-p').src = fotosA.p || "";
+            document.getElementById('img-v').src = fotosA.v || "";
+            document.getElementById('img-s').src = fotosA.s || "";
+
+            // Generar y cargar Galería (6 fotos)
+            const fotosG = JSON.parse(localStorage.getItem('fotosGaleria')) || [];
+            const containerG = document.getElementById('grid-fotos');
+            for(let i=0; i<6; i++) {
+                const f = fotosG[i] || {url: '', titulo: '', desc: ''};
+                containerG.innerHTML += `
+                    <div class="gal-card">
+                        <img id="g-img-${i}" src="${f.url}">
+                        <input type="file" onchange="leerImg(this, 'g-img-${i}')" style="font-size:0.6rem">
+                        <input type="text" id="g-tit-${i}" value="${f.titulo}" placeholder="Título">
+                        <input type="text" id="g-desc-${i}" value="${f.desc}" placeholder="Desc.">
+                    </div>
+                `;
+            }
+
+            // Datos Partido
+            const p = JSON.parse(localStorage.getItem('proximoPartido'));
+            if(p) document.getElementById('dash-rival').innerText = p.rival;
+        };
+
+        // --- GUARDADO COMPATIBLE CON EL_CLUB.HTML ---
+        function guardarTodoClub() {
+            // 1. configClubWeb (Texto)
+            const config = {
+                historia: document.getElementById('historia-input').value,
+                pNom: document.getElementById('nom-p').value,
+                vNom: document.getElementById('nom-v').value,
+                sNom: document.getElementById('nom-s').value
+            };
+            localStorage.setItem('configClubWeb', JSON.stringify(config));
+
+            // 2. fotosAutoridades (Base64)
+            const fotosA = {
+                p: document.getElementById('img-p').src,
+                v: document.getElementById('img-v').src,
+                s: document.getElementById('img-s').src
+            };
+            localStorage.setItem('fotosAutoridades', JSON.stringify(fotosA));
+
+            // 3. fotosGaleria (Array de 6 objetos)
+            let fotosG = [];
+            for(let i=0; i<6; i++) {
+                fotosG.push({
+                    url: document.getElementById('g-img-'+i).src,
+                    titulo: document.getElementById('g-tit-'+i).value,
+                    desc: document.getElementById('g-desc-'+i).value
+                });
+            }
+            localStorage.setItem('fotosGaleria', JSON.stringify(fotosG));
+
+            alert("✅ ¡EL_CLUB.HTML actualizado correctamente!");
+        }
+
+        function guardarPartido() {
+            const f = document.getElementById('fecha').value.split('-');
+            const obj = {
+                rival: document.getElementById('rival').value.toUpperCase(),
+                fecha: `${f[2]}/${f[1]}/${f[0]}`,
+                hora: document.getElementById('hora').value,
+                lugar: document.getElementById('lugar').value.toUpperCase(),
+                fechaOriginal: document.getElementById('fecha').value
+            };
+            localStorage.setItem('proximoPartido', JSON.stringify(obj));
+            alert("✅ Liga Actualizada");
+        }
+    </script>
+</body>
+</html>

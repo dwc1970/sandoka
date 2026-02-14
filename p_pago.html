@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasarela de Pago | C.S.D. Constitución</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #fbc02d;
+            --bg: #050505;
+            --card: #121212;
+            --text: #ffffff;
+            --mp-blue: #009ee3;
+            --success: #4caf50;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .checkout-container {
+            background: var(--card);
+            width: 90%;
+            max-width: 420px;
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        .club-logo {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            margin-bottom: 10px;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .header h2 { font-family: 'Archivo Black'; text-transform: uppercase; margin: 0; font-size: 1.2rem; color: #fff; }
+
+        .summary-box {
+            background: rgba(251, 192, 45, 0.05);
+            border: 1px dashed var(--primary);
+            padding: 15px; border-radius: 15px; margin: 20px 0;
+        }
+
+        .monto-input-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .simbolo-peso { font-family: 'Archivo Black'; font-size: 2rem; color: var(--primary); }
+
+        .monto-editable {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            font-family: 'Archivo Black';
+            font-size: 2.5rem;
+            width: 70%;
+            text-align: center;
+            outline: none;
+            border-bottom: 2px solid rgba(251, 192, 45, 0.2);
+        }
+
+        .input-group { text-align: left; margin-bottom: 12px; }
+        label { font-size: 0.65rem; color: #888; font-weight: 800; margin-bottom: 5px; display: block; text-transform: uppercase; }
+        
+        .field-input {
+            width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333;
+            border-radius: 8px; color: white; box-sizing: border-box; outline: none; font-size: 0.9rem;
+        }
+        .field-input:focus { border-color: var(--primary); }
+
+        .btn-confirm {
+            width: 100%; padding: 16px; background: var(--primary); color: #000;
+            border: none; border-radius: 10px; font-weight: 900; cursor: pointer;
+            text-transform: uppercase; transition: 0.3s; margin-top: 10px;
+        }
+
+        .btn-mp {
+            width: 100%; padding: 14px; background: var(--mp-blue); color: white;
+            border: none; border-radius: 10px; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+
+        #status-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.98);
+            z-index: 9999;
+            flex-direction: column; justify-content: center; align-items: center;
+        }
+
+        .spinner {
+            width: 50px; height: 50px;
+            border: 5px solid rgba(251, 192, 45, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .success-mark {
+            display: none;
+            font-size: 70px;
+            color: var(--success);
+            animation: scaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes scaleUp { from { transform: scale(0); } to { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+    <div id="status-overlay">
+        <div id="loader-spinner" class="spinner"></div>
+        <div id="success-mark" class="success-mark">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h3 id="status-text" style="margin-top: 20px; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; font-family: 'Archivo Black';">Procesando...</h3>
+    </div>
+
+    <div class="checkout-container">
+        <img src="logo.jpg" class="club-logo" onerror="this.src='https://via.placeholder.com/80?text=CLUB'" alt="Logo Club">
+        
+        <div class="header">
+            <h2 id="txt-titulo">Pasarela de Pago</h2>
+            <p id="txt-subtitulo" style="color: #666; font-size: 0.75rem; margin-top: 4px;">CONSTITUCIÓN ÉLITE SECURITY</p>
+        </div>
+
+        <div class="summary-box">
+            <p id="txt-label-monto" style="margin: 0; font-size: 0.65rem; color: #888; font-weight: 700;">VALOR A PAGAR</p>
+            <div class="monto-input-wrapper">
+                <span class="simbolo-peso">$</span>
+                <input type="number" id="monto-final" class="monto-editable" value="0">
+            </div>
+        </div>
+
+        <form id="form-pago">
+            <div class="input-group">
+                <label>Tarjeta de Crédito / Débito</label>
+                <input type="text" class="field-input" placeholder="0000 0000 0000 0000" maxlength="19" required>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <div style="flex: 1;">
+                    <label>Vencimiento</label>
+                    <input type="text" class="field-input" placeholder="MM/AA" maxlength="5" required>
+                </div>
+                <div style="flex: 1;">
+                    <label>Cód. Seguridad</label>
+                    <input type="password" class="field-input" placeholder="123" maxlength="3" required>
+                </div>
+            </div>
+            <button type="submit" class="btn-confirm">Pagar con Tarjeta</button>
+        </form>
+
+        <div style="margin: 15px 0; color: #333; font-size: 0.7rem; font-weight: 800;">O</div>
+
+        <button type="button" class="btn-mp" onclick="iniciarPago('Mercado Pago')">
+            <img src="https://logotipous.com/wp-content/uploads/2021/11/Mercado-Pago-Logo.png" alt="MP" height="20" style="filter: brightness(0) invert(1);">
+            MERCADO PAGO
+        </button>
+    </div>
+
+    <script>
+        window.onload = () => {
+            const montoGuardado = sessionStorage.getItem('montoAPagar');
+            const tipoPago = sessionStorage.getItem('tipoPago');
+            
+            if (montoGuardado) {
+                document.getElementById('monto-final').value = montoGuardado;
+            }
+
+            if (tipoPago === 'cuota') {
+                document.getElementById('txt-titulo').innerText = "Pago de Cuota";
+                document.getElementById('txt-label-monto').innerText = "TOTAL MENSUALIDAD";
+            } else if (tipoPago === 'entrada') {
+                document.getElementById('txt-titulo').innerText = "Compra de Entradas";
+                document.getElementById('txt-label-monto').innerText = "VALOR ENTRADA";
+            }
+        };
+
+        function iniciarPago(metodo) {
+            const montoCargado = document.getElementById('monto-final').value;
+            if (!montoCargado || montoCargado <= 0) {
+                alert("Monto no válido.");
+                return;
+            }
+
+            const overlay = document.getElementById('status-overlay');
+            const spinner = document.getElementById('loader-spinner');
+            const successMark = document.getElementById('success-mark');
+            const statusText = document.getElementById('status-text');
+
+            overlay.style.display = 'flex';
+            statusText.innerText = "Conectando...";
+
+            setTimeout(() => {
+                spinner.style.display = 'none';
+                successMark.style.display = 'block';
+                statusText.innerText = "¡PAGO EXITOSO!";
+                statusText.style.color = "#4caf50";
+
+                const tipoPago = sessionStorage.getItem('tipoPago');
+                const dniSocio = sessionStorage.getItem('socioLogueado');
+
+                // Lógica para Cuotas
+                if (tipoPago === 'cuota' && dniSocio) {
+                    const mesesJSON = sessionStorage.getItem('mesesAProcesar');
+                    if(mesesJSON) {
+                        const mesesAPagar = JSON.parse(mesesJSON);
+                        let historial = JSON.parse(localStorage.getItem('historialPagos')) || [];
+                        mesesAPagar.forEach(mesNombre => {
+                            const yaExiste = historial.some(p => p.dni === dniSocio && p.mes === mesNombre);
+                            if (!yaExiste) {
+                                historial.push({
+                                    dni: dniSocio,
+                                    mes: mesNombre,
+                                    fechaPago: new Date().toLocaleDateString(),
+                                    metodo: metodo
+                                });
+                            }
+                        });
+                        localStorage.setItem('historialPagos', JSON.stringify(historial));
+                    }
+                }
+
+                // Lógica para Entradas (Opcional: puedes guardar el registro de venta aquí también)
+                if (tipoPago === 'entrada') {
+                    let ventas = JSON.parse(localStorage.getItem('ventasEntradas')) || [];
+                    ventas.push({
+                        dni: dniSocio,
+                        monto: montoCargado,
+                        fecha: new Date().toLocaleDateString(),
+                        metodo: metodo
+                    });
+                    localStorage.setItem('ventasEntradas', JSON.stringify(ventas));
+                }
+
+                sessionStorage.setItem('pagoExitoso', 'true');
+
+                setTimeout(() => {
+                    // REDIRECCIÓN INTELIGENTE
+                    if (tipoPago === 'entrada') {
+                        window.location.href = 'ticket.html'; // Va a descargar la entrada
+                    } else {
+                        window.location.href = 'cuotas.html'; // Vuelve a ver sus cuotas
+                    }
+                }, 2000);
+
+            }, 2500);
+        }
+
+        document.getElementById('form-pago').onsubmit = (e) => {
+            e.preventDefault();
+            iniciarPago('Tarjeta de Crédito/Débito');
+        };
+    </script>
+</body>
+</html>

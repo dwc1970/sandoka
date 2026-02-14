@@ -1,0 +1,144 @@
+/* Variables de identidad del club */
+:root {
+    --amarillo: #fbc02d;
+    --negro: #1a1d23;
+    --gris-fondo: #f4f4f4;
+}
+
+.futbol-main {
+    background-color: var(--gris-fondo);
+    min-height: 100vh;
+}
+
+.futbol-hero {
+    /* Ajustamos la ruta para que Flask la encuentre en static/img/ */
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/static/img/cancha.jfif');
+    background-size: cover;
+    background-position: center;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--amarillo);
+    text-align: center;
+}
+
+.futbol-container {
+    max-width: 1200px;
+    margin: -50px auto 50px; /* Este es el efecto de "solapado" sobre el hero */
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+/* Tarjeta de Partido */
+.match-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.card-header {
+    background: var(--negro);
+    color: var(--amarillo);
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+}
+
+.match-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.team {
+    text-align: center;
+    flex: 1;
+}
+
+.team img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.team span {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+    color: var(--negro);
+}
+
+.vs {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #ddd;
+}
+
+.match-info {
+    border-top: 1px solid #eee;
+    padding: 20px;
+    text-align: center;
+    color: #666;
+}
+
+/* Tabla de Posiciones */
+.table-container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.table-container h2 {
+    margin-top: 0;
+    color: var(--negro);
+    border-bottom: 3px solid var(--amarillo);
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.posiciones {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.posiciones th {
+    text-align: left;
+    background: #f8f9fa;
+    padding: 12px;
+    border-bottom: 2px solid var(--amarillo);
+    color: var(--negro);
+}
+
+.posiciones td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Resaltado para el Canario en la tabla */
+.highlight {
+    background-color: rgba(251, 192, 45, 0.15);
+    font-weight: bold;
+}
+
+/* Adaptación para celulares */
+@media (max-width: 768px) {
+    .futbol-container {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+    }
+    
+    .match-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
