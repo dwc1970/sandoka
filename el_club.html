@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Club | C.S.D. Constitución</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
     /* Estética Futurista Dark Premium - C.S.D. Constitución 2026 */
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600;700&display=swap');
@@ -26,7 +30,6 @@
         overflow-x: hidden;
     }
     
-    /* NAVBAR AMARILLA UNIFICADA */
     .navbar { 
         background: var(--club-gold);
         padding: 12px 0; 
@@ -45,12 +48,8 @@
         text-transform: uppercase; 
         font-size: 0.8rem;
         letter-spacing: 1px;
-        transition: 0.3s ease;
     }
 
-    .navbar a:hover { opacity: 0.6; transform: scale(1.05); }
-    
-    /* CONTENEDOR PRINCIPAL */
     .container { 
         max-width: 1000px; 
         margin: 40px auto; 
@@ -59,55 +58,31 @@
         padding: 40px; 
         border-radius: 40px;
         border: 1px solid rgba(255, 255, 255, 0.05);
-        box-shadow: 0 25px 50px rgba(0,0,0,0.6);
     }
     
-    /* LOGO CENTRADO Y PEQUEÑO */
-    .logo-container { 
-        text-align: center; 
-        margin-bottom: 20px; 
-    }
+    .logo-container { text-align: center; margin-bottom: 20px; }
     .logo-club { 
-        width: 80px; 
-        height: 80px; 
+        width: 80px; height: 80px; 
         border-radius: 50%; 
         border: 2px solid var(--club-gold);
-        box-shadow: 0 0 20px var(--border-glow);
         object-fit: cover;
-        background: #000;
     }
 
     .header h1 { 
         font-family: 'Orbitron', sans-serif;
         text-align: center;
-        font-size: 2.2rem; 
-        margin: 10px 0;
         background: linear-gradient(to bottom, #fff, var(--club-gold));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
     
-    .header p { 
-        text-align: center;
-        color: var(--club-gold); 
-        letter-spacing: 5px; 
-        font-weight: 700;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-    }
-    
-    /* TÍTULOS CENTRADOS CON LÍNEAS DE NEÓN */
     h3 { 
         font-family: 'Orbitron', sans-serif;
         color: #fff;
         margin-top: 60px;
-        font-size: 1rem;
-        letter-spacing: 2px;
-        text-transform: uppercase;
         display: flex;
         align-items: center;
         justify-content: center;
-        text-align: center;
         gap: 15px;
     }
 
@@ -117,10 +92,8 @@
         max-width: 50px;
         height: 2px;
         background: var(--club-gold);
-        box-shadow: 0 0 10px var(--club-gold);
     }
 
-    /* TARJETAS DE COMISIÓN - BLANCO MODERNO */
     .comision-grid { 
         display: grid; 
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
@@ -133,11 +106,6 @@
         border-radius: 25px; 
         text-align: center; 
         color: #000;
-        transition: 0.4s ease;
-    }
-    .card-aut:hover { 
-        transform: translateY(-10px); 
-        box-shadow: 0 15px 30px var(--border-glow); 
     }
     .card-aut img { 
         width: 110px; height: 110px; 
@@ -147,9 +115,7 @@
         object-fit: cover;
     }
     .cargo-label { color: var(--club-gold-dark); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; }
-    .nombre-label { font-size: 1.3rem; font-weight: 700; margin: 5px 0; }
 
-    /* GALERIA TECH */
     .galeria-grid { 
         display: grid; 
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
@@ -160,15 +126,12 @@
         border-radius: 20px; 
         overflow: hidden; 
         position: relative;
-        border: 1px solid rgba(255,255,255,0.1);
     }
-    .gal-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-    .gal-item:hover img { transform: scale(1.1); }
+    .gal-item img { width: 100%; height: 100%; object-fit: cover; }
     
     .info-overlay { 
         position: absolute; bottom: 0; 
         background: rgba(0,0,0,0.8);
-        backdrop-filter: blur(5px);
         padding: 15px; width: 100%; box-sizing: border-box;
         border-top: 2px solid var(--club-gold);
     }
@@ -176,7 +139,7 @@
     #historia-txt { 
         line-height: 1.8; 
         color: #aaa; 
-        text-align: center; /* También centramos el texto de la historia */
+        text-align: center;
         max-width: 800px;
         margin: 20px auto;
     }
@@ -185,26 +148,24 @@
 <body>
 
    <nav class="navbar">
-        <a href="index.html"><i class="fas fa-home"></i> INICIO</a>
-        <a href="el_club.html"><i class="fas fa-shield-alt"></i> EL CLUB</a>
-        <a href="liga.html"><i class="fas fa-futbol"></i> PRÓXIMO PARTIDO</a>
-        <a href="SoySocio.html"><i class="fas fa-users"></i> SOCIOS</a>
-        <a href="contacto.html"><i class="fas fa-envelope"></i> CONTACTO</a>
-        <a href="ad_master/admin_login.html"><i class="fas fa-user-cog"></i> ADMIN</a>
+        <a href="index.html">INICIO</a>
+        <a href="el_club.html">EL CLUB</a>
+        <a href="liga.html">LIGA</a>
+        <a href="socios.html">SOCIOS</a>
     </nav>
 
     <div class="container">
         <div class="logo-container">
-            <img src="../img/logo.jpg" alt="Logo C.S.D. Constitución" class="logo-club">
+            <img src="img/logo.jpg" alt="Logo C.S.D. Constitución" class="logo-club">
         </div>
 
         <div class="header">
             <h1>C.S.D. CONSTITUCIÓN</h1>
-            <p style="letter-spacing: 2px; font-weight: bold;">SAN RAFAEL, MENDOZA</p>
+            <p>SAN RAFAEL, MENDOZA</p>
         </div>
 
         <h3><i class="fas fa-history"></i> Nuestra Historia</h3>
-        <p id="historia-txt">Cargando la historia del club...</p>
+        <p id="historia-txt">Sincronizando con la nube...</p>
 
         <h3><i class="fas fa-users"></i> Comisión Directiva</h3>
         <div id="comision-display" class="comision-grid"></div>
@@ -214,56 +175,66 @@
     </div>
 
     <script>
+        // CONFIGURACIÓN FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE",
+            authDomain: "csydconstitucion-8b8bb.firebaseapp.com",
+            projectId: "csydconstitucion-8b8bb",
+            storageBucket: "csydconstitucion-8b8bb.firebasestorage.app",
+            messagingSenderId: "363486272350",
+            appId: "1:363486272350:web:e937e924c4371a3db74dcf"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         function sincronizarWeb() {
-            const config = JSON.parse(localStorage.getItem('configClubWeb'));
-            const fotosA = JSON.parse(localStorage.getItem('fotosAutoridades'));
-            const fotosG = JSON.parse(localStorage.getItem('fotosGaleria'));
-
-            // 1. Cargar Historia
-            if (config && config.historia) {
-                document.getElementById('historia-txt').innerText = config.historia;
-            }
-
-            // 2. Cargar Comisión
-            const comisionCont = document.getElementById('comision-display');
-            if (config) {
-                comisionCont.innerHTML = `
-                    <div class="card-aut">
-                        <img src="${fotosA?.p || 'https://via.placeholder.com/120'}">
-                        <p class="cargo-label">Presidente</p>
-                        <h4 class="nombre-label">${config.pNom || 'A designar'}</h4>
-                    </div>
-                    <div class="card-aut">
-                        <img src="${fotosA?.v || 'https://via.placeholder.com/120'}">
-                        <p class="cargo-label">Vicepresidente</p>
-                        <h4 class="nombre-label">${config.vNom || 'A designar'}</h4>
-                    </div>
-                    <div class="card-aut">
-                        <img src="${fotosA?.s || 'https://via.placeholder.com/120'}">
-                        <p class="cargo-label">Secretario</p>
-                        <h4 class="nombre-label">${config.sNom || 'A designar'}</h4>
-                    </div>
-                `;
-            }
-
-            // 3. Cargar Galería
-            const galeriaCont = document.getElementById('galeria-display');
-            if (fotosG && fotosG.length > 0) {
-                galeriaCont.innerHTML = "";
-                fotosG.forEach(foto => {
-                    galeriaCont.innerHTML += `
-                        <div class="gal-item">
-                            <img src="${foto.url}">
-                            <div class="info-overlay">
-                                <strong>${foto.titulo}</strong><br>
-                                <small>${foto.desc}</small>
-                            </div>
+            // Escuchar cambios en la configuración del club (Historia y Nombres)
+            db.collection("config").doc("club").onSnapshot((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('historia-txt').innerText = data.historia || "Historia no disponible";
+                    
+                    document.getElementById('comision-display').innerHTML = `
+                        <div class="card-aut">
+                            <img src="${data.fotoP || 'https://via.placeholder.com/120'}">
+                            <p class="cargo-label">Presidente</p>
+                            <h4 class="nombre-label">${data.pNom || 'A designar'}</h4>
+                        </div>
+                        <div class="card-aut">
+                            <img src="${data.fotoV || 'https://via.placeholder.com/120'}">
+                            <p class="cargo-label">Vicepresidente</p>
+                            <h4 class="nombre-label">${data.vNom || 'A designar'}</h4>
+                        </div>
+                        <div class="card-aut">
+                            <img src="${data.fotoS || 'https://via.placeholder.com/120'}">
+                            <p class="cargo-label">Secretario</p>
+                            <h4 class="nombre-label">${data.sNom || 'A designar'}</h4>
                         </div>
                     `;
-                });
-            } else {
-                galeriaCont.innerHTML = "<p>No hay fotos disponibles en este momento.</p>";
-            }
+                }
+            });
+
+            // Escuchar cambios en la Galería
+            db.collection("config").doc("galeria").onSnapshot((doc) => {
+                const galeriaCont = document.getElementById('galeria-display');
+                if (doc.exists && doc.data().fotos) {
+                    const fotos = doc.data().fotos;
+                    galeriaCont.innerHTML = "";
+                    fotos.forEach(foto => {
+                        galeriaCont.innerHTML += `
+                            <div class="gal-item">
+                                <img src="${foto.url}">
+                                <div class="info-overlay">
+                                    <strong>${foto.titulo}</strong><br>
+                                    <small>${foto.desc}</small>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    galeriaCont.innerHTML = "<p>Próximamente más imágenes del club.</p>";
+                }
+            });
         }
 
         window.onload = sincronizarWeb;
