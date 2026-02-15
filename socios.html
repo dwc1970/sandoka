@@ -2,96 +2,35 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Socios - C.S.D. Constitución</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
+    <title>Registro de Socios - Constitución</title>
     <style>
-        :root { --amarillo: #fbc02d; --negro: #1a1d23; --gris: #f4f4f4; --blanco: #ffffff; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('img/cancha.jfif'); background-size: cover; background-attachment: fixed; color: var(--negro); }
-        header { background: var(--amarillo); padding: 15px 0; text-align: center; border-bottom: 4px solid var(--negro); }
-        .form-container { max-width: 450px; margin: 50px auto; background: var(--blanco); padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .form-container h2 { text-align: center; color: var(--negro); margin-top: 0; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn-accion { width: 100%; padding: 15px; background: var(--negro); color: var(--amarillo); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
-        .toggle-link { text-align: center; margin-top: 15px; cursor: pointer; color: #555; font-size: 0.9rem; }
+        body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; }
+        .form-container { background: #222; padding: 20px; max-width: 400px; margin: 20px auto; border-radius: 10px; border: 1px solid #f1c40f; }
+        input { width: 90%; padding: 10px; margin: 10px 0; }
+        button { background: #f1c40f; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
+        .carnet { background: #f1c40f; color: black; width: 350px; height: 200px; margin: 20px auto; border-radius: 15px; padding: 15px; display: none; text-align: left; }
     </style>
 </head>
 <body>
-
-    <header>
-        <h1 style="margin:0; font-weight:900;">C.S.D. CONSTITUCIÓN</h1>
-    </header>
-
-    <div class="form-container" id="reg-box">
-        <h2>SOLICITUD DE SOCIO</h2>
-        <input type="text" id="regNombre" placeholder="Nombre Completo">
-        <input type="number" id="regDni" placeholder="DNI (Será tu usuario)">
-        <input type="text" id="regTel" placeholder="Teléfono">
-        <input type="password" id="regPass" placeholder="Crea una contraseña">
-        <button class="btn-accion" onclick="registrarSocio()">ENVIAR SOLICITUD</button>
-        <div class="toggle-link" onclick="mostrarLogin()">¿Ya sos socio? Iniciá sesión acá</div>
+    <h1>REGISTRO DE SOCIOS</h1>
+    <div class="form-container">
+        <input type="text" id="nombre" placeholder="Nombre Completo">
+        <input type="text" id="dni" placeholder="DNI">
+        <button onclick="registrar()">GENERAR CARNET</button>
     </div>
-
-    <div class="form-container" id="login-box" style="display:none;">
-        <h2>ACCESO SOCIOS</h2>
-        <input type="number" id="loginDni" placeholder="Tu DNI">
-        <input type="password" id="loginPass" placeholder="Tu Contraseña">
-        <button class="btn-accion" onclick="iniciarSesion()">INGRESAR AL PANEL</button>
-        <div class="toggle-link" onclick="mostrarReg()">¿No sos socio? Registrate acá</div>
+    <div id="carnet" class="carnet">
+        <h3>SOCIO CONSTITUCIÓN</h3>
+        <p>NOMBRE: <span id="c-nombre"></span></p>
+        <p>DNI: <span id="c-dni"></span></p>
+        <p>ESTADO: ACTIVO</p>
     </div>
-
     <script>
-        // CONFIGURACIÓN FIREBASE
-        const firebaseConfig = {
-            apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE",
-            authDomain: "csydconstitucion-8b8bb.firebaseapp.com",
-            projectId: "csydconstitucion-8b8bb",
-            storageBucket: "csydconstitucion-8b8bb.firebasestorage.app",
-            messagingSenderId: "363486272350",
-            appId: "1:363486272350:web:e937e924c4371a3db74dcf"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        function mostrarLogin() { document.getElementById('reg-box').style.display = 'none'; document.getElementById('login-box').style.display = 'block'; }
-        function mostrarReg() { document.getElementById('reg-box').style.display = 'block'; document.getElementById('login-box').style.display = 'none'; }
-
-        async function registrarSocio() {
-            const nombre = document.getElementById('regNombre').value;
-            const dni = document.getElementById('regDni').value;
-            const pass = document.getElementById('regPass').value;
-
-            if(!nombre || !dni || !pass) return alert("Completá todos los campos");
-
-            try {
-                // Guardamos en Firebase
-                await db.collection("socios").doc(dni).set({
-                    nombre: nombre,
-                    dni: dni,
-                    pass: pass,
-                    estado: 'deuda',
-                    fechaRegistro: new Date().toLocaleDateString()
-                });
-                alert("¡Registro exitoso! Ya podés iniciar sesión.");
-                mostrarLogin();
-            } catch (e) { alert("Error al registrar: " + e.message); }
-        }
-
-        async function iniciarSesion() {
-            const dni = document.getElementById('loginDni').value;
-            const pass = document.getElementById('loginPass').value;
-
-            const doc = await db.collection("socios").doc(dni).get();
-            if(doc.exists && doc.data().pass === pass) {
-                sessionStorage.setItem('socioLogueado', dni);
-                window.location.href = "SoySocio.html";
-            } else {
-                alert("Datos incorrectos o el socio no existe.");
-            }
+        function registrar() {
+            const nom = document.getElementById('nombre').value;
+            const dni = document.getElementById('dni').value;
+            document.getElementById('c-nombre').innerText = nom;
+            document.getElementById('c-dni').innerText = dni;
+            document.getElementById('carnet').style.display = 'block';
         }
     </script>
 </body>

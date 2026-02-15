@@ -17,25 +17,23 @@
     <div class="card">
         <i class="fas fa-user-shield" style="font-size: 3rem; color: var(--oro);"></i>
         <h2>ALTA DE AUTORIDAD</h2>
-        <label>Llave Maestra</label>
-        <input type="password" id="key" placeholder="Ingresa 'llaveclub'">
-        <label>Usuario Nuevo</label>
-        <input type="text" id="u">
+        <label>Usuario</label>
+        <input type="text" id="user_login">
         <label>Contraseña</label>
-        <input type="password" id="p">
-        <button class="btn" onclick="registrar()">ACTIVAR CUENTA</button>
-        <p><a href="admin_login.html" style="color: #666; font-size: 0.8rem; text-decoration: none;">Volver al Login</a></p>
+        <input type="password" id="pass_login">
+        <button class="btn" onclick="entrar()">ENTRAR AL PANEL</button>
+        <p><a href="admin_registro.html" style="color: #666; font-size: 0.8rem; text-decoration: none;">Crear cuenta nueva</a></p>
     </div>
     <script>
-        function registrar() {
-            const k = document.getElementById('key').value;
-            const u = document.getElementById('u').value;
-            const p = document.getElementById('p').value;
-            if(k !== "llaveclub") return alert("Llave maestra incorrecta");
-            if(!u || p.length < 4) return alert("Datos incompletos");
-            localStorage.setItem('adminConstitucion', JSON.stringify({ usuario: u, clave: btoa(p) }));
-            alert("¡Administrador Creado!");
-            window.location.href = "admin_login.html";
+        function entrar() {
+            const u = document.getElementById('user_login').value;
+            const p = document.getElementById('pass_login').value;
+            const guardado = JSON.parse(localStorage.getItem('adminConstitucion'));
+            if(guardado && guardado.usuario === u && guardado.clave === btoa(p)) {
+                window.location.href = "administrar_club.html";
+            } else {
+                alert("Usuario o Clave incorrectos");
+            }
         }
     </script>
 </body>

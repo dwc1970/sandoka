@@ -19,42 +19,25 @@
         <div style="background: rgba(251,192,45,0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.8rem; border: 1px dashed var(--oro);">
             <i class="fas fa-key"></i> REQUIERE LLAVE MAESTRA
         </div>
-        
         <label>Llave de Seguridad</label>
         <input type="password" id="llave" placeholder="Ingresa llaveclub">
-        
         <label>Nuevo Usuario</label>
         <input type="text" id="u">
-        
         <label>Nueva Contraseña</label>
         <input type="password" id="p">
-        
         <button class="btn" onclick="crearAdmin()">REGISTRAR Y ACTIVAR</button>
         <p style="text-align:center; font-size: 0.8rem; margin-top: 15px;">
             <a href="admin_login.html" style="color: #666; text-decoration: none;">Volver al Login</a>
         </p>
     </div>
-
     <script>
         function crearAdmin() {
             const llave = document.getElementById('llave').value;
             const u = document.getElementById('u').value;
             const p = document.getElementById('p').value;
-
-            if (llave !== "llaveclub") {
-                alert("Llave Maestra Incorrecta");
-                return;
-            }
-            if (u.length < 3 || p.length < 4) {
-                alert("Datos muy cortos");
-                return;
-            }
-
-            localStorage.setItem('adminConstitucion', JSON.stringify({
-                usuario: u,
-                clave: btoa(p)
-            }));
-
+            if (llave !== "llaveclub") return alert("Llave Maestra Incorrecta");
+            if (u.length < 3 || p.length < 4) return alert("Datos muy cortos");
+            localStorage.setItem('adminConstitucion', JSON.stringify({ usuario: u, clave: btoa(p) }));
             alert("¡Administrador Creado con Éxito!");
             window.location.href = "admin_login.html";
         }
