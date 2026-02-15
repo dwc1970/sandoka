@@ -37,6 +37,9 @@
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th { text-align: left; color: var(--oro); padding: 10px; border-bottom: 1px solid var(--borde); }
         td { padding: 10px; border-bottom: 1px solid var(--borde); font-size: 0.9rem; }
+
+        /* Estilo específico para que el input de archivo no se vea mal */
+        .input-file-mini { font-size: 0.7rem; color: var(--texto-gris); margin-top: 5px; background: none; border: none; padding: 5px; }
     </style>
 </head>
 <body>
@@ -75,17 +78,17 @@
                     <div class="preview-box">
                         <img id="img-p" src="perfil.png"><label>Presidente</label>
                         <input type="text" id="nom-p" placeholder="Nombre">
-                        <input type="file" onchange="leerImg(this, 'img-p')" style="font-size:0.7rem">
+                        <input type="file" class="input-file-mini" onchange="leerImg(this, 'img-p')">
                     </div>
                     <div class="preview-box">
                         <img id="img-v" src="perfil.png"><label>Vicepresidente</label>
                         <input type="text" id="nom-v" placeholder="Nombre">
-                        <input type="file" onchange="leerImg(this, 'img-v')" style="font-size:0.7rem">
+                        <input type="file" class="input-file-mini" onchange="leerImg(this, 'img-v')">
                     </div>
                     <div class="preview-box">
                         <img id="img-s" src="perfil.png"><label>Secretario</label>
                         <input type="text" id="nom-s" placeholder="Nombre">
-                        <input type="file" onchange="leerImg(this, 'img-s')" style="font-size:0.7rem">
+                        <input type="file" class="input-file-mini" onchange="leerImg(this, 'img-s')">
                     </div>
                 </div>
             </div>
@@ -103,12 +106,12 @@
                     <div class="preview-box">
                         <img id="logo-local-prev" src="../img/logo.jpg" style="width:70px; height:70px;">
                         <label>Logo Constitución</label>
-                        <input type="file" onchange="leerImg(this, 'logo-local-prev')" style="font-size:0.6rem">
+                        <input type="file" class="input-file-mini" onchange="leerImg(this, 'logo-local-prev')">
                     </div>
                     <div class="preview-box">
                         <img id="logo-rival-prev" src="perfil.png" style="width:70px; height:70px;">
                         <label>Logo Rival</label>
-                        <input type="file" onchange="leerImg(this, 'logo-rival-prev')" style="font-size:0.6rem">
+                        <input type="file" class="input-file-mini" onchange="leerImg(this, 'logo-rival-prev')">
                     </div>
                 </div>
 
@@ -167,7 +170,7 @@
                 containerG.innerHTML += `
                     <div class="gal-card">
                         <img id="g-img-${i}" src="">
-                        <input type="file" onchange="leerImg(this, 'g-img-${i}')" style="font-size:0.6rem">
+                        <input type="file" onchange="leerImg(this, 'g-img-${i}')" style="font-size:0.6rem; border:none; background:none;">
                         <input type="text" id="g-tit-${i}" placeholder="Título">
                         <input type="text" id="g-desc-${i}" placeholder="Desc.">
                     </div>
@@ -205,7 +208,6 @@
                     document.getElementById('lugar').value = p.lugar || "";
                     document.getElementById('fecha').value = p.fecha || "";
                     document.getElementById('hora').value = p.hora || "";
-                    // Cargar imágenes guardadas si existen
                     if(p.logoLocal) document.getElementById('logo-local-prev').src = p.logoLocal;
                     if(p.logoRival) document.getElementById('logo-rival-prev').src = p.logoRival;
                 }
