@@ -99,6 +99,19 @@
         <div id="partido" class="content-view">
             <h1>Ajustes de Liga</h1>
             <div class="card-admin" style="max-width: 500px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div class="preview-box">
+                        <img id="logo-local-prev" src="../img/logo.jpg" style="width:70px; height:70px;">
+                        <label>Logo Constitución</label>
+                        <input type="file" onchange="leerImg(this, 'logo-local-prev')" style="font-size:0.6rem">
+                    </div>
+                    <div class="preview-box">
+                        <img id="logo-rival-prev" src="perfil.png" style="width:70px; height:70px;">
+                        <label>Logo Rival</label>
+                        <input type="file" onchange="leerImg(this, 'logo-rival-prev')" style="font-size:0.6rem">
+                    </div>
+                </div>
+
                 <label>Rival</label><input type="text" id="rival-input">
                 <label>Fecha</label><input type="date" id="fecha">
                 <label>Hora</label><input type="time" id="hora">
@@ -190,6 +203,11 @@
                     document.getElementById('dash-rival').innerText = p.rival || "--";
                     document.getElementById('rival-input').value = p.rival || "";
                     document.getElementById('lugar').value = p.lugar || "";
+                    document.getElementById('fecha').value = p.fecha || "";
+                    document.getElementById('hora').value = p.hora || "";
+                    // Cargar imágenes guardadas si existen
+                    if(p.logoLocal) document.getElementById('logo-local-prev').src = p.logoLocal;
+                    if(p.logoRival) document.getElementById('logo-rival-prev').src = p.logoRival;
                 }
             });
 
@@ -232,7 +250,9 @@
                 rival: document.getElementById('rival-input').value.toUpperCase(),
                 fecha: document.getElementById('fecha').value,
                 hora: document.getElementById('hora').value,
-                lugar: document.getElementById('lugar').value.toUpperCase()
+                lugar: document.getElementById('lugar').value.toUpperCase(),
+                logoLocal: document.getElementById('logo-local-prev').src,
+                logoRival: document.getElementById('logo-rival-prev').src
             });
             alert("✅ Liga Actualizada en Firebase");
         }

@@ -17,7 +17,8 @@
         .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
         .card-proximo { background: var(--negro); color: white; padding: 2rem; border-radius: 20px; text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .vs-box { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 20px 0; }
-        .escudo { width: 80px; height: 80px; background: white; border-radius: 50%; padding: 10px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; }
+        .escudo { width: 80px; height: 80px; background: white; border-radius: 50%; padding: 10px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; overflow: hidden; }
+        .escudo img { width: 100%; height: 100%; object-fit: contain; }
         .info-partido { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .tabla-pos { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; }
@@ -37,10 +38,12 @@
         <div class="card-proximo">
             <span style="color: var(--amarillo); font-weight: bold; letter-spacing: 2px;">PRÓXIMO ENCUENTRO</span>
             <div class="vs-box">
-                <div class="escudo">C.S.D.C</div>
+                <div class="escudo"><img id="logoLocal" src="" alt="C.S.D.C"></div>
                 <div style="font-size: 1.5rem; font-weight: 900;">VS</div>
-                <div class="escudo" id="nombreRival">---</div>
+                <div class="escudo"><img id="logoRival" src="" alt="RIVAL"></div>
             </div>
+            <div id="nombreRival" style="margin-bottom: 15px; font-weight: bold; color: var(--amarillo);">---</div>
+
             <div class="info-partido">
                 <div><i class="far fa-calendar-alt"></i> FECHA: <span id="fecha">--/--</span></div>
                 <div><i class="far fa-clock"></i> HORA: <span id="hora">--:--</span></div>
@@ -80,6 +83,10 @@
                 document.getElementById('fecha').innerText = p.fecha || "--/--";
                 document.getElementById('hora').innerText = (p.hora || "--:--") + " hs";
                 document.getElementById('lugar').innerText = p.lugar || "A CONFIRMAR";
+                
+                // Carga de logos desde la base de datos
+                if(p.logoLocal) document.getElementById('logoLocal').src = p.logoLocal;
+                if(p.logoRival) document.getElementById('logoRival').src = p.logoRival;
             }
         });
     </script>
