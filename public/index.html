@@ -103,13 +103,7 @@
 
         .logo-central { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--amarillo); margin-bottom: 20px; }
 
-        /* Contenedor de Botones */
-        .hero-buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
+        .hero-buttons { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
 
         .btn-main {
             padding: 15px 30px;
@@ -123,17 +117,8 @@
             text-transform: uppercase;
         }
 
-        .btn-socio {
-            background-color: var(--amarillo);
-            color: var(--negro);
-            box-shadow: 0 5px 15px rgba(251, 192, 45, 0.2);
-        }
-
-        .btn-app {
-            background-color: transparent;
-            color: var(--blanco);
-            border: 2px solid var(--amarillo);
-        }
+        .btn-socio { background-color: var(--amarillo); color: var(--negro); box-shadow: 0 5px 15px rgba(251, 192, 45, 0.2); }
+        .btn-app { background-color: transparent; color: var(--blanco); border: 2px solid var(--amarillo); }
 
         .btn-main:hover {
             transform: scale(1.05);
@@ -178,7 +163,7 @@
     </nav>
 
     <div class="marquee-container">
-        <div id="marquesina-dinamica" class="marquee-content">CARGANDO INFORMACIÓN DEL PRÓXIMO PARTIDO...</div>
+        <div id="marquesina-dinamica" class="marquee-content">CARGANDO PRÓXIMA FECHA...</div>
     </div>
 
     <section class="hero">
@@ -201,7 +186,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // Configuración de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE",
             authDomain: "csydconstitucion-8b8bb.firebaseapp.com",
@@ -210,17 +194,17 @@
             messagingSenderId: "363486272350",
             appId: "1:363486272350:web:e937e924c4371a3db74dcf"
         };
+        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
         window.onload = function() {
-            // Mostrar modal tras 1 segundo
             setTimeout(() => {
                 const modal = document.getElementById('modalCuotas');
                 if(modal) modal.classList.add('modal-active');
             }, 1000);
 
-            // Escuchar cambios en el partido desde Firebase
+            // Escuchar cambios en tiempo real desde la carpeta public
             db.collection("config").doc("partido").onSnapshot((doc) => {
                 const marquesinaTexto = document.getElementById('marquesina-dinamica');
                 if (doc.exists) {
