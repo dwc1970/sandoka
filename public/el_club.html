@@ -4,53 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Club | Club Constitución</title>
-    </head>
+</head>
 <body>
+    <div id="historia-texto">Cargando historia...</div>
+    <div id="comision">
+        <div><img id="img-presidente" src="perfil.png"><h4 id="nom-presidente"></h4></div>
+        <div><img id="img-vice" src="perfil.png"><h4 id="nom-vice"></h4></div>
+        <div><img id="img-secretario" src="perfil.png"><h4 id="nom-secretario"></h4></div>
+    </div>
+    <div id="grid-galeria-publico"></div>
+
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE",
-            authDomain: "csydconstitucion-8b8bb.firebaseapp.com",
-            projectId: "csydconstitucion-8b8bb",
-            storageBucket: "csydconstitucion-8b8bb.firebasestorage.app",
-            messagingSenderId: "363486272350",
-            appId: "1:363486272350:web:e937e924c4371a3db74dcf"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE", authDomain: "csydconstitucion-8b8bb.firebaseapp.com", projectId: "csydconstitucion-8b8bb", storageBucket: "csydconstitucion-8b8bb.firebasestorage.app", messagingSenderId: "363486272350", appId: "1:363486272350:web:e937e924c4371a3db74dcf" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-
         db.collection("config").doc("club").onSnapshot((doc) => {
             if (doc.exists) {
                 const data = doc.data();
-                
-                // Historia
-                const h = document.getElementById('historia-texto');
-                if(h) h.innerText = data.historia || "Cargando historia...";
-
-                // Comisión
+                if(document.getElementById('historia-texto')) document.getElementById('historia-texto').innerText = data.historia || "";
                 if(data.imgP) document.getElementById('img-presidente').src = data.imgP;
                 if(data.pNom) document.getElementById('nom-presidente').innerText = data.pNom;
-
                 if(data.imgV) document.getElementById('img-vice').src = data.imgV;
                 if(data.vNom) document.getElementById('nom-vice').innerText = data.vNom;
-
                 if(data.imgS) document.getElementById('img-secretario').src = data.imgS;
                 if(data.sNom) document.getElementById('nom-secretario').innerText = data.sNom;
-
-                // Galería (Reemplaza el contenido del contenedor)
                 const galeriaWrap = document.getElementById('grid-galeria-publico');
                 if(galeriaWrap && data.galeria) {
                     galeriaWrap.innerHTML = "";
                     data.galeria.forEach(foto => {
-                        if(foto.url.length > 50) { // Evita mostrar cuadros vacíos
-                            galeriaWrap.innerHTML += `
-                                <div class="gal-item">
-                                    <img src="${foto.url}">
-                                    <h3>${foto.titulo}</h3>
-                                    <p>${foto.desc}</p>
-                                </div>`;
+                        if(foto.url && foto.url.length > 10) {
+                            galeriaWrap.innerHTML += `<div class="gal-item"><img src="${foto.url}"><h3>${foto.titulo}</h3><p>${foto.desc}</p></div>`;
                         }
                     });
                 }

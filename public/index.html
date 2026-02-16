@@ -6,137 +6,39 @@
     <title>C.S.D. Constitución | Sitio Oficial</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --amarillo: #fbc02d;
-            --negro: #000000;
-            --gris-oscuro: #1a1a1a;
-            --blanco: #ffffff;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--negro);
-            color: var(--blanco);
-        }
-
-        /* Navbar Principal */
-        .navbar {
-            background-color: var(--amarillo);
-            padding: 10px 0;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .navbar a, .dropbtn {
-            color: var(--negro);
-            text-decoration: none;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 0;
-            font-family: inherit;
-        }
-
-        /* Dropdown */
+        :root { --amarillo: #fbc02d; --negro: #000000; --gris-oscuro: #1a1a1a; --blanco: #ffffff; }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--negro); color: var(--blanco); }
+        .navbar { background-color: var(--amarillo); padding: 10px 0; display: flex; justify-content: center; gap: 20px; position: sticky; top: 0; z-index: 1000; }
+        .navbar a, .dropbtn { color: var(--negro); text-decoration: none; font-weight: bold; text-transform: uppercase; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; cursor: pointer; background: none; border: none; padding: 0; font-family: inherit; }
         .dropdown { position: relative; display: inline-block; }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: var(--gris-oscuro);
-            min-width: 180px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
-            z-index: 1;
-            top: 100%;
-            border: 1px solid var(--amarillo);
-        }
+        .dropdown-content { display: none; position: absolute; background-color: var(--gris-oscuro); min-width: 180px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5); z-index: 1; top: 100%; border: 1px solid var(--amarillo); }
         .dropdown-content a { color: var(--amarillo); padding: 12px 16px; text-decoration: none; display: block; text-transform: uppercase; font-size: 0.8rem; }
         .dropdown-content a:hover { background-color: var(--amarillo); color: var(--negro); }
         .dropdown:hover .dropdown-content { display: block; }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 2000; visibility: hidden; opacity: 0; transition: 0.3s;
-        }
-        .modal-content {
-            background: var(--blanco); color: var(--negro);
-            width: 90%; max-width: 450px; padding: 30px; border-radius: 15px;
-            text-align: center; border: 5px solid var(--amarillo);
-            transform: scale(0.7); transition: 0.3s;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: flex; justify-content: center; align-items: center; z-index: 2000; visibility: hidden; opacity: 0; transition: 0.3s; }
+        .modal-content { background: var(--blanco); color: var(--negro); width: 90%; max-width: 450px; padding: 30px; border-radius: 15px; text-align: center; border: 5px solid var(--amarillo); transform: scale(0.7); transition: 0.3s; }
         .modal-active { visibility: visible; opacity: 1; }
         .modal-active .modal-content { transform: scale(1); }
-
-        .btn-cerrar {
-            background: var(--negro); color: var(--blanco);
-            border: 2px solid var(--amarillo); padding: 10px 40px;
-            font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 5px;
-        }
-
-        /* Marquesina */
+        .btn-cerrar { background: var(--negro); color: var(--blanco); border: 2px solid var(--amarillo); padding: 10px 40px; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 5px; }
         .marquee-container { background-color: var(--gris-oscuro); color: var(--amarillo); padding: 12px 0; border-bottom: 2px solid var(--amarillo); overflow: hidden; display: flex; justify-content: center; }
         .marquee-content { display: inline-block; white-space: nowrap; font-weight: 900; text-transform: uppercase; animation: pausaCentroLenta 16s ease-in-out infinite; }
         @keyframes pausaCentroLenta { 0% { transform: translateX(110vw); } 35% { transform: translateX(0); } 65% { transform: translateX(0); } 100% { transform: translateX(-110vw); } }
-
-        /* Hero Section */
-        .hero {
-            height: 80vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80');
-            background-size: cover; background-position: center;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-        }
-
+        .hero { height: 80vh; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80'); background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         .logo-central { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--amarillo); margin-bottom: 20px; }
-
         .hero-buttons { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
-
-        .btn-main {
-            padding: 15px 30px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 900;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-transform: uppercase;
-        }
-
+        .btn-main { padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: 900; transition: 0.3s; display: flex; align-items: center; gap: 10px; text-transform: uppercase; }
         .btn-socio { background-color: var(--amarillo); color: var(--negro); box-shadow: 0 5px 15px rgba(251, 192, 45, 0.2); }
         .btn-app { background-color: transparent; color: var(--blanco); border: 2px solid var(--amarillo); }
-
-        .btn-main:hover {
-            transform: scale(1.05);
-            background-color: var(--blanco);
-            color: var(--negro);
-        }
+        .btn-main:hover { transform: scale(1.05); background-color: var(--blanco); color: var(--negro); }
     </style>
 </head>
 <body>
-
     <div class="modal-overlay" id="modalCuotas">
         <div class="modal-content">
             <img src="logo.jpg" alt="Logo" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--amarillo); margin-bottom: 10px;" onerror="this.src='perfil.png'">
             <h2 style="margin-bottom: 5px;">PONETE AL DÍA</h2>
             <p style="font-style: italic; color: #555; margin-bottom: 20px;">"El club lo hacemos entre todos, tu aporte nos ayuda a seguir creciendo"</p>
-            <div style="background: var(--amarillo); color: black; padding: 15px; border-radius: 10px; font-weight: 900; margin-bottom: 20px; text-transform: uppercase;">
-                TENEMOS UN PLAN DE PAGO A TU MEDIDA
-            </div>
+            <div style="background: var(--amarillo); color: black; padding: 15px; border-radius: 10px; font-weight: 900; margin-bottom: 20px; text-transform: uppercase;">TENEMOS UN PLAN DE PAGO A TU MEDIDA</div>
             <p style="font-size: 0.9rem; margin-bottom: 20px;">Consultas en la secretaría o Gestión de Cobros.</p>
             <button class="btn-cerrar" onclick="cerrarModal()">CERRAR</button>
         </div>
@@ -145,7 +47,6 @@
     <nav class="navbar">
         <a href="index.html"><i class="fas fa-home"></i> INICIO</a>
         <a href="el_club.html"><i class="fas fa-shield-alt"></i> EL CLUB</a>
-        
         <div class="dropdown">
             <button class="dropbtn"><i class="fas fa-list-ul"></i> DIVISIONES <i class="fas fa-caret-down"></i></button>
             <div class="dropdown-content">
@@ -155,7 +56,6 @@
                 <a href="divisiones/fem.html">Canaritas</a>
             </div>
         </div>
-
         <a href="liga.html"><i class="fas fa-futbol"></i> PRÓXIMO PARTIDO</a>
         <a href="SoySocio.html"><i class="fas fa-users"></i> SOCIOS</a>
         <a href="contacto.html"><i class="fas fa-envelope"></i> CONTACTO</a>
@@ -170,55 +70,29 @@
         <img src="logo.jpg" alt="Logo Constitución" class="logo-central" onerror="this.src='perfil.png'">
         <h1>C.S.D. CONSTITUCIÓN</h1>
         <p>El sentimiento que nos une, el orgullo de San Rafael</p>
-        
         <div class="hero-buttons">
-            <a href="SoySocio.html" class="btn-main btn-socio">
-                <i class="fas fa-user-plus"></i> HACETE SOCIO
-            </a>
-            
-            <a href="#" class="btn-main btn-app">
-                <i class="fas fa-mobile-alt"></i> DESCARGÁ NUESTRA APP
-            </a>
+            <a href="SoySocio.html" class="btn-main btn-socio"><i class="fas fa-user-plus"></i> HACETE SOCIO</a>
+            <a href="#" class="btn-main btn-app"><i class="fas fa-mobile-alt"></i> DESCARGÁ NUESTRA APP</a>
         </div>
     </section>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE",
-            authDomain: "csydconstitucion-8b8bb.firebaseapp.com",
-            projectId: "csydconstitucion-8b8bb",
-            storageBucket: "csydconstitucion-8b8bb.firebasestorage.app",
-            messagingSenderId: "363486272350",
-            appId: "1:363486272350:web:e937e924c4371a3db74dcf"
-        };
-        
+        const firebaseConfig = { apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE", authDomain: "csydconstitucion-8b8bb.firebaseapp.com", projectId: "csydconstitucion-8b8bb", storageBucket: "csydconstitucion-8b8bb.firebasestorage.app", messagingSenderId: "363486272350", appId: "1:363486272350:web:e937e924c4371a3db74dcf" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-
         window.onload = function() {
-            setTimeout(() => {
-                const modal = document.getElementById('modalCuotas');
-                if(modal) modal.classList.add('modal-active');
-            }, 1000);
-
-            // Escuchar cambios en tiempo real desde la carpeta public
+            setTimeout(() => { if(document.getElementById('modalCuotas')) document.getElementById('modalCuotas').classList.add('modal-active'); }, 1000);
             db.collection("config").doc("partido").onSnapshot((doc) => {
                 const marquesinaTexto = document.getElementById('marquesina-dinamica');
                 if (doc.exists) {
                     const datos = doc.data();
                     marquesinaTexto.innerHTML = `PRÓXIMA FECHA: CONSTITUCIÓN vs ${datos.rival || 'A CONFIRMAR'} | FECHA: ${datos.fecha || '--/--'} | HORA: ${datos.hora || '--:--'} HS | ESTADIO: ${datos.lugar || 'A CONFIRMAR'}`;
-                } else {
-                    marquesinaTexto.innerHTML = "PRÓXIMO PARTIDO A CONFIRMAR - ¡VAMOS CONSTITUCIÓN!";
-                }
+                } else { marquesinaTexto.innerHTML = "PRÓXIMO PARTIDO A CONFIRMAR - ¡VAMOS CONSTITUCIÓN!"; }
             });
         };
-
-        function cerrarModal() {
-            document.getElementById('modalCuotas').classList.remove('modal-active');
-        }
+        function cerrarModal() { document.getElementById('modalCuotas').classList.remove('modal-active'); }
     </script>
 </body>
 </html>
