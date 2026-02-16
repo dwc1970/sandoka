@@ -129,7 +129,6 @@
             box-shadow: 0 5px 15px rgba(251, 192, 45, 0.2);
         }
 
-        /* NUEVO BOTÓN APP */
         .btn-app {
             background-color: transparent;
             color: var(--blanco);
@@ -147,7 +146,7 @@
 
     <div class="modal-overlay" id="modalCuotas">
         <div class="modal-content">
-            <img src="logo.jpg" alt="Logo" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--amarillo); margin-bottom: 10px;" onerror="this.src='https://via.placeholder.com/80'">
+            <img src="logo.jpg" alt="Logo" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--amarillo); margin-bottom: 10px;" onerror="this.src='perfil.png'">
             <h2 style="margin-bottom: 5px;">PONETE AL DÍA</h2>
             <p style="font-style: italic; color: #555; margin-bottom: 20px;">"El club lo hacemos entre todos, tu aporte nos ayuda a seguir creciendo"</p>
             <div style="background: var(--amarillo); color: black; padding: 15px; border-radius: 10px; font-weight: 900; margin-bottom: 20px; text-transform: uppercase;">
@@ -158,34 +157,32 @@
         </div>
     </div>
 
-   <nav class="navbar">
-    <a href="index.html"><i class="fas fa-home"></i> INICIO</a>
-    <a href="el_club.html"><i class="fas fa-shield-alt"></i> EL CLUB</a>
-    
-    <div class="dropdown">
-        <button class="dropbtn"><i class="fas fa-list-ul"></i> DIVISIONES <i class="fas fa-caret-down"></i></button>
-        <div class="dropdown-content">
-            <a href="divisiones/primera.html">Primera División</a>
-            <a href="divisiones/reserva.html">Reserva</a> 
-            <a href="divisiones/inferiores.html">Inferiores</a>
-            <a href="divisiones/fem.html">Canaritas</a>
+    <nav class="navbar">
+        <a href="index.html"><i class="fas fa-home"></i> INICIO</a>
+        <a href="el_club.html"><i class="fas fa-shield-alt"></i> EL CLUB</a>
+        
+        <div class="dropdown">
+            <button class="dropbtn"><i class="fas fa-list-ul"></i> DIVISIONES <i class="fas fa-caret-down"></i></button>
+            <div class="dropdown-content">
+                <a href="divisiones/primera.html">Primera División</a>
+                <a href="divisiones/reserva.html">Reserva</a> 
+                <a href="divisiones/inferiores.html">Inferiores</a>
+                <a href="divisiones/fem.html">Canaritas</a>
+            </div>
         </div>
-    </div>
 
-    <a href="liga.html"><i class="fas fa-futbol"></i> PRÓXIMO PARTIDO</a>
-    
-    <a href="SoySocio.html"><i class="fas fa-users"></i> SOCIOS</a>
-    <a href="contacto.html"><i class="fas fa-envelope"></i> CONTACTO</a>
-    
-    <a href="ad_master/admin_login.html"><i class="fas fa-user-cog"></i> ADMIN</a>
-</nav>
+        <a href="liga.html"><i class="fas fa-futbol"></i> PRÓXIMO PARTIDO</a>
+        <a href="SoySocio.html"><i class="fas fa-users"></i> SOCIOS</a>
+        <a href="contacto.html"><i class="fas fa-envelope"></i> CONTACTO</a>
+        <a href="ad_master/admin_login.html"><i class="fas fa-user-cog"></i> ADMIN</a>
+    </nav>
 
     <div class="marquee-container">
-        <div id="marquesina-dinamica" class="marquee-content">CARGANDO PRÓXIMA FECHA...</div>
+        <div id="marquesina-dinamica" class="marquee-content">CARGANDO INFORMACIÓN DEL PRÓXIMO PARTIDO...</div>
     </div>
 
     <section class="hero">
-        <img src="logo.jpg" alt="Logo Constitución" class="logo-central" onerror="this.src='https://via.placeholder.com/150'">
+        <img src="logo.jpg" alt="Logo Constitución" class="logo-central" onerror="this.src='perfil.png'">
         <h1>C.S.D. CONSTITUCIÓN</h1>
         <p>El sentimiento que nos une, el orgullo de San Rafael</p>
         
@@ -200,27 +197,43 @@
         </div>
     </section>
 
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE",
+            authDomain: "csydconstitucion-8b8bb.firebaseapp.com",
+            projectId: "csydconstitucion-8b8bb",
+            storageBucket: "csydconstitucion-8b8bb.firebasestorage.app",
+            messagingSenderId: "363486272350",
+            appId: "1:363486272350:web:e937e924c4371a3db74dcf"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         window.onload = function() {
+            // Mostrar modal tras 1 segundo
             setTimeout(() => {
-                document.getElementById('modalCuotas').classList.add('modal-active');
+                const modal = document.getElementById('modalCuotas');
+                if(modal) modal.classList.add('modal-active');
             }, 1000);
-            actualizarMarquesina();
+
+            // Escuchar cambios en el partido desde Firebase
+            db.collection("config").doc("partido").onSnapshot((doc) => {
+                const marquesinaTexto = document.getElementById('marquesina-dinamica');
+                if (doc.exists) {
+                    const datos = doc.data();
+                    marquesinaTexto.innerHTML = `PRÓXIMA FECHA: CONSTITUCIÓN vs ${datos.rival || 'A CONFIRMAR'} | FECHA: ${datos.fecha || '--/--'} | HORA: ${datos.hora || '--:--'} HS | ESTADIO: ${datos.lugar || 'A CONFIRMAR'}`;
+                } else {
+                    marquesinaTexto.innerHTML = "PRÓXIMO PARTIDO A CONFIRMAR - ¡VAMOS CONSTITUCIÓN!";
+                }
+            });
         };
 
         function cerrarModal() {
             document.getElementById('modalCuotas').classList.remove('modal-active');
-        }
-
-        function actualizarMarquesina() {
-            const partidoGuardado = localStorage.getItem('proximoPartido');
-            const marquesinaTexto = document.getElementById('marquesina-dinamica');
-            if (partidoGuardado) {
-                try {
-                    const datos = JSON.parse(partidoGuardado);
-                    marquesinaTexto.innerHTML = `PRÓXIMA FECHA: CONSTITUCIÓN vs ${datos.rival || 'TBD'} | FECHA: ${datos.fecha || 'TBD'} | HORA: ${datos.hora || '--:--'} HS | ESTADIO: ${datos.lugar || 'A CONFIRMAR'}`;
-                } catch (e) { marquesinaTexto.innerHTML = "PRÓXIMO PARTIDO A CONFIRMAR - ¡VAMOS CONSTITUCIÓN!"; }
-            } else { marquesinaTexto.innerHTML = "PRÓXIMO PARTIDO A CONFIRMAR - ¡VAMOS CONSTITUCIÓN!"; }
         }
     </script>
 </body>
