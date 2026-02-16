@@ -20,10 +20,10 @@
         .carnet { background: var(--negro); color: white; border-radius: 20px; overflow: hidden; position: relative; box-shadow: 0 15px 30px rgba(0,0,0,0.3); display: flex; flex-wrap: wrap; border: 3px solid var(--amarillo); }
         .carnet-header { background: var(--amarillo); width: 100%; padding: 15px; color: var(--negro); text-align: center; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
         .carnet-foto { flex: 1; min-width: 200px; padding: 30px; text-align: center; background: rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
-        .foto-usuario { width: 150px; height: 180px; background: #333; border-radius: 15px; border: 3px solid var(--amarillo); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .foto-usuario { width: 150px; height: 180px; background: #333; border-radius: 15px; border: 3px solid var(--amarillo); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         .foto-usuario img { width: 100%; height: 100%; object-fit: cover; }
         .foto-usuario i { font-size: 4rem; color: var(--amarillo); }
-        .btn-subir { margin-top: 10px; font-size: 0.8rem; color: var(--amarillo); cursor: pointer; text-decoration: underline; }
+        .btn-subir { margin-top: 10px; font-size: 0.8rem; color: var(--amarillo); cursor: pointer; text-decoration: underline; font-weight: bold; }
         
         .status-badge { background: var(--verde); color: white; padding: 5px 15px; border-radius: 50px; font-size: 0.9rem; font-weight: bold; display: inline-block; margin-top: 15px; }
         .status-badge.deuda { background: var(--rojo); }
@@ -60,11 +60,11 @@
         <div class="carnet" id="areaCarnet">
             <div class="carnet-header">Socio Oficial - C.S.D. Constitución</div>
             <div class="carnet-foto">
-                <div class="foto-usuario">
+                <div class="foto-usuario" id="contenedorFoto">
                     <i class="fas fa-user" id="iconoDefecto"></i>
-                    <img src="perfil.png" id="fotoPerfil" style="display:none;">
+                    <img id="fotoPerfil" style="display:none;">
                 </div>
-                <label for="inputFoto" class="btn-subir">Subir Foto de Perfil</label>
+                <label for="inputFoto" class="btn-subir">Cambiar Foto</label>
                 <input type="file" id="inputFoto" accept="image/*" onchange="subirFoto(event)">
                 <div id="badgeEstado" class="status-badge">AL DÍA</div>
             </div>
@@ -91,11 +91,11 @@
 
         function cargarSocio() {
             if (!dniLogueado) { 
-                window.location.href = "socios.html"; // O el nombre de tu archivo de login de socios
+                window.location.href = "socios.html"; 
                 return; 
             }
             
-            // CORRECCIÓN: Buscamos dentro de la lista única de socios del club
+            // Buscamos al socio en la lista de localStorage
             const listaSocios = JSON.parse(localStorage.getItem('listaSocios')) || [];
             const socio = listaSocios.find(s => s.dni === dniLogueado);
             
@@ -105,13 +105,17 @@
                 document.getElementById('nroSocio').innerText = socio.nroSocio || "---";
                 document.getElementById('categoriaSocio').innerText = socio.categoria || "Activo";
 
+                // Si tiene foto guardada, la cargamos
                 if (socio.foto) {
-                    mostrarFotoEnPantalla(socio.foto);
+                    const img = document.getElementById('fotoPerfil');
+                    img.src = socio.foto;
+                    img.style.display = "block";
+                    document.getElementById('iconoDefecto').style.display = "none";
                 }
 
-                // Sincronización con el estado que pone el Administrador
+                // Estado de deuda
                 const badge = document.getElementById('badgeEstado');
-                if (socio.estado === "deudor") {
+                if (socio.estado === "deuda" || socio.estado === "deudor") {
                     document.getElementById('alarmaDeuda').style.display = "block";
                     badge.innerText = "DEBE CUOTA";
                     badge.classList.add('deuda');
@@ -121,7 +125,7 @@
                     badge.classList.remove('deuda');
                 }
             } else {
-                alert("No se encontraron datos de socio. Por favor, regístrese.");
+                alert("Sesión inválida.");
                 cerrarSesion();
             }
         }
@@ -138,37 +142,38 @@
                 imgRaiz.onload = function() {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
+                    
+                    // Tamaño carnet
                     canvas.width = 300; 
                     canvas.height = 400;
                     ctx.drawImage(imgRaiz, 0, 0, 300, 400);
                     
-                    const fotoComprimida = canvas.toDataURL('image/jpeg', 0.7);
+                    // Convertir a Base64 comprimido
+                    const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
 
-                    // Guardar en la lista general para que el Admin también la vea
+                    // Actualizar en el array general de socios
                     let lista = JSON.parse(localStorage.getItem('listaSocios')) || [];
-                    let idx = lista.findIndex(s => s.dni === dniLogueado);
-                    
-                    if (idx !== -1) {
-                        lista[idx].foto = fotoComprimida;
+                    const index = lista.findIndex(s => s.dni === dniLogueado);
+
+                    if (index !== -1) {
+                        lista[index].foto = fotoBase64;
                         localStorage.setItem('listaSocios', JSON.stringify(lista));
-                        mostrarFotoEnPantalla(fotoComprimida);
-                        alert("✅ ¡Foto de perfil actualizada!");
+                        
+                        // Actualizar la vista inmediatamente
+                        const img = document.getElementById('fotoPerfil');
+                        img.src = fotoBase64;
+                        img.style.display = "block";
+                        document.getElementById('iconoDefecto').style.display = "none";
+                        
+                        alert("¡Foto actualizada correctamente!");
                     }
                 };
             };
             lector.readAsDataURL(archivo);
         }
 
-        function mostrarFotoEnPantalla(src) {
-            const img = document.getElementById('fotoPerfil');
-            img.src = src;
-            img.style.display = "block";
-            document.getElementById('iconoDefecto').style.display = "none";
-        }
-
         function descargarCarnet() {
             const area = document.getElementById('areaCarnet');
-            // Agregamos un pequeño delay para asegurar que la imagen esté renderizada
             html2canvas(area, { 
                 scale: 2, 
                 backgroundColor: "#1a1d23",
@@ -183,9 +188,10 @@
 
         function cerrarSesion() {
             sessionStorage.removeItem('socioLogueado');
-            window.location.href = "index.html";
+            window.location.href = "socios.html";
         }
 
+        // Ejecutar al cargar la página
         window.onload = cargarSocio;
     </script>
 </body>

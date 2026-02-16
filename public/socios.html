@@ -24,7 +24,7 @@
             overflow-x: hidden;
         }
 
-        /* --- NAVBAR PROFESIONAL (Basada en tu imagen) --- */
+        /* --- NAVBAR PROFESIONAL --- */
         header { 
             background: var(--amarillo); 
             height: 65px;
@@ -246,6 +246,10 @@
                         <label>Clave de Acceso</label>
                         <input type="password" id="regPass" placeholder="Crea tu contraseña">
                     </div>
+                    <div class="input-box">
+                        <label>Confirmar Clave</label>
+                        <input type="password" id="regPassConfirm" placeholder="Repite tu contraseña">
+                    </div>
                     <button class="btn-premium" onclick="registrarSocio()">Confirmar Socio</button>
                     <div class="form-footer">¿Ya tienes cuenta? <b onclick="toggleView(true)">Inicia Sesión</b></div>
                 </div>
@@ -255,7 +259,7 @@
     </div>
 
     <script>
-        // Cambia entre Login y Registro con transición de ancho
+        // Cambia entre Login y Registro
         function toggleView(isLogin) {
             const body = document.getElementById('mainBody');
             const loginF = document.getElementById('loginForm');
@@ -275,28 +279,53 @@
             }
         }
 
-        // --- LÓGICA DE NEGOCIO ---
+        // --- LÓGICA DE REGISTRO CON VALIDACIÓN ---
         function registrarSocio() {
-            const nombre = document.getElementById('regNombre').value;
-            const dni = document.getElementById('regDni').value;
+            const nombre = document.getElementById('regNombre').value.trim();
+            const dni = document.getElementById('regDni').value.trim();
             const pass = document.getElementById('regPass').value;
+            const passConfirm = document.getElementById('regPassConfirm').value;
 
-            if(!nombre || !dni || !pass) { alert("Completa los datos"); return; }
+            // 1. Validar campos vacíos
+            if(!nombre || !dni || !pass || !passConfirm) { 
+                alert("Por favor, completa todos los campos."); 
+                return; 
+            }
 
+            // 2. Validar que las contraseñas coincidan
+            if(pass !== passConfirm) {
+                alert("Las contraseñas no coinciden. Inténtalo de nuevo.");
+                document.getElementById('regPassConfirm').focus();
+                return;
+            }
+
+            // 3. Lógica de almacenamiento
             let lista = JSON.parse(localStorage.getItem('listaSocios')) || [];
-            if (lista.some(s => s.dni === dni)) { alert("DNI ya registrado"); return; }
+            
+            if (lista.some(s => s.dni === dni)) { 
+                alert("Este DNI ya se encuentra registrado como socio."); 
+                return; 
+            }
 
-            const nuevoSocio = { nombre, dni, pass, nroSocio: (lista.length + 1).toString().padStart(5, '0'), estado: 'deuda' };
+            const nuevoSocio = { 
+                nombre, 
+                dni, 
+                pass, 
+                nroSocio: (lista.length + 1).toString().padStart(5, '0'), 
+                estado: 'deuda' 
+            };
+
             lista.push(nuevoSocio);
             localStorage.setItem('listaSocios', JSON.stringify(lista));
             localStorage.setItem(dni, JSON.stringify(nuevoSocio));
 
-            alert("¡Bienvenido al Club! Ya puedes ingresar.");
-            toggleView(true);
+            alert("¡Bienvenido al Club Constitución! Tu cuenta ha sido creada con éxito.");
+            toggleView(true); // Volver al login
         }
 
+        // --- LÓGICA DE LOGIN ---
         function iniciarSesion() {
-            const dni = document.getElementById('loginDni').value;
+            const dni = document.getElementById('loginDni').value.trim();
             const pass = document.getElementById('loginPass').value;
             const datos = JSON.parse(localStorage.getItem(dni));
 
@@ -304,7 +333,7 @@
                 sessionStorage.setItem('socioLogueado', dni);
                 window.location.href = "soysocio.html";
             } else {
-                alert("Datos incorrectos");
+                alert("DNI o contraseña incorrectos.");
             }
         }
     </script>

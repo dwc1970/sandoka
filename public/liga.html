@@ -4,8 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liga y Posiciones | Club Constitución</title>
-    </head>
+    <style>
+        :root {
+            --amarillo: #ffcc00;
+            --negro: #1a1a1a;
+            --blanco: #ffffff;
+            --gris: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--gris);
+            color: var(--negro);
+        }
+
+        header {
+            background-color: var(--negro);
+            color: var(--amarillo);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--amarillo);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+
+        /* Card del Próximo Partido */
+        .card {
+            background: var(--blanco);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .match-display {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .team img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .vs {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--amarillo);
+            background: var(--negro);
+            padding: 10px 15px;
+            border-radius: 50%;
+        }
+
+        .info-partido {
+            font-size: 1.1em;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        /* Tabla de Posiciones */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--blanco);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background-color: var(--negro);
+            color: var(--amarillo);
+            padding: 15px;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .pos-top { font-weight: bold; color: #2ecc71; }
+    </style>
+</head>
 <body>
+
+    <header>
+        <h1>LIGA Y POSICIONES</h1>
+        <p>Club Social y Deportivo Constitución</p>
+    </header>
+
+            
+        <div class="card">
+            <h3>PRÓXIMO ENCUENTRO</h3>
+            <div class="match-display">
+                <div class="team">
+                    <img id="logoLocal" src="img/escudo-constitucion.png" alt="Constitución">
+                    <p>Constitución</p>
+                </div>
+                <div class="vs">VS</div>
+                <div class="team">
+                    <img id="logoRival" src="img/placeholder-rival.png" alt="Rival">
+                    <p id="nombreRival">Cargando...</p>
+                </div>
+            </div>
+            <div class="info-partido">
+                <p><strong>Fecha:</strong> <span id="fecha">--/--</span></p>
+                <p><strong>Hora:</strong> <span id="hora">--:--</span></p>
+                <p><strong>Cancha:</strong> <span id="lugar">---</span></p>
+            </div>
+        </div>
+
+       
+
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
@@ -18,19 +138,18 @@
             messagingSenderId: "363486272350",
             appId: "1:363486272350:web:e937e924c4371a3db74dcf"
         };
+        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Escucha del Próximo Partido
+        // Lógica de actualización en tiempo real
         db.collection("config").doc("partido").onSnapshot((doc) => {
             if (doc.exists) {
                 const p = doc.data();
-                document.getElementById('nombreRival').innerText = p.rival || "---";
-                
-                // Formato de fecha lindo (opcional)
-                document.getElementById('fecha').innerText = p.fecha || "--/--";
-                document.getElementById('hora').innerText = (p.hora || "--:--") + " HS";
-                document.getElementById('lugar').innerText = p.lugar || "A CONFIRMAR";
+                document.getElementById('nombreRival').textContent = p.rival || "Rival";
+                document.getElementById('fecha').textContent = p.fecha || "--/--";
+                document.getElementById('hora').textContent = (p.hora || "--:--") + " HS";
+                document.getElementById('lugar').textContent = p.lugar || "A confirmar";
                 
                 if(p.logoLocal) document.getElementById('logoLocal').src = p.logoLocal;
                 if(p.logoRival) document.getElementById('logoRival').src = p.logoRival;
