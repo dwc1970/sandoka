@@ -3,249 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Socios - C.S.D. Constitución</title>
+    <title>Socios - Club Constitución</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root { 
             --amarillo: #fbc02d; 
-            --amarillo-brillante: #ffeb3b;
-            --negro: #1a1d23; 
-            --gris: #f4f4f4; 
+            --amarillo-brillante: #fff176;
+            --negro-puro: #0a0a0a;
+            --negro-card: #141414;
             --blanco: #ffffff; 
+            --transparente: rgba(255, 255, 255, 0.05);
         }
         
         body { 
             margin: 0; 
-            font-family: 'Segoe UI', sans-serif; 
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('img/cancha.jfif'); 
-            background-size: cover;
-            background-attachment: fixed;
-            color: var(--negro); 
+            font-family: 'Inter', sans-serif; 
+            background: var(--negro-puro);
+            color: var(--blanco);
+            overflow-x: hidden;
         }
 
-        /* NAVBAR */
+        /* --- NAVBAR PROFESIONAL (Basada en tu imagen) --- */
         header { 
             background: var(--amarillo); 
-            padding: 15px 0; 
-            text-align: center; 
-            border-bottom: 4px solid var(--negro);
-            position: sticky; top: 0; z-index: 1000;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        
-        nav { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+        nav { display: flex; gap: 30px; }
         nav a { 
-            text-decoration: none; color: var(--negro); font-weight: 800; 
-            text-transform: uppercase; font-size: 0.85rem; padding: 10px 22px;
-            border-radius: 50px; transition: 0.3s;
+            text-decoration: none; 
+            color: #000; 
+            font-weight: 800; 
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
         }
-        nav a:hover { background: var(--negro); color: var(--amarillo); }
+        nav a:hover { opacity: 0.6; }
+        .admin-btn { background: rgba(0,0,0,0.1); padding: 8px 15px; border-radius: 5px; }
 
-        /* CONTENEDOR PRINCIPAL */
-        .auth-container {
-            max-width: 450px;
-            margin: 50px auto;
-            background: var(--blanco);
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            text-align: center;
+        /* --- CONTENEDOR DE IMPACTO --- */
+        .hero-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 65px);
+            padding: 40px 20px;
+            background: radial-gradient(circle at top right, #222, #0a0a0a);
         }
 
-        .logo-socio {
-            width: 100px; height: 100px; border-radius: 50%;
-            border: 4px solid var(--amarillo); margin-bottom: 20px;
+        .main-card {
+            display: flex;
+            width: 1100px;
+            background: var(--negro-card);
+            border-radius: 40px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        h2 { text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px; }
+        /* --- LADO IZQUIERDO: JUGADOR Y TEXTO --- */
+        .player-side {
+            flex: 1.3;
+            position: relative;
+            background: #000;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-height: 650px;
+        }
 
-        /* FORMULARIOS */
-        .form-group { text-align: left; margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
+        .player-img {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+            mask-image: linear-gradient(to top, black 40%, transparent 100%);
+        }
+
+        .content-overlay { position: relative; z-index: 2; }
         
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 50px; 
-            border: 2px solid #ddd;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        input:focus { border-color: var(--amarillo); }
-
-        .btn-auth {
-            width: 100%;
-            padding: 15px;
-            background: var(--amarillo);
-            border: none;
-            border-radius: 50px;
-            font-weight: 900;
+        .content-overlay h2 { 
+            font-family: 'Big Shoulders Display', sans-serif; 
+            font-size: 5rem; 
+            line-height: 0.8; 
+            margin: 0; 
+            color: var(--amarillo);
             text-transform: uppercase;
-            cursor: pointer;
-            margin-top: 20px;
+        }
+
+        .content-overlay h3 { font-size: 1.5rem; font-weight: 400; margin: 10px 0 30px; letter-spacing: 5px; text-transform: uppercase; }
+
+        .benefit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .benefit-item { 
+            background: var(--transparente); 
+            padding: 15px; 
+            border-radius: 15px; 
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .benefit-item i { color: var(--amarillo); margin-bottom: 10px; display: block; }
+        .benefit-item span { font-size: 0.85rem; font-weight: 600; line-height: 1.2; display: block; }
+
+        /* --- LADO DERECHO: FORMULARIO --- */
+        .form-side {
+            flex: 1;
+            padding: 60px;
+            background: var(--blanco);
+            color: var(--negro-puro);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header { text-align: center; margin-bottom: 40px; }
+        .form-header img { width: 80px; margin-bottom: 20px; }
+        .form-header h4 { margin: 0; font-size: 1.8rem; font-weight: 800; text-transform: uppercase; }
+
+        .input-box { margin-bottom: 20px; position: relative; }
+        .input-box label { display: block; font-size: 10px; font-weight: 800; text-transform: uppercase; color: #999; margin-bottom: 8px; margin-left: 5px; }
+        .input-box input {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 15px;
+            border: 2px solid #eee;
+            background: #fdfdfd;
+            font-size: 1rem;
+            box-sizing: border-box;
             transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(251, 192, 45, 0.3);
+        }
+        .input-box input:focus { border-color: var(--amarillo); outline: none; background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        .btn-premium {
+            width: 100%;
+            padding: 20px;
+            background: var(--negro-puro);
+            color: var(--amarillo);
+            border: none;
+            border-radius: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
         }
 
-        .btn-auth:hover { background: var(--negro); color: var(--amarillo); transform: translateY(-3px); }
+        .btn-premium:hover { background: var(--amarillo); color: var(--negro-puro); transform: scale(1.02); }
 
-        .toggle-link {
-            margin-top: 20px;
-            display: block;
-            color: #666;
-            text-decoration: none;
-            font-size: 0.9rem;
+        .form-footer { text-align: center; margin-top: 30px; font-size: 0.9rem; color: #666; }
+        .form-footer b { color: var(--negro-puro); cursor: pointer; border-bottom: 2px solid var(--amarillo); }
+
+        /* --- ESTADOS DINÁMICOS --- */
+        .hidden { display: none !important; }
+        .mode-login .player-side { display: none; }
+        .mode-login .main-card { width: 480px; }
+
+        @media (max-width: 900px) {
+            .main-card { flex-direction: column; width: 100% !important; border-radius: 20px; }
+            .player-side { min-height: 400px; padding: 30px; }
+            .player-side h2 { font-size: 3rem; }
         }
-
-        .toggle-link b { color: var(--negro); border-bottom: 2px solid var(--amarillo); }
-
-        .hidden { display: none; }
     </style>
 </head>
-<body>
+<body class="mode-login" id="mainBody">
 
     <header>
         <nav>
-            <a href="index.html">Inicio</a>
-            <a href="el_club.html">El Club</a>
-            <a href="liga/liga.html"><i class="fas fa-futbol"></i> Próximo Partido</a>
-            <a href="socios.html">Socios</a>
-            <a href="contacto.html">Contacto</a>
+            <a href="index.html"><i class="fas fa-home"></i> INICIO</a>
+            <a href="el_club.html"><i class="fas fa-shield-alt"></i> EL CLUB</a>
+            <a href="#"><i class="fas fa-list"></i> DIVISIONES <i class="fas fa-caret-down"></i></a>
+            <a href="liga.html"><i class="fas fa-futbol"></i> PRÓXIMO PARTIDO</a>
+            <a href="socios.html"><i class="fas fa-users"></i> SOCIOS</a>
+            <a href="contacto.html"><i class="fas fa-envelope"></i> CONTACTO</a>
+            <a href="admin.html" class="admin-btn"><i class="fas fa-user-cog"></i> ADMIN</a>
         </nav>
     </header>
 
-    <div class="auth-container">
-        <img src="img/logo.jpg" alt="Logo Club" class="logo-socio">
+    <div class="hero-section">
+        <div class="main-card">
+            
+            <div class="player-side" id="playerSide">
+                <img src="jugador1.png" class="player-img" alt="Jugador" onerror="this.style.opacity='0.2'">
+                <div class="content-overlay">
+                    <h2>CONSTITUCIÓN</h2>
+                    <h3>TE QUIERE SOCIO</h3>
+                    <div class="benefit-grid">
+                        <div class="benefit-item">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span>ENTRADAS<br>PREFERENCIALES</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>DESCUENTOS EN<br>EL CANARIO SHOP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div id="loginForm">
-            <h2>Ingreso Socios</h2>
-            <div class="form-group">
-                <label>DNI (Usuario)</label>
-                <input type="text" id="loginDni" placeholder="Tu DNI">
-            </div>
-            <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" id="loginPass" placeholder="********">
-            </div>
-            <button class="btn-auth" onclick="iniciarSesion()">Ingresar</button>
-            <a href="#" class="toggle-link" onclick="mostrarRegistro()">¿No tenés cuenta? <b>Registrate acá</b></a>
-        </div>
+            <div class="form-side">
+                <div class="form-header">
+                    <img src="img/logo.jpg" alt="Logo">
+                    <h4 id="formTitle">Bienvenido</h4>
+                </div>
 
-        <div id="registroForm" class="hidden">
-            <h2>Registro de Socio</h2>
-            <div class="form-group">
-                <label>Nombre y Apellido</label>
-                <input type="text" id="regNombre" placeholder="Juan Pérez">
+                <div id="loginForm">
+                    <div class="input-box">
+                        <label>DNI de Socio</label>
+                        <input type="text" id="loginDni" placeholder="Tu documento">
+                    </div>
+                    <div class="input-box">
+                        <label>Contraseña</label>
+                        <input type="password" id="loginPass" placeholder="••••••••">
+                    </div>
+                    <button class="btn-premium" onclick="iniciarSesion()">Acceder al Portal</button>
+                    <div class="form-footer">¿Aún no eres parte? <b onclick="toggleView(false)">Registrate ahora</b></div>
+                </div>
+
+                <div id="registroForm" class="hidden">
+                    <div class="input-box">
+                        <label>Nombre y Apellido</label>
+                        <input type="text" id="regNombre" placeholder="Ej: Juan Pérez">
+                    </div>
+                    <div class="input-box">
+                        <label>DNI (Usuario)</label>
+                        <input type="text" id="regDni" placeholder="12345678">
+                    </div>
+                    <div class="input-box">
+                        <label>Clave de Acceso</label>
+                        <input type="password" id="regPass" placeholder="Crea tu contraseña">
+                    </div>
+                    <button class="btn-premium" onclick="registrarSocio()">Confirmar Socio</button>
+                    <div class="form-footer">¿Ya tienes cuenta? <b onclick="toggleView(true)">Inicia Sesión</b></div>
+                </div>
+
             </div>
-            <div class="form-group">
-                <label>DNI (Será tu usuario)</label>
-                <input type="text" id="regDni" placeholder="Ej: 12345678">
-            </div>
-            <div class="form-group">
-                <label>Dirección</label>
-                <input type="text" id="regDir" placeholder="Tu calle y nro">
-            </div>
-            <div class="form-group">
-                <label>Teléfono</label>
-                <input type="text" id="regTel" placeholder="2604-000000">
-            </div>
-            <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" id="regPass" placeholder="********">
-            </div>
-            <div class="form-group">
-                <label>Validar Contraseña</label>
-                <input type="password" id="regPassConfirm" placeholder="********">
-            </div>
-            <button class="btn-auth" onclick="registrarSocio()">Registrarse</button>
-            <a href="#" class="toggle-link" onclick="mostrarLogin()">¿Ya sos socio? <b>Iniciá Sesión</b></a>
         </div>
     </div>
 
     <script>
-        function mostrarRegistro() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('registroForm').classList.remove('hidden');
+        // Cambia entre Login y Registro con transición de ancho
+        function toggleView(isLogin) {
+            const body = document.getElementById('mainBody');
+            const loginF = document.getElementById('loginForm');
+            const registroF = document.getElementById('registroForm');
+            const title = document.getElementById('formTitle');
+
+            if(isLogin) {
+                body.classList.add('mode-login');
+                loginF.classList.remove('hidden');
+                registroF.classList.add('hidden');
+                title.innerText = "Bienvenido";
+            } else {
+                body.classList.remove('mode-login');
+                loginF.classList.add('hidden');
+                registroF.classList.remove('hidden');
+                title.innerText = "Nuevo Socio";
+            }
         }
 
-        function mostrarLogin() {
-            document.getElementById('registroForm').classList.add('hidden');
-            document.getElementById('loginForm').classList.remove('hidden');
-        }
-
+        // --- LÓGICA DE NEGOCIO ---
         function registrarSocio() {
             const nombre = document.getElementById('regNombre').value;
             const dni = document.getElementById('regDni').value;
-            const dir = document.getElementById('regDir').value;
-            const tel = document.getElementById('regTel').value;
             const pass = document.getElementById('regPass').value;
-            const passConfirm = document.getElementById('regPassConfirm').value;
 
-            if(!nombre || !dni || !pass) {
-                alert("Por favor completá los campos obligatorios");
-                return;
-            }
+            if(!nombre || !dni || !pass) { alert("Completa los datos"); return; }
 
-            if(pass !== passConfirm) {
-                alert("Las contraseñas no coinciden");
-                return;
-            }
+            let lista = JSON.parse(localStorage.getItem('listaSocios')) || [];
+            if (lista.some(s => s.dni === dni)) { alert("DNI ya registrado"); return; }
 
-            // 1. OBTENER LISTA CENTRAL PARA EL ADMIN
-            let listaCentral = JSON.parse(localStorage.getItem('listaSocios')) || [];
-
-            // Verificar si el DNI ya existe en la lista
-            if (listaCentral.some(s => s.dni === dni)) {
-                alert("Este DNI ya está registrado.");
-                return;
-            }
-
-            // 2. LÓGICA DE NÚMERO DE SOCIO
-            let ultimoNumero = localStorage.getItem('ultimoNumeroSocio') || 0;
-            let nuevoNumero = parseInt(ultimoNumero) + 1;
-            localStorage.setItem('ultimoNumeroSocio', nuevoNumero);
-            const nroSocioFormateado = nuevoNumero.toString().padStart(5, '0');
-
-            // 3. CREAR OBJETO SOCIO (Compatible con el Dashboard)
-            const nuevoSocio = { 
-                nombre: nombre, 
-                dni: dni, 
-                dir: dir, 
-                tel: tel, 
-                pass: pass, 
-                nroSocio: nroSocioFormateado,
-                estado: 'deuda', // Estado inicial
-                categoria: 'Activo'
-            };
-            
-            // 4. GUARDADO DOBLE
-            // Guardado para login individual
+            const nuevoSocio = { nombre, dni, pass, nroSocio: (lista.length + 1).toString().padStart(5, '0'), estado: 'deuda' };
+            lista.push(nuevoSocio);
+            localStorage.setItem('listaSocios', JSON.stringify(lista));
             localStorage.setItem(dni, JSON.stringify(nuevoSocio));
-            
-            // Guardado en el array central que lee el Dashboard
-            listaCentral.push(nuevoSocio);
-            localStorage.setItem('listaSocios', JSON.stringify(listaCentral));
 
-            alert("¡Registro exitoso! Bienvenido al Club Constitución. Tu número de socio es: " + nroSocioFormateado);
-            mostrarLogin();
+            alert("¡Bienvenido al Club! Ya puedes ingresar.");
+            toggleView(true);
         }
 
         function iniciarSesion() {
             const dni = document.getElementById('loginDni').value;
             const pass = document.getElementById('loginPass').value;
-            const datosSocio = localStorage.getItem(dni);
+            const datos = JSON.parse(localStorage.getItem(dni));
 
-            if(datosSocio) {
-                const socio = JSON.parse(datosSocio);
-                if(socio.pass === pass) {
-                    sessionStorage.setItem('socioLogueado', dni);
-                    window.location.href = "soysocio.html";
-                } else {
-                    alert("Contraseña incorrecta");
-                }
+            if(datos && datos.pass === pass) {
+                sessionStorage.setItem('socioLogueado', dni);
+                window.location.href = "soysocio.html";
             } else {
-                alert("El usuario no existe.");
+                alert("Datos incorrectos");
             }
         }
     </script>

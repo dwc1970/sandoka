@@ -97,8 +97,7 @@
 
             <div class="card-admin">
                 <h3>Galería de Imágenes (6 Fotos)</h3>
-                <div class="grid-galeria" id="grid-fotos">
-                    </div>
+                <div class="grid-galeria" id="grid-fotos"></div>
             </div>
             <button class="btn-principal" onclick="guardarTodoClub()">PUBLICAR CAMBIOS EN "EL CLUB"</button>
         </div>
@@ -167,7 +166,6 @@
         }
 
         window.onload = () => {
-            // Generar campos de galería
             const containerG = document.getElementById('grid-fotos');
             for(let i=0; i<6; i++) {
                 containerG.innerHTML += `
@@ -180,8 +178,8 @@
                 `;
             }
 
-            // Cargar Datos del Club
-            db.collection("config").doc("club").get().then((doc) => {
+            // Cargar Datos del Club (Escucha en tiempo real para el Admin)
+            db.collection("config").doc("club").onSnapshot((doc) => {
                 if (doc.exists) {
                     const data = doc.data();
                     document.getElementById('historia-input').value = data.historia || "";
