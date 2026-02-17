@@ -59,9 +59,7 @@
         <a href="liga.html"><i class="fas fa-user"></i> PRÓXIMO PARTIDO</a>
         <a href="SoySocio.html"><i class="fas fa-users"></i> SOCIOS</a>
         <a href="contacto.html"><i class="fas fa-envelope"></i> CONTACTO</a>
-       <a href="https://csydconstitucion-8b8bb.web.app/admin_login.html">
-  <i class="fas fa-user-cog"></i> ADMIN
-</a>
+        <a href="https://csydconstitucion-8b8bb.web.app/admin_login.html"><i class="fas fa-user-cog"></i> ADMIN</a>
     </nav>
 
     <div class="marquee-container">
@@ -80,21 +78,41 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE", authDomain: "csydconstitucion-8b8bb.firebaseapp.com", projectId: "csydconstitucion-8b8bb", storageBucket: "csydconstitucion-8b8bb.firebasestorage.app", messagingSenderId: "363486272350", appId: "1:363486272350:web:e937e924c4371a3db74dcf" };
+        const firebaseConfig = { 
+            apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE", 
+            authDomain: "csydconstitucion-8b8bb.firebaseapp.com", 
+            projectId: "csydconstitucion-8b8bb", 
+            storageBucket: "csydconstitucion-8b8bb.firebasestorage.app", 
+            messagingSenderId: "363486272350", 
+            appId: "1:363486272350:web:e937e924c4371a3db74dcf" 
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+
         window.onload = function() {
-            setTimeout(() => { if(document.getElementById('modalCuotas')) document.getElementById('modalCuotas').classList.add('modal-active'); }, 1000);
+            // Modal automático
+            setTimeout(() => { 
+                if(document.getElementById('modalCuotas')) document.getElementById('modalCuotas').classList.add('modal-active'); 
+            }, 1000);
+
+            // Escuchar cambios en la base de datos (Colección config, Documento partido)
             db.collection("config").doc("partido").onSnapshot((doc) => {
                 const marquesinaTexto = document.getElementById('marquesina-dinamica');
                 if (doc.exists) {
                     const datos = doc.data();
+                    // Usamos los campos exactos que definimos en administrar_club.html
                     marquesinaTexto.innerHTML = `PRÓXIMA FECHA: CONSTITUCIÓN vs ${datos.rival || 'A CONFIRMAR'} | FECHA: ${datos.fecha || '--/--'} | HORA: ${datos.hora || '--:--'} HS | ESTADIO: ${datos.lugar || 'A CONFIRMAR'}`;
-                } else { marquesinaTexto.innerHTML = "PRÓXIMO PARTIDO A CONFIRMAR - ¡VAMOS CONSTITUCIÓN!"; }
+                } else { 
+                    marquesinaTexto.innerHTML = "PRÓXIMO PARTIDO A CONFIRMAR - ¡VAMOS CONSTITUCIÓN!"; 
+                }
             });
         };
-        function cerrarModal() { document.getElementById('modalCuotas').classList.remove('modal-active'); }
+
+        function cerrarModal() { 
+            document.getElementById('modalCuotas').classList.remove('modal-active'); 
+        }
     </script>
 </body>
 </html>
