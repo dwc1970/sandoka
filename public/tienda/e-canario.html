@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda del Canario | Club Constitución</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --amarillo: #FFD700;
+            --negro: #121212;
+            --gris-claro: #f8f9fa;
+            --gris-medio: #e0e0e0;
+            --verde-mp: #00a650;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            /* Variable para transiciones suaves */
+            --transition: all 0.3s ease;
+        }
+
+        body { font-family: 'Poppins', sans-serif; margin: 0; background-color: var(--gris-claro); color: var(--negro); }
+
+        /* HEADER PROFESIONAL */
+        header {
+            background-color: var(--amarillo);
+            padding: 10px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Contenedor para botón y logo */
+        .header-left { display: flex; align-items: center; gap: 15px; }
+
+        /* BOTON REGRESAR */
+        .btn-regresar {
+            text-decoration: none;
+            color: var(--negro);
+            background: rgba(255, 255, 255, 0.5);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-regresar:hover { background: white; transform: translateX(-3px); }
+
+        .logo-area { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--negro); }
+        .logo-circle {
+            width: 55px; height: 55px; border-radius: 50%;
+            border: 2px solid var(--negro); overflow: hidden;
+            background: white; display: flex; align-items: center; justify-content: center;
+        }
+        .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
+        .logo-text { font-weight: 800; font-size: 1.4rem; letter-spacing: -0.5px; text-transform: uppercase; }
+
+        .search-bar { flex: 1; margin: 0 40px; position: relative; max-width: 600px; }
+        .search-bar input {
+            width: 100%; padding: 12px 20px; border: none; border-radius: 50px;
+            font-size: 0.9rem; outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+        .search-bar input:focus { box-shadow: inset 0 2px 8px rgba(0,0,0,0.1); }
+
+        .nav-tools { display: flex; gap: 25px; align-items: center; }
+        .cart-btn { position: relative; cursor: pointer; font-size: 1.5rem; transition: var(--transition); }
+        .cart-btn:hover { color: #333; transform: scale(1.1); }
+        .badge {
+            position: absolute; top: -8px; right: -12px; background: var(--negro);
+            color: var(--amarillo); font-size: 11px; padding: 2px 6px; border-radius: 50%; font-weight: bold;
+        }
+
+        /* LAYOUT */
+        .main-container { display: grid; grid-template-columns: 240px 1fr; gap: 30px; padding: 30px 5%; min-height: 70vh; }
+
+        /* SIDEBAR CATEGORIAS */
+        .sidebar h3 { font-size: 1.1rem; text-transform: uppercase; margin-bottom: 20px; border-bottom: 3px solid var(--amarillo); display: inline-block; }
+        .cat-item {
+            padding: 12px 15px; border-radius: 10px; cursor: pointer;
+            transition: var(--transition); font-weight: 500; margin-bottom: 5px; display: block;
+        }
+        .cat-item:hover { background: var(--amarillo); padding-left: 20px; }
+        .cat-item.active { background: var(--negro); color: var(--amarillo); }
+
+        /* GRID DE PRODUCTOS */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
+        
+        .product-card {
+            background: white; border-radius: 16px; overflow: hidden;
+            transition: var(--transition); border: 1px solid var(--gris-medio); display: flex; flex-direction: column;
+        }
+        .product-card:hover { transform: translateY(-10px); box-shadow: var(--shadow); border-color: var(--amarillo); }
+        
+        .img-box { height: 230px; background: #fff; display: flex; align-items: center; justify-content: center; padding: 15px; }
+        .img-box img { max-width: 100%; max-height: 100%; object-fit: contain; transition: var(--transition); }
+        .product-card:hover .img-box img { transform: scale(1.05); }
+        .img-box i { font-size: 4rem; color: #eee; }
+
+        .info-box { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        .p-cat { font-size: 0.7rem; color: #888; text-transform: uppercase; font-weight: 600; }
+        .p-title { font-weight: 600; font-size: 0.95rem; margin: 5px 0 10px 0; min-height: 40px; }
+        .p-price { font-size: 1.3rem; font-weight: 700; color: var(--negro); margin-top: auto; }
+        
+        .add-button {
+            width: 100%; background: var(--negro); color: var(--amarillo);
+            border: none; padding: 12px; border-radius: 10px; font-weight: 700;
+            cursor: pointer; margin-top: 15px; transition: var(--transition);
+        }
+        .add-button:hover { background: #333; letter-spacing: 1px; }
+
+        /* CARRITO LATERAL */
+        #cart-sidebar {
+            position: fixed; right: -450px; top: 0; width: 400px; height: 100vh;
+            background: white; z-index: 2000; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1); display: flex; flex-direction: column;
+        }
+        #cart-sidebar.active { transform: translateX(-450px); }
+        
+        .cart-header { padding: 25px; background: var(--negro); color: white; display: flex; justify-content: space-between; align-items: center; }
+        .cart-items { flex-grow: 1; overflow-y: auto; padding: 20px; }
+        
+        .cart-item-row { display: flex; gap: 15px; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid #eee; align-items: center; transition: var(--transition); }
+        .cart-img-mini { width: 50px; height: 50px; background: #f4f4f4; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .cart-item-details { flex-grow: 1; font-size: 0.85rem; }
+        .qty-btns { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .qty-btn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; transition: var(--transition); }
+        .qty-btn:hover { background: var(--gris-medio); }
+
+        .cart-footer { padding: 25px; border-top: 2px solid var(--amarillo); background: #fafafa; }
+        
+        /* FORMULARIO ENVIO Y PAGO */
+        .checkout-form { display: none; opacity: 0; transition: var(--transition); }
+        .checkout-form.active { display: block; opacity: 1; }
+        .form-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; transition: var(--transition); }
+        .form-input:focus { border-color: var(--amarillo); outline: none; }
+        
+        .pay-btn {
+            width: 100%; background: var(--verde-mp); color: white; border: none;
+            padding: 16px; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer;
+            transition: var(--transition);
+        }
+        .pay-btn:hover { transform: scale(1.02); filter: brightness(1.1); }
+
+        /* BANNER PROMO */
+        .promo-banner { background: var(--negro); color: white; text-align: center; padding: 8px; font-size: 0.85rem; font-weight: 600; }
+
+        /* OVERLAY */
+        #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1500; transition: var(--transition); opacity: 0; }
+        #overlay.active { display: block; opacity: 1; }
+
+        /* MODAL DE PRODUCTO */
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); 
+                  background: white; width: 500px; max-width: 90%; border-radius: 20px; z-index: 3000; 
+                  box-shadow: 0 10px 40px rgba(0,0,0,0.2); padding: 25px; transition: var(--transition); opacity: 0; }
+        .modal.active { display: block; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-body { display: flex; gap: 20px; }
+        .modal-img { width: 200px; height: 200px; object-fit: contain; }
+        .modal-info { flex: 1; }
+        .modal-select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; }
+
+        /* FOOTER */
+        footer {
+            background-color: var(--negro);
+            color: var(--amarillo);
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="promo-banner">¡Envío gratis a todo el país en compras superiores a $150.000!</div>
+
+<div id="overlay" onclick="closeAll()"></div>
+
+<header>
+    <div class="header-left">
+        <a href="../index.html" class="btn-regresar">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
+        <a href="#" class="logo-area">
+            <div class="logo-circle">
+                <img src="../logo.jpg" alt="Club Constitución">
+            </div>
+            <div class="logo-text">Tienda del Canario</div>
+        </a>
+    </div>
+    
+    <div class="search-bar">
+        <input type="text" id="search" placeholder="¿Qué estás buscando hoy?" onkeyup="doSearch()">
+    </div>
+    <div class="nav-tools">
+        <div class="cart-btn" onclick="toggleCart()">
+            <i class="fas fa-shopping-basket"></i>
+            <span class="badge" id="cart-count">0</span>
+        </div>
+        <i class="fas fa-user-circle" style="font-size: 1.5rem; cursor: pointer;"></i>
+    </div>
+</header>
+
+<div class="main-container">
+    <aside class="sidebar">
+        <h3>Filtrar</h3>
+        <nav>
+            <span class="cat-item active" onclick="filterCat('all', this)">Todos los productos</span>
+            <span class="cat-item" onclick="filterCat('indumentaria', this)">Indumentaria Oficial</span>
+            <span class="cat-item" onclick="filterCat('entrenamiento', this)">Entrenamiento</span>
+            <span class="cat-item" onclick="filterCat('calzado', this)">Calzado</span>
+            <span class="cat-item" onclick="filterCat('accesorios', this)">Accesorios</span>
+            <span class="cat-item" onclick="filterCat('hogar', this)">Hogar y Bazar</span>
+        </nav>
+    </aside>
+
+    <main class="products-grid" id="grid-articulos">
+        </main>
+</div>
+
+<footer>
+    <div style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">Club Atlético Constitución</div>
+    <div>&copy; 2026 DWC - Todos los derechos reservados.</div>
+</footer>
+
+<div id="product-modal" class="modal">
+    <div class="modal-header">
+        <h3 style="margin:0;" id="modal-title">Detalle</h3>
+        <i class="fas fa-times" style="cursor:pointer" onclick="closeModal()"></i>
+    </div>
+    <div class="modal-body">
+        <img src="" id="modal-img" class="modal-img" alt="Producto">
+        <div class="modal-info">
+            <p style="font-weight:700; font-size:1.5rem; margin:0;" id="modal-price"></p>
+            <div id="modal-size-container">
+                <label>Talle:</label>
+                <select class="modal-select" id="modal-size">
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                </select>
+            </div>
+            <label>Cantidad:</label>
+            <input type="number" class="modal-select" id="modal-qty" value="1" min="1">
+            <button class="add-button" id="modal-add-btn">AGREGAR AL CARRITO</button>
+        </div>
+    </div>
+</div>
+
+<div id="cart-sidebar">
+    <div class="cart-header">
+        <span style="font-weight: 700;">TU CARRITO</span>
+        <i class="fas fa-times" style="cursor:pointer" onclick="toggleCart()"></i>
+    </div>
+    <div class="cart-items" id="cart-list">
+        </div>
+    
+    <div class="cart-footer">
+        <div id="summary-section">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight: 700; font-size: 1.2rem;">
+                <span>Total:</span>
+                <span id="cart-total">$0</span>
+            </div>
+            <button class="pay-btn" onclick="showCheckout()">FINALIZAR COMPRA</button>
+        </div>
+
+        <div id="checkout-section" class="checkout-form">
+            <h4 style="margin:0 0 10px 0;">Datos de Envío</h4>
+            <input type="text" class="form-input" placeholder="Nombre completo">
+            <input type="text" class="form-input" placeholder="Dirección y localidad">
+            <button class="pay-btn" style="background:var(--negro);" onclick="finishOrder()">PAGAR AHORA</button>
+            <button style="background:none; border:none; margin-top:10px; cursor:pointer; color:#888" onclick="hideCheckout()">Volver</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const productos = [
+        { id: 1, name: "Camiseta Titular 'Canario Infinito'", price: 65000, cat: "indumentaria", img: "art/producto1.png", icon: "fa-shirt", hasSize: true },
+        { id: 2, name: "Camiseta Hincha Réplica", price: 45000, cat: "indumentaria", img: "art/producto2.png", icon: "fa-users", hasSize: true },
+        { id: 3, name: "Musculosa Entrenamiento", price: 38000, cat: "entrenamiento", img: "art/producto3.png", icon: "fa-vest", hasSize: true },
+        { id: 4, name: "Pantalón Corto Juego", price: 32000, cat: "indumentaria", img: "art/producto4.png", icon: "fa-socks", hasSize: true },
+        { id: 5, name: "Botines Elite Amarillos", price: 120000, cat: "calzado", img: "art/producto5.png", icon: "fa-boot", hasSize: false },
+        { id: 6, name: "Medias Oficiales Pack", price: 8500, cat: "indumentaria", img: "art/producto6.png", icon: "fa-socks", hasSize: false },
+        { id: 7, name: "Gorra E-Canario Pro", price: 18500, cat: "accesorios", img: "art/producto7.png", icon: "fa-hat-cowboy", hasSize: false },
+        { id: 8, name: "Tobilleras Elásticas", price: 12500, cat: "entrenamiento", img: "art/producto8.png", icon: "fa-band-aid", hasSize: false },
+        { id: 9, name: "Banderín Oficial", price: 9000, cat: "accesorios", img: "art/producto9.png", icon: "fa-flag", hasSize: false },
+        { id: 10, name: "Bufanda Estadio", price: 14000, cat: "accesorios", img: "art/producto10.png", icon: "fa-scroll", hasSize: false },
+        { id: 11, name: "Vaso Térmico Club", price: 22000, cat: "hogar", img: "art/producto11.png", icon: "fa-mug-hot", hasSize: false },
+        { id: 12, name: "Taza Cerámica Escudo", price: 9500, cat: "hogar", img: "art/producto12.png", icon: "fa-coffee", hasSize: false },
+        { id: 13, name: "Llavero Metálico", price: 4500, cat: "accesorios", img: "art/producto13.png", icon: "fa-key", hasSize: false },
+        { id: 14, name: "Toallón Playa XL", price: 35000, cat: "hogar", img: "art/producto14.png", icon: "fa-rug", hasSize: false },
+        { id: 15, name: "Pack Stickers x20", price: 3500, cat: "accesorios", img: "art/producto15.png", icon: "fa-note-sticky", hasSize: false }
+    ];
+
+    let carrito = [];
+
+    function render(data = productos) {
+        const grid = document.getElementById('grid-articulos');
+        grid.innerHTML = data.map(p => `
+            <div class="product-card">
+                <div class="img-box">
+                    <img src="${p.img}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                    <i class="fas ${p.icon}" style="display:none"></i>
+                </div>
+                <div class="info-box">
+                    <span class="p-cat">${p.cat}</span>
+                    <div class="p-title">${p.name}</div>
+                    <div class="p-price">$${p.price.toLocaleString()}</div>
+                    <button class="add-button" onclick="openModal(${p.id})">AGREGAR AL CARRITO</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Funciones del Modal
+    function openModal(id) {
+        const p = productos.find(x => x.id === id);
+        document.getElementById('modal-title').innerText = p.name;
+        document.getElementById('modal-img').src = p.img;
+        document.getElementById('modal-price').innerText = `$${p.price.toLocaleString()}`;
+        document.getElementById('modal-size-container').style.display = p.hasSize ? 'block' : 'none';
+        document.getElementById('modal-add-btn').setAttribute('onclick', `addToCartFromModal(${p.id})`);
+        
+        document.getElementById('product-modal').classList.add('active');
+        document.getElementById('overlay').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('product-modal').classList.remove('active');
+        document.getElementById('overlay').classList.remove('active');
+    }
+
+    function addToCartFromModal(id) {
+        const p = productos.find(x => x.id === id);
+        const size = p.hasSize ? document.getElementById('modal-size').value : 'Único';
+        const qty = parseInt(document.getElementById('modal-qty').value);
+        
+        const exists = carrito.find(x => x.id === id && x.size === size);
+        
+        if(exists) exists.qty += qty;
+        else carrito.push({...p, qty: qty, size: size});
+        
+        updateUI();
+        closeModal();
+        if(!document.getElementById('cart-sidebar').classList.contains('active')) toggleCart();
+    }
+
+    function updateUI() {
+        const list = document.getElementById('cart-list');
+        const total = document.getElementById('cart-total');
+        const count = document.getElementById('cart-count');
+        
+        let suma = 0;
+        let itemsCount = 0;
+
+        list.innerHTML = carrito.map(item => {
+            suma += item.price * item.qty;
+            itemsCount += item.qty;
+            return `
+                <div class="cart-item-row">
+                    <div class="cart-img-mini"><i class="fas ${item.icon}"></i></div>
+                    <div class="cart-item-details">
+                        <b>${item.name}</b><br>
+                        Talle: ${item.size} - $${(item.price * item.qty).toLocaleString()}
+                        <div class="qty-btns">
+                            <button class="qty-btn" onclick="changeQty(${item.id}, -1, '${item.size}')">-</button>
+                            <span>${item.qty}</span>
+                            <button class="qty-btn" onclick="changeQty(${item.id}, 1, '${item.size}')">+</button>
+                        </div>
+                    </div>
+                    <i class="fas fa-trash" style="color:#ff4d4d; cursor:pointer" onclick="remove(${item.id}, '${item.size}')"></i>
+                </div>
+            `;
+        }).join('');
+
+        total.innerText = `$${suma.toLocaleString()}`;
+        count.innerText = itemsCount;
+    }
+
+    function changeQty(id, delta, size) {
+        const item = carrito.find(x => x.id === id && x.size === size);
+        item.qty += delta;
+        if(item.qty <= 0) remove(id, size);
+        updateUI();
+    }
+
+    function remove(id, size) {
+        carrito = carrito.filter(x => !(x.id === id && x.size === size));
+        updateUI();
+    }
+
+    function toggleCart() {
+        document.getElementById('cart-sidebar').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+    }
+
+    function closeAll() {
+        closeModal();
+        if(document.getElementById('cart-sidebar').classList.contains('active')) toggleCart();
+    }
+
+    function filterCat(cat, el) {
+        document.querySelectorAll('.cat-item').forEach(x => x.classList.remove('active'));
+        el.classList.add('active');
+        if(cat === 'all') render();
+        else render(productos.filter(x => x.cat === cat));
+    }
+
+    function doSearch() {
+        const val = document.getElementById('search').value.toLowerCase();
+        render(productos.filter(x => x.name.toLowerCase().includes(val)));
+    }
+
+    function showCheckout() {
+        if(carrito.length === 0) return alert("El carrito está vacío");
+        document.getElementById('summary-section').style.display = 'none';
+        document.getElementById('checkout-section').classList.add('active');
+    }
+
+    function hideCheckout() {
+        document.getElementById('summary-section').style.display = 'block';
+        document.getElementById('checkout-section').classList.remove('active');
+    }
+
+    function finishOrder() {
+        alert("¡Pedido realizado con éxito! En breve nos comunicaremos.");
+        carrito = [];
+        updateUI();
+        hideCheckout();
+        toggleCart();
+    }
+
+    render();
+</script>
+</body>
+</html>
