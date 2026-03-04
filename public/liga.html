@@ -3,128 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liga y Posiciones | Club Constitución</title>
+    <title>PRÓXIMO PARTIDO | Club Constitución</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --amarillo: #ffcc00;
-            --negro: #1a1a1a;
+            --oro: #fbc02d;
+            --negro: #0d1117;
+            --negro-luz: #161b22;
+            --borde: #30363d;
             --blanco: #ffffff;
-            --gris: #f4f4f4;
+            --gris-texto: #8b949e;
+            --gris-claro: #f8f9fa;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
-            background-color: var(--gris);
-            color: var(--negro);
-        }
-
-        header {
             background-color: var(--negro);
-            color: var(--amarillo);
-            padding: 20px;
-            text-align: center;
-            border-bottom: 4px solid var(--amarillo);
+            color: var(--blanco);
         }
 
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 10px;
+        /* --- NAVBAR AMARILLA --- */
+        .navbar-club {
+            background-color: var(--oro);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #000;
         }
 
-        /* Card del Próximo Partido */
-        .card {
-            background: var(--blanco);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .match-display {
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
-            justify-content: space-around;
-            align-items: center;
-            margin: 20px 0;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
-        .team img {
+        .nav-link {
+            text-decoration: none;
+            color: #000;
+            font-weight: 800;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover { opacity: 0.6; }
+
+        /* --- HEADER LIMPIO --- */
+        .header-simple {
+            padding: 40px 20px;
+            text-align: center;
+            background-color: var(--negro-luz);
+            border-bottom: 4px solid var(--oro);
+        }
+
+        .logo-small {
             width: 80px;
             height: 80px;
-            object-fit: contain;
-        }
-
-        .vs {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--amarillo);
-            background: var(--negro);
-            padding: 10px 15px;
             border-radius: 50%;
+            border: 2px solid var(--oro);
+            background: white;
+            margin-bottom: 15px;
         }
 
-        .info-partido {
-            font-size: 1.1em;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
-        /* Tabla de Posiciones */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--blanco);
-            border-radius: 12px;
+        /* --- TARJETA DE PARTIDO CON SECCIÓN BLANCA --- */
+        .match-card {
+            background: var(--negro-luz);
+            border-radius: 20px;
+            border: 1px solid var(--borde);
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        th {
-            background-color: var(--negro);
-            color: var(--amarillo);
-            padding: 15px;
-        }
-
-        td {
+        .match-header {
+            background: var(--oro);
             padding: 12px;
             text-align: center;
-            border-bottom: 1px solid #eee;
+            color: #000;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        .pos-top { font-weight: bold; color: #2ecc71; }
+        /* SECCIÓN DE ESCUDOS CON FONDO BLANCO */
+        .match-body-white {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 50px 20px;
+            background-color: var(--blanco); /* Fondo Blanco pedido */
+            color: #000; /* Texto negro para contrastar con el fondo blanco */
+        }
+
+        .team-box {
+            text-align: center;
+            flex: 1;
+        }
+
+        .team-box img {
+            width: 130px;
+            height: 130px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        .team-name {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin: 0;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        .vs-circle {
+            width: 60px;
+            height: 60px;
+            background: var(--oro);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 900;
+            font-size: 1.2rem;
+            margin: 0 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        /* PIE DE TARJETA (DATOS) */
+        .match-footer {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background: var(--negro-luz);
+            padding: 25px;
+            border-top: 1px solid var(--borde);
+        }
+
+        .info-item {
+            text-align: center;
+            border-right: 1px solid var(--borde);
+        }
+
+        .info-item:last-child { border-right: none; }
+
+        .info-label {
+            display: block;
+            color: var(--gris-texto);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .info-value {
+            color: var(--oro);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 600px) {
+            .match-body-white { flex-direction: column; gap: 30px; }
+            .vs-circle { transform: rotate(90deg); margin: 10px 0; }
+            .match-footer { grid-template-columns: 1fr; gap: 20px; }
+            .info-item { border-right: none; border-bottom: 1px solid var(--borde); padding-bottom: 15px; }
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>LIGA Y POSICIONES</h1>
-        <p>Club Social y Deportivo Constitución</p>
+    <nav class="navbar-club">
+        <div class="nav-container">
+            <a href="index.html" class="nav-link"><i class="fas fa-home"></i> INICIO</a>
+            <a href="el_club.html" class="nav-link"><i class="fas fa-shield-alt"></i> EL CLUB</a>
+            <a href="socios.html" class="nav-link"><i class="fas fa-users"></i> SOCIOS</a>
+            <a href="contiback/admin_login.html" class="nav-link"><i class="fas fa-user-cog"></i> ADMIN</a>
+        </div>
+    </nav>
+
+    <header class="header-simple">
+        <img src="logo.jpg" alt="Logo" class="logo-small">
+        <h1 style="margin:0; font-size: 1.8rem; letter-spacing: 1px;">PRÓXIMO PARTIDO</h1>
+        <p style="color: var(--oro); margin: 5px 0 0; font-weight: bold; text-transform: uppercase;">Club Social y Deportivo Constitución</p>
     </header>
 
+    <div class="container">
+        <div class="match-card">
+            <div class="match-header">Liga Sanrafaelina de Fútbol</div>
             
-        <div class="card">
-            <h3>PRÓXIMO ENCUENTRO</h3>
-            <div class="match-display">
-                <div class="team">
-                    <img id="logoLocal" src="img/escudo-constitucion.png" alt="Constitución">
-                    <p>Constitución</p>
+            <div class="match-body-white">
+                <div class="team-box">
+                    <img id="logoLocal" src="logo.jpg" alt="Local">
+                    <p class="team-name">CONSTITUCIÓN</p>
                 </div>
-                <div class="vs">VS</div>
-                <div class="team">
-                    <img id="logoRival" src="img/placeholder-rival.png" alt="Rival">
-                    <p id="nombreRival">Cargando...</p>
+
+                <div class="vs-circle">VS</div>
+
+                <div class="team-box">
+                    <img id="logoRival" src="perfil.png" alt="Rival">
+                    <p id="nombreRival" class="team-name">CARGANDO...</p>
                 </div>
             </div>
-            <div class="info-partido">
-                <p><strong>Fecha:</strong> <span id="fecha">--/--</span></p>
-                <p><strong>Hora:</strong> <span id="hora">--:--</span></p>
-                <p><strong>Cancha:</strong> <span id="lugar">---</span></p>
+
+            <div class="match-footer">
+                <div class="info-item">
+                    <span class="info-label"><i class="far fa-calendar-alt"></i> Fecha</span>
+                    <span id="fecha" class="info-value">--/--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label"><i class="far fa-clock"></i> Horario</span>
+                    <span id="hora" class="info-value">--:--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label"><i class="fas fa-map-marker-alt"></i> Estadio</span>
+                    <span id="lugar" class="info-value">---</span>
+                </div>
             </div>
         </div>
-
-       
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -142,14 +252,13 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Lógica de actualización en tiempo real
         db.collection("config").doc("partido").onSnapshot((doc) => {
             if (doc.exists) {
                 const p = doc.data();
-                document.getElementById('nombreRival').textContent = p.rival || "Rival";
+                document.getElementById('nombreRival').textContent = p.rival || "RIVAL";
                 document.getElementById('fecha').textContent = p.fecha || "--/--";
                 document.getElementById('hora').textContent = (p.hora || "--:--") + " HS";
-                document.getElementById('lugar').textContent = p.lugar || "A confirmar";
+                document.getElementById('lugar').textContent = p.lugar || "A CONFIRMAR";
                 
                 if(p.logoLocal) document.getElementById('logoLocal').src = p.logoLocal;
                 if(p.logoRival) document.getElementById('logoRival').src = p.logoRival;

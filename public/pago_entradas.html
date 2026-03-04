@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasarela de Pago | Club Constitución</title>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #050505; color: white; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .pago-card { background: #111; padding: 40px; border-radius: 20px; border: 1px solid #fbc02d; text-align: center; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .monto { font-size: 2.5rem; color: #fbc02d; font-weight: 900; margin: 15px 0; }
+        .btn-mp { background: #009aff; color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; text-decoration: none; }
+        .loader { border: 4px solid #333; border-top: 4px solid #fbc02d; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="pago-card">
+        <i class="fab fa-mercado-pago" style="font-size: 4rem; color: #009aff;"></i>
+        <h2>Resumen de Compra</h2>
+        <p style="color: #888;">Entradas para el próximo partido</p>
+        
+        <div class="monto">$<span id="monto-texto">0</span></div>
+        <p id="detalle-cantidad">Cantidad: 1 entrada</p>
+
+        <div id="wallet_container">
+            <button class="btn-mp" onclick="iniciarPagoMP()">
+                PAGAR AHORA
+            </button>
+        </div>
+
+        <a href="ticket.html" style="color: #666; text-decoration: none; display: block; margin-top: 20px; font-size: 0.9rem;">Cancelar y volver</a>
+    </div>
+
+    <script>
+        // 1. Obtener los datos del sessionStorage (guardados en ticket.html)
+        const total = sessionStorage.getItem('montoAPagar');
+        const cantidad = sessionStorage.getItem('cantidadComprada');
+
+        if (total) {
+            document.getElementById('monto-texto').innerText = total;
+            document.getElementById('detalle-cantidad').innerText = `Cantidad: ${cantidad} entrada(s)`;
+        } else {
+            // Si no hay datos, algo salió mal, volvemos
+            window.location.href = "ticket.html";
+        }
+
+        // 2. Función para conectar con Mercado Pago
+        function iniciarPagoMP() {
+            const btn = document.querySelector('.btn-mp');
+            btn.innerHTML = '<div class="loader"></div>';
+            btn.disabled = true;
+
+            /* IMPORTANTE: Mercado Pago requiere un "AccessToken" para crear pagos reales.
+               Como estás en un entorno de solo HTML, lo ideal es que aquí redirijas
+               a un LINK DE PAGO generado en tu panel de Mercado Pago.
+            */
+            
+            // Ejemplo de redirección a un Link de Pago (Reemplaza con el tuyo real)
+            // Si quieres integración automática por API, necesitarías un servidor (Node.js/PHP).
+            setTimeout(() => {
+                // SIMULACIÓN: En un entorno real, aquí iría tu Link de Pago de MP
+                // window.location.href = "https://www.mercadopago.com.ar/checkout/v1/redirect?...";
+                
+                // Para probar que el flujo funciona:
+                alert("Redirigiendo a Mercado Pago...");
+                
+                // Simulamos que el usuario pagó y MP lo devuelve a la web:
+                sessionStorage.setItem('pagoExitoso', 'true');
+                window.location.href = "ticket.html?status=approved"; 
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

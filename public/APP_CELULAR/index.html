@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Constitución - App Oficial</title>
+    
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    <link rel="apple-touch-icon" href="logo.jpg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root { 
+            --amarillo: #FFD700; 
+            --negro: #000000; 
+            --gris-oscuro: #121212; 
+        }
+        
+        * { font-family: 'Times New Roman', Times, serif !important; }
+
+        body { 
+            margin: 0; background-color: var(--negro); color: white; 
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; overflow: hidden;
+        }
+
+        /* SPLASH SCREEN */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--negro); display: flex; justify-content: center; align-items: center;
+            z-index: 9999; transition: opacity 0.8s ease-in-out;
+        }
+        .logo-splash { width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--amarillo); box-shadow: 0 0 25px rgba(255, 215, 0, 0.3); }
+
+        .container { width: 100%; max-width: 380px; padding: 20px; box-sizing: border-box; }
+        
+        /* CARDS CON TRANSICIÓN */
+        .card { 
+            background: var(--gris-oscuro); padding: 25px; border-radius: 25px; 
+            border: 1.5px solid var(--amarillo); text-align: center; 
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0;
+        }
+
+        h2 { color: var(--amarillo); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; font-weight: bold; }
+        
+        input, select { 
+            width: 100%; height: 42px; margin: 6px 0; border-radius: 10px; 
+            border: 1px solid #333; background: #1a1a1a; color: white; text-align: center;
+        }
+
+        .btn-club { 
+            width: 100%; height: 42px; margin: 8px 0; border-radius: 25px; 
+            font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
+        .btn-negro { background-color: var(--amarillo); color: black; border: none; }
+        .btn-blanco { background-color: transparent; color: white; border: 1px solid #444; }
+
+        .btn-web {
+            display: flex; align-items: center; justify-content: center;
+            background: #222; border: 1px dashed var(--amarillo); color: white;
+            padding: 10px; border-radius: 15px; text-decoration: none; font-size: 13px; margin-top: 15px;
+        }
+        .btn-web img { width: 25px; height: 25px; margin-right: 12px; border-radius: 50%; border: 1px solid var(--amarillo); }
+        
+        .hidden { display: none !important; }
+        .btn-back { background: none; color: #888; text-decoration: underline; border: none; font-size: 11px; margin-top: 12px; cursor: pointer; }
+
+        /* TICKET DE PAGO */
+        #ticket-descarga { background: white; padding: 20px; color: black; border-radius: 12px; margin-top: 10px; text-align: left; }
+        .ticket-header { text-align:center; font-weight:bold; border-bottom:1px solid #ccc; margin-bottom:10px; font-size: 14px; }
+        .ticket-row { font-size: 13px; margin: 5px 0; }
+
+        /* MODALES */
+        #custom-modal, #pasarela-pago {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; 
+            z-index: 10000; opacity: 0; transition: opacity 0.4s ease;
+        }
+        .modal-content { background: #1a1a1a; padding: 25px; border-radius: 15px; border: 1px solid var(--amarillo); text-align: center; width: 280px; }
+
+        .loader { border: 4px solid #333; border-top: 4px solid var(--amarillo); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen"><img src="logo.jpg" class="logo-splash"></div>
+
+    <div id="custom-modal" class="hidden">
+        <div class="modal-content">
+            <h3 style="color: var(--amarillo); text-transform: uppercase;">Aviso</h3>
+            <p id="modal-msg" style="color: white;"></p>
+            <button class="btn-club btn-negro" style="height: 35px;" onclick="closeModal()">ACEPTAR</button>
+        </div>
+    </div>
+
+    <div id="pasarela-pago" class="hidden">
+        <div class="modal-content">
+            <img src="logo.jpg" style="width: 50px; border-radius: 50%;">
+            <h3 style="color: white;">Procesando Pago...</h3>
+            <div class="loader"></div>
+            <p style="font-size: 12px; color: #888;">Validando con la red de pagos</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="view-login" class="card hidden">
+            <img src="logo.jpg" style="width: 60px; margin-bottom: 10px; border-radius: 50%;">
+            <h2>INGRESAR</h2>
+            <input type="email" id="login-email" placeholder="EMAIL">
+            <input type="password" id="login-pass" placeholder="CONTRASEÑA">
+            <button class="btn-club btn-negro" onclick="transitionTo('view-home', 1200)">ENTRAR</button>
+            <button class="btn-back" onclick="transitionTo('view-register', 1200)">¿NO TENÉS CUENTA? REGISTRATE</button>
+        </div>
+
+        <div id="view-register" class="card hidden">
+            <h2>NUEVO SOCIO</h2>
+            <input type="text" id="reg-nombre" placeholder="NOMBRE Y APELLIDO">
+            <input type="number" id="reg-dni" placeholder="DNI">
+            <input type="number" id="reg-tel" placeholder="TELÉFONO">
+            <input type="email" id="reg-email" placeholder="EMAIL">
+            <input type="password" id="reg-pass" placeholder="CONTRASEÑA">
+            <input type="password" id="reg-pass-val" placeholder="REPETIR CONTRASEÑA">
+            <button class="btn-club btn-negro" onclick="validarRegistro()">CREAR CUENTA</button>
+            <button class="btn-back" onclick="transitionTo('view-login', 1200)">VOLVER</button>
+        </div>
+
+        <div id="view-home" class="card hidden">
+            <h2>MI PANEL</h2>
+            <button class="btn-club btn-negro" onclick="prepararPago('CUOTA MENSUAL', 5000, true)">PAGAR CUOTA</button>
+            <button class="btn-club btn-blanco" onclick="prepararPago('ENTRADA PARTIDO', 2500, false)">ENTRADAS</button>
+            <a href="https://csydconstitucion-8b8bb.web.app/index.html" target="_blank" class="btn-web"><img src="logo.jpg"> VISITAR WEB OFICIAL</a>
+            <div id="lista-pagos" style="margin-top:15px; text-align: left;"></div>
+            <button class="btn-back" style="color: #ff4444; width:100%;" onclick="location.reload()">CERRAR SESIÓN</button>
+        </div>
+
+        <div id="view-checkout" class="card hidden">
+            <h2>CONFIRMACIÓN</h2>
+            <p id="checkout-item" style="color: white;"></p>
+            <div id="mes-selector-container">
+                <select id="mes-cuota"></select>
+            </div>
+            <h2 id="checkout-price" style="font-size: 32px; margin: 15px 0; color: var(--amarillo);"></h2>
+            <button class="btn-club btn-negro" onclick="iniciarPasarela()">PAGAR AHORA</button>
+            <button class="btn-back" onclick="transitionTo('view-home', 1200)">CANCELAR</button>
+        </div>
+
+        <div id="view-success" class="card hidden">
+            <h2 style="color: #00ff00;">¡PAGO EXITOSO!</h2>
+            <div id="ticket-descarga">
+                <div class="ticket-header">CLUB CONSTITUCIÓN</div>
+                <div class="ticket-row">SOCIO: <span id="t-nombre"></span></div>
+                <div class="ticket-row">DNI: <span id="t-dni"></span></div>
+                <div class="ticket-row">CONCEPTO: <span id="t-item"></span></div>
+                <div class="ticket-row">MES: <span id="t-mes"></span></div>
+                <div id="qrcode" style="display:flex; justify-content:center; padding:10px;"></div>
+                <div id="dni-footer" style="text-align:center; font-size:10px; font-weight:bold; margin-top:-5px;"></div>
+            </div>
+            <button class="btn-club btn-negro" onclick="descargarTicket()" style="background:#28a745; color:white; border:none; margin-top:15px;">📥 GUARDAR TICKET</button>
+            <button class="btn-back" onclick="transitionTo('view-home', 1200)">VOLVER AL PANEL</button>
+        </div>
+    </div>
+
+<script>
+    let socioActual = { nombre: "Socio", dni: "00000000" };
+    let pagosRealizados = [];
+
+    window.onload = () => {
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.classList.add('hidden');
+                showView('view-login');
+            }, 800);
+        }, 1700);
+    };
+
+    function showView(viewId) {
+        const view = document.getElementById(viewId);
+        view.classList.remove('hidden');
+        setTimeout(() => view.style.opacity = '1', 50);
+    }
+
+    function transitionTo(viewId, time) {
+        const splash = document.getElementById('splash-screen');
+        splash.classList.remove('hidden');
+        splash.style.opacity = '1';
+        setTimeout(() => {
+            document.querySelectorAll('.card').forEach(c => {
+                c.classList.add('hidden');
+                c.style.opacity = '0';
+            });
+            showView(viewId);
+            splash.style.opacity = '0';
+            setTimeout(() => splash.classList.add('hidden'), 600);
+        }, time);
+    }
+
+    function openModal(msg) {
+        document.getElementById('modal-msg').innerText = msg;
+        const m = document.getElementById('custom-modal');
+        m.classList.remove('hidden');
+        setTimeout(() => m.style.opacity = '1', 50);
+    }
+
+    function closeModal() {
+        document.getElementById('custom-modal').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('custom-modal').classList.add('hidden');
+            transitionTo('view-login', 1200);
+        }, 400);
+    }
+
+    function validarRegistro() {
+        const nom = document.getElementById('reg-nombre').value;
+        const dni = document.getElementById('reg-dni').value;
+        if(!nom || !dni) { openModal("Completá los datos"); return; }
+        socioActual = { nombre: nom, dni: dni };
+        openModal("¡Registro Exitoso!"); 
+    }
+
+    function prepararPago(nombre, precio, esCuota) {
+        document.getElementById('checkout-item').innerText = nombre;
+        document.getElementById('checkout-price').innerText = "$" + precio;
+        const cont = document.getElementById('mes-selector-container');
+        if(esCuota) {
+            cont.classList.remove('hidden');
+            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            const sel = document.getElementById('mes-cuota');
+            sel.innerHTML = "";
+            meses.filter(m => !pagosRealizados.some(p => p.mes === m)).forEach(m => {
+                let o = document.createElement('option'); o.value = m; o.text = m; sel.appendChild(o);
+            });
+        } else { cont.classList.add('hidden'); }
+        transitionTo('view-checkout', 1200);
+    }
+
+    function iniciarPasarela() {
+        const p = document.getElementById('pasarela-pago');
+        p.classList.remove('hidden');
+        setTimeout(() => p.style.opacity = '1', 50);
+        setTimeout(() => {
+            p.style.opacity = '0';
+            setTimeout(() => {
+                p.classList.add('hidden');
+                mostrarExito();
+            }, 400);
+        }, 3000);
+    }
+
+    function mostrarExito() {
+        const item = document.getElementById('checkout-item').innerText;
+        const mes = item.includes("CUOTA") ? document.getElementById('mes-cuota').value : "N/A";
+        
+        pagosRealizados.push({ concepto: item, mes: mes });
+        
+        // Cargar datos en el ticket incluyendo DNI
+        document.getElementById('t-nombre').innerText = socioActual.nombre;
+        document.getElementById('t-dni').innerText = socioActual.dni;
+        document.getElementById('t-item').innerText = item;
+        document.getElementById('t-mes').innerText = mes;
+        document.getElementById('dni-footer').innerText = "DNI: " + socioActual.dni;
+
+        // Generar QR con info del socio
+        document.getElementById('qrcode').innerHTML = "";
+        new QRCode(document.getElementById("qrcode"), { text: "ID:"+socioActual.dni+"-"+mes, width: 80, height: 80 });
+
+        // Historial
+        const lista = document.getElementById('lista-pagos');
+        lista.innerHTML = "<p style='font-size:10px; color:var(--amarillo); text-align:center;'>PAGOS REGISTRADOS</p>";
+        pagosRealizados.forEach(p => {
+            lista.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #222; font-size:12px;"><span>${p.mes !== 'N/A' ? p.mes : p.concepto}</span><span style="color:#00ff00;">PAGADO ✅</span></div>`;
+        });
+
+        transitionTo('view-success', 1200);
+    }
+
+    function descargarTicket() {
+        html2canvas(document.getElementById('ticket-descarga')).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'Ticket-Constitucion.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+</script>
+</body>
+</html>

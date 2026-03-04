@@ -4,38 +4,241 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Club | Club Constitución</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --oro: #fbc02d;
+            --negro: #0a0c10;
+            --gris-oscuro: #161b22;
+            --borde: #30363d;
+            --blanco: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--negro);
+            color: var(--blanco);
+        }
+
+        /* --- NAVBAR ESTILO IMAGEN --- */
+        .navbar-club {
+            background-color: var(--oro);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center; /* Centrado como en tu captura */
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #000;
+            font-weight: 800;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .nav-link i { font-size: 16px; }
+        .nav-link:hover { opacity: 0.7; }
+
+        /* --- HEADER PROFESIONAL --- */
+        header {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('logo.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 4px solid var(--oro);
+        }
+
+        .logo-header {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--oro);
+            background: white;
+            margin-bottom: 10px;
+        }
+
+        /* --- CONTENIDO --- */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-card {
+            background: var(--gris-oscuro);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--borde);
+            margin-bottom: 30px;
+        }
+
+        h2.title {
+            color: var(--oro);
+            border-left: 5px solid var(--oro);
+            padding-left: 15px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        /* COMISION */
+        .comision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .member-card {
+            background: #0d1117;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--borde);
+        }
+
+        .member-card img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--oro);
+            margin-bottom: 10px;
+        }
+
+        /* GALERIA */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .gal-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .gal-info {
+            padding: 15px;
+            background: #0d1117;
+            border-radius: 0 0 10px 10px;
+            border: 1px solid var(--borde);
+        }
+    </style>
 </head>
 <body>
-    <div id="historia-texto">Cargando historia...</div>
-    <div id="comision">
-        <div><img id="img-presidente" src="perfil.png"><h4 id="nom-presidente"></h4></div>
-        <div><img id="img-vice" src="perfil.png"><h4 id="nom-vice"></h4></div>
-        <div><img id="img-secretario" src="perfil.png"><h4 id="nom-secretario"></h4></div>
+
+    <nav class="navbar-club">
+        <div class="nav-container">
+            <a href="index.html" class="nav-link"><i class="fas fa-home"></i> INICIO</a>
+            <a href="el_club.html" class="nav-link"><i class="fas fa-shield-alt"></i> EL CLUB</a>
+            <a href="index.html#divisiones" class="nav-link"><i class="fas fa-list-ul"></i> DIVISIONES</a>
+            <a href="index.html#partido" class="nav-link"><i class="fas fa-futbol"></i> PRÓXIMO PARTIDO</a>
+            <a href="socios.html" class="nav-link"><i class="fas fa-users"></i> SOCIOS</a>
+            <a href="#" class="nav-link"><i class="fas fa-shopping-cart"></i> TIENDA</a>
+            <a href="contacto.html" class="nav-link"><i class="fas fa-envelope"></i> CONTACTO</a>
+            <a href="contiback/admin_login.html" class="nav-link"><i class="fas fa-user-cog"></i> ADMIN</a>
+        </div>
+    </nav>
+
+    <header>
+        <img src="logo.jpg" class="logo-header">
+        <h1 style="margin:0;">C.S.D. CONSTITUCIÓN</h1>
+        <p style="color: var(--oro); margin:0;">Pasión por el Canario</p>
+    </header>
+
+    <div class="container">
+        <section class="section-card">
+            <h2 class="title">Nuestra Historia</h2>
+            <div id="historia-texto" style="white-space: pre-wrap;">Cargando historia...</div>
+        </section>
+
+        <section class="section-card">
+            <h2 class="title">Comisión Directiva</h2>
+            <div class="comision-grid">
+                <div class="member-card">
+                    <img id="img-presidente" src="perfil.png">
+                    <h4 id="nom-presidente" style="margin:5px 0; color:var(--oro);">---</h4>
+                    <small>Presidente</small>
+                </div>
+                <div class="member-card">
+                    <img id="img-vice" src="perfil.png">
+                    <h4 id="nom-vice" style="margin:5px 0; color:var(--oro);">---</h4>
+                    <small>Vicepresidente</small>
+                </div>
+                <div class="member-card">
+                    <img id="img-secretario" src="perfil.png">
+                    <h4 id="nom-secretario" style="margin:5px 0; color:var(--oro);">---</h4>
+                    <small>Secretario</small>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2 class="title">Galería de Fotos</h2>
+            <div id="grid-galeria-publico" class="gallery-grid"></div>
+        </section>
     </div>
-    <div id="grid-galeria-publico"></div>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE", authDomain: "csydconstitucion-8b8bb.firebaseapp.com", projectId: "csydconstitucion-8b8bb", storageBucket: "csydconstitucion-8b8bb.firebasestorage.app", messagingSenderId: "363486272350", appId: "1:363486272350:web:e937e924c4371a3db74dcf" };
+        const firebaseConfig = { 
+            apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE", 
+            authDomain: "csydconstitucion-8b8bb.firebaseapp.com", 
+            projectId: "csydconstitucion-8b8bb", 
+            storageBucket: "csydconstitucion-8b8bb.firebasestorage.app", 
+            messagingSenderId: "363486272350", 
+            appId: "1:363486272350:web:e937e924c4371a3db74dcf" 
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+
         db.collection("config").doc("club").onSnapshot((doc) => {
             if (doc.exists) {
                 const data = doc.data();
-                if(document.getElementById('historia-texto')) document.getElementById('historia-texto').innerText = data.historia || "";
+                document.getElementById('historia-texto').innerText = data.historia || "";
                 if(data.imgP) document.getElementById('img-presidente').src = data.imgP;
                 if(data.pNom) document.getElementById('nom-presidente').innerText = data.pNom;
                 if(data.imgV) document.getElementById('img-vice').src = data.imgV;
                 if(data.vNom) document.getElementById('nom-vice').innerText = data.vNom;
                 if(data.imgS) document.getElementById('img-secretario').src = data.imgS;
                 if(data.sNom) document.getElementById('nom-secretario').innerText = data.sNom;
+
                 const galeriaWrap = document.getElementById('grid-galeria-publico');
-                if(galeriaWrap && data.galeria) {
-                    galeriaWrap.innerHTML = "";
+                galeriaWrap.innerHTML = "";
+                if(data.galeria) {
                     data.galeria.forEach(foto => {
-                        if(foto.url && foto.url.length > 10) {
-                            galeriaWrap.innerHTML += `<div class="gal-item"><img src="${foto.url}"><h3>${foto.titulo}</h3><p>${foto.desc}</p></div>`;
+                        if(foto.url && foto.url.length > 50) {
+                            galeriaWrap.innerHTML += `
+                                <div class="gal-item">
+                                    <img src="${foto.url}">
+                                    <div class="gal-info">
+                                        <h3 style="margin:0; color:var(--oro);">${foto.titulo || ''}</h3>
+                                        <p style="margin:5px 0 0; font-size:12px; color:#8b949e;">${foto.desc || ''}</p>
+                                    </div>
+                                </div>`;
                         }
                     });
                 }

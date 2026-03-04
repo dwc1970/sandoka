@@ -3,274 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pasarela de Pago | C.S.D. Constitución</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Panel de Socio - C.S.D. Constitución</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
-        :root {
-            --primary: #fbc02d;
-            --bg: #050505;
-            --card: #121212;
-            --text: #ffffff;
-            --mp-blue: #009ee3;
-            --success: #4caf50;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .checkout-container {
-            background: var(--card);
-            width: 90%;
-            max-width: 420px;
-            padding: 30px;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-            text-align: center;
-        }
-
-        .club-logo {
-            width: 70px; height: 70px;
-            border-radius: 50%;
-            border: 3px solid var(--primary);
-            margin-bottom: 10px;
-            object-fit: cover;
-            background: #000;
-        }
-
-        .header h2 { font-family: 'Archivo Black'; text-transform: uppercase; margin: 0; font-size: 1.2rem; color: #fff; }
-
-        .summary-box {
-            background: rgba(251, 192, 45, 0.05);
-            border: 1px dashed var(--primary);
-            padding: 15px; border-radius: 15px; margin: 20px 0;
-        }
-
-        .monto-input-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            margin-top: 5px;
-        }
-
-        .simbolo-peso { font-family: 'Archivo Black'; font-size: 2rem; color: var(--primary); }
-
-        .monto-editable {
-            background: transparent;
-            border: none;
-            color: var(--primary);
-            font-family: 'Archivo Black';
-            font-size: 2.5rem;
-            width: 70%;
-            text-align: center;
-            outline: none;
-            border-bottom: 2px solid rgba(251, 192, 45, 0.2);
-        }
-
-        .input-group { text-align: left; margin-bottom: 12px; }
-        label { font-size: 0.65rem; color: #888; font-weight: 800; margin-bottom: 5px; display: block; text-transform: uppercase; }
+        :root { --amarillo: #fbc02d; --negro: #1a1d23; --blanco: #ffffff; --gris: #f4f4f4; --rojo: #d32f2f; --verde: #4caf50; --borde: #333; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--gris); }
+        header { background: var(--amarillo); padding: 15px 0; text-align: center; border-bottom: 4px solid var(--negro); }
+        nav a { text-decoration: none; color: var(--negro); font-weight: 800; text-transform: uppercase; margin: 0 15px; }
+        .container { max-width: 800px; margin: 40px auto; padding: 20px; }
         
-        .field-input {
-            width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333;
-            border-radius: 8px; color: white; box-sizing: border-box; outline: none; font-size: 0.9rem;
-        }
-        .field-input:focus { border-color: var(--primary); }
+        .alarma-deuda { display: none; background: #ffebee; color: var(--rojo); border: 2px solid var(--rojo); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: center; font-weight: bold; }
 
-        .btn-confirm {
-            width: 100%; padding: 16px; background: var(--primary); color: #000;
-            border: none; border-radius: 10px; font-weight: 900; cursor: pointer;
-            text-transform: uppercase; transition: 0.3s; margin-top: 10px;
-        }
+        /* Carnet */
+        .carnet { background: var(--negro); color: white; border-radius: 20px; overflow: hidden; position: relative; box-shadow: 0 15px 30px rgba(0,0,0,0.3); display: flex; flex-wrap: wrap; border: 3px solid var(--amarillo); }
+        .carnet-header { background: var(--amarillo); width: 100%; padding: 15px; color: var(--negro); text-align: center; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .carnet-foto { flex: 1; min-width: 200px; padding: 30px; text-align: center; background: rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
+        .foto-usuario { width: 150px; height: 180px; background: #333; border-radius: 15px; border: 3px solid var(--amarillo); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .foto-usuario img { width: 100%; height: 100%; object-fit: cover; }
+        .foto-usuario i { font-size: 4rem; color: var(--amarillo); }
+        .btn-subir { margin-top: 10px; font-size: 0.8rem; color: var(--amarillo); cursor: pointer; text-decoration: underline; font-weight: bold; }
+        
+        .status-badge { background: var(--verde); color: white; padding: 5px 15px; border-radius: 50px; font-size: 0.9rem; font-weight: bold; display: inline-block; margin-top: 15px; }
+        .status-badge.deuda { background: var(--rojo); }
 
-        .btn-mp {
-            width: 100%; padding: 14px; background: var(--mp-blue); color: white;
-            border: none; border-radius: 10px; font-weight: 700; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
+        .carnet-info { flex: 2; padding: 30px; display: flex; flex-direction: column; justify-content: center; }
+        .dato-socio { margin: 10px 0; font-size: 1.1rem; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .label { color: var(--amarillo); font-size: 0.8rem; display: block; text-transform: uppercase; }
 
-        #status-overlay {
-            display: none;
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.98);
-            z-index: 9999;
-            flex-direction: column; justify-content: center; align-items: center;
-        }
+        /* Cuotas */
+        .seccion-movimientos { margin-top: 30px; background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .titulo-seccion { font-weight: 900; text-transform: uppercase; color: var(--negro); border-left: 5px solid var(--amarillo); padding-left: 15px; margin-bottom: 20px; }
+        .grid-meses { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; }
+        .mes-card { text-align: center; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
+        .mes-card.pagado { background: var(--verde); color: white; border-color: var(--verde); }
+        .mes-card.pendiente { background: #ffebee; color: var(--rojo); border-color: var(--rojo); }
 
-        .spinner {
-            width: 50px; height: 50px;
-            border: 5px solid rgba(251, 192, 45, 0.1);
-            border-left-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+        /* Estilos del Ticket de Pago (Oculto inicialmente) */
+        #ticketContainer { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; flex-direction: column; }
+        .ticket-box { background: white; width: 320px; padding: 20px; border-radius: 10px; font-family: 'Courier New', Courier, monospace; color: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; border: 1px dashed #000; }
+        .ticket-header { border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px; }
+        .ticket-body { text-align: left; line-height: 1.6; }
+        .ticket-footer { border-top: 2px dashed #000; margin-top: 15px; padding-top: 10px; font-weight: bold; }
+        
+        /* Botones */
+        .acciones { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .btn-panel { background: white; padding: 20px; border-radius: 15px; text-align: center; color: var(--negro); font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; border: none; cursor: pointer; font-size: 1rem; }
+        .btn-panel:hover { transform: translateY(-5px); background: var(--amarillo); }
+        .btn-panel i { display: block; font-size: 2rem; margin-bottom: 10px; }
+        .btn-descargar { background: var(--verde); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold; }
+        .btn-volver { background: var(--rojo); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-weight: bold; }
 
-        .success-mark {
-            display: none;
-            font-size: 70px;
-            color: var(--success);
-            animation: scaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes scaleUp { from { transform: scale(0); } to { transform: scale(1); } }
+        .cerrar-sesion { display: block; text-align: center; margin-top: 40px; color: #888; text-decoration: none; font-weight: bold; }
+        #inputFoto { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="status-overlay">
-        <div id="loader-spinner" class="spinner"></div>
-        <div id="success-mark" class="success-mark">
-            <i class="fas fa-check-circle"></i>
+    <header>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="el_club.html">El Club</a>
+            <a href="liga.html">Fixture</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div id="alarmaDeuda" class="alarma-deuda">⚠️ ATENCIÓN: Debes cuotas sociales. Por favor regulariza tu situación para mantener los beneficios.</div>
+
+        <h1 style="text-align: center; text-transform: uppercase;">Mi Panel de Socio</h1>
+
+        <div class="carnet" id="areaCarnet">
+            <div class="carnet-header">Socio Oficial - C.S.D. Constitución</div>
+            <div class="carnet-foto">
+                <div class="foto-usuario">
+                    <i class="fas fa-user" id="iconoDefecto"></i>
+                    <img id="fotoPerfil" style="display:none;">
+                </div>
+                <label for="inputFoto" class="btn-subir">Cambiar Foto</label>
+                <input type="file" id="inputFoto" accept="image/*" onchange="subirFoto(event)">
+                <div id="badgeEstado" class="status-badge">ACTUALIZANDO...</div>
+            </div>
+            <div class="carnet-info">
+                <div class="dato-socio"><span class="label">Nombre y Apellido</span><strong id="nombreSocio">---</strong></div>
+                <div class="dato-socio"><span class="label">DNI</span><strong id="dniSocio">---</strong></div>
+                <div class="dato-socio"><span class="label">Nro de Socio</span><strong id="nroSocio">---</strong></div>
+                <div class="dato-socio"><span class="label">Categoría</span><strong id="categoriaSocio">Activo</strong></div>
+                <div style="text-align: right;"><i class="fas fa-qrcode" style="font-size: 3rem; opacity: 0.7;"></i></div>
+            </div>
         </div>
-        <h3 id="status-text" style="margin-top: 20px; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; font-family: 'Archivo Black';">Procesando...</h3>
+
+        <div class="seccion-movimientos">
+            <h3 class="titulo-seccion">Estado de Cuotas 2026</h3>
+            <div class="grid-meses" id="gridCuotas"></div>
+        </div>
+
+        <div class="acciones">
+            <button class="btn-panel" onclick="window.location.href='cuotas.html'"><i class="fas fa-money-check-alt"></i>Pagar Cuota</button>
+            <button class="btn-panel" onclick="window.location.href='ticket.html'"><i class="fas fa-ticket-alt"></i>Comprar Entrada</button>
+            <button class="btn-panel" onclick="descargarCarnet()"><i class="fas fa-id-card"></i>Descargar Carnet</button>
+            <button class="btn-panel" onclick="location.reload()"><i class="fas fa-sync"></i>Actualizar Datos</button>
+        </div>
+        <a href="#" class="cerrar-sesion" onclick="cerrarSesion()">Cerrar Sesión</a>
     </div>
 
-    <div class="checkout-container">
-        <img src="logo.jpg" class="club-logo" onerror="this.src='https://via.placeholder.com/80?text=CLUB'" alt="Logo Club">
-        
-        <div class="header">
-            <h2 id="txt-titulo">Pasarela de Pago</h2>
-            <p id="txt-subtitulo" style="color: #666; font-size: 0.75rem; margin-top: 4px;">CONSTITUCIÓN ÉLITE SECURITY</p>
-        </div>
-
-        <div class="summary-box">
-            <p id="txt-label-monto" style="margin: 0; font-size: 0.65rem; color: #888; font-weight: 700;">VALOR A PAGAR</p>
-            <div class="monto-input-wrapper">
-                <span class="simbolo-peso">$</span>
-                <input type="number" id="monto-final" class="monto-editable" value="0">
+    <div id="ticketContainer">
+        <div class="ticket-box" id="ticketVisual">
+            <div class="ticket-header">
+                <h3>C.S.D. CONSTITUCIÓN</h3>
+                <p>Comprobante de Pago</p>
+            </div>
+            <div class="ticket-body" id="ticketDetalle">
+                </div>
+            <div class="ticket-footer">
+                ¡GRACIAS POR TU APOYO!
             </div>
         </div>
-
-        <form id="form-pago">
-            <div class="input-group">
-                <label>Tarjeta de Crédito / Débito</label>
-                <input type="text" class="field-input" placeholder="0000 0000 0000 0000" maxlength="19" required>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <div style="flex: 1;">
-                    <label>Vencimiento</label>
-                    <input type="text" class="field-input" placeholder="MM/AA" maxlength="5" required>
-                </div>
-                <div style="flex: 1;">
-                    <label>Cód. Seguridad</label>
-                    <input type="password" class="field-input" placeholder="123" maxlength="3" required>
-                </div>
-            </div>
-            <button type="submit" class="btn-confirm">Pagar con Tarjeta</button>
-        </form>
-
-        <div style="margin: 15px 0; color: #333; font-size: 0.7rem; font-weight: 800;">O</div>
-
-        <button type="button" class="btn-mp" onclick="iniciarPago('Mercado Pago')">
-            <img src="https://logotipous.com/wp-content/uploads/2021/11/Mercado-Pago-Logo.png" alt="MP" height="20" style="filter: brightness(0) invert(1);">
-            MERCADO PAGO
-        </button>
+        <button class="btn-descargar" onclick="descargarTicketImg()">📥 Descargar Ticket</button>
+        <button class="btn-volver" onclick="cerrarTicket()">VOLVER</button>
     </div>
 
     <script>
-        window.onload = () => {
-            const montoGuardado = sessionStorage.getItem('montoAPagar');
-            const tipoPago = sessionStorage.getItem('tipoPago');
-            
-            if (montoGuardado) {
-                document.getElementById('monto-final').value = montoGuardado;
-            }
-
-            if (tipoPago === 'cuota') {
-                document.getElementById('txt-titulo').innerText = "Pago de Cuota";
-                document.getElementById('txt-label-monto').innerText = "TOTAL MENSUALIDAD";
-            } else if (tipoPago === 'entrada') {
-                document.getElementById('txt-titulo').innerText = "Compra de Entradas";
-                document.getElementById('txt-label-monto').innerText = "VALOR ENTRADA";
-            }
+        const firebaseConfig = { 
+            apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE", 
+            authDomain: "csydconstitucion-8b8bb.firebaseapp.com", 
+            projectId: "csydconstitucion-8b8bb", 
+            appId: "1:363486272350:web:e937e924c4371a3db74dcf" 
         };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        function iniciarPago(metodo) {
-            const montoCargado = document.getElementById('monto-final').value;
-            if (!montoCargado || montoCargado <= 0) {
-                alert("Monto no válido.");
-                return;
-            }
+        const dniLogueado = sessionStorage.getItem('socioLogueado');
+        const mesesNombres = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
-            const overlay = document.getElementById('status-overlay');
-            const spinner = document.getElementById('loader-spinner');
-            const successMark = document.getElementById('success-mark');
-            const statusText = document.getElementById('status-text');
+        function cargarSocio() {
+            if (!dniLogueado) { window.location.href = "socios.html"; return; }
+            
+            db.collection("socios").where("dni", "==", dniLogueado).onSnapshot((snapshot) => {
+                if (!snapshot.empty) {
+                    const socio = snapshot.docs[0].data();
+                    document.getElementById('nombreSocio').innerText = socio.nombre || "Socio";
+                    document.getElementById('dniSocio').innerText = socio.dni || "---";
+                    document.getElementById('nroSocio').innerText = socio.nroSocio || "---";
+                    document.getElementById('categoriaSocio').innerText = socio.categoria || "Activo";
 
-            overlay.style.display = 'flex';
-            statusText.innerText = "Conectando...";
-
-            setTimeout(() => {
-                spinner.style.display = 'none';
-                successMark.style.display = 'block';
-                statusText.innerText = "¡PAGO EXITOSO!";
-                statusText.style.color = "#4caf50";
-
-                const tipoPago = sessionStorage.getItem('tipoPago');
-                const dniSocio = sessionStorage.getItem('socioLogueado');
-
-                // Lógica para Cuotas
-                if (tipoPago === 'cuota' && dniSocio) {
-                    const mesesJSON = sessionStorage.getItem('mesesAProcesar');
-                    if(mesesJSON) {
-                        const mesesAPagar = JSON.parse(mesesJSON);
-                        let historial = JSON.parse(localStorage.getItem('historialPagos')) || [];
-                        mesesAPagar.forEach(mesNombre => {
-                            const yaExiste = historial.some(p => p.dni === dniSocio && p.mes === mesNombre);
-                            if (!yaExiste) {
-                                historial.push({
-                                    dni: dniSocio,
-                                    mes: mesNombre,
-                                    fechaPago: new Date().toLocaleDateString(),
-                                    metodo: metodo
-                                });
-                            }
-                        });
-                        localStorage.setItem('historialPagos', JSON.stringify(historial));
+                    if (socio.foto) {
+                        const img = document.getElementById('fotoPerfil');
+                        img.src = socio.foto; img.style.display = "block";
+                        document.getElementById('iconoDefecto').style.display = "none";
                     }
-                }
 
-                // Lógica para Entradas (Opcional: puedes guardar el registro de venta aquí también)
-                if (tipoPago === 'entrada') {
-                    let ventas = JSON.parse(localStorage.getItem('ventasEntradas')) || [];
-                    ventas.push({
-                        dni: dniSocio,
-                        monto: montoCargado,
-                        fecha: new Date().toLocaleDateString(),
-                        metodo: metodo
+                    const grid = document.getElementById('gridCuotas');
+                    grid.innerHTML = "";
+                    const pagos = socio.pagos || {};
+                    let tieneDeuda = false;
+                    const mesActual = new Date().getMonth();
+
+                    mesesNombres.forEach((mes, index) => {
+                        const mesKey = mes.toLowerCase();
+                        const estaPagado = pagos[mesKey] === true;
+                        const card = document.createElement('div');
+                        card.className = `mes-card ${estaPagado ? 'pagado' : 'pendiente'}`;
+                        card.innerHTML = `${mes}<br>${estaPagado ? '✓' : 'X'}`;
+                        grid.appendChild(card);
+                        if(!estaPagado && index <= mesActual) tieneDeuda = true;
                     });
-                    localStorage.setItem('ventasEntradas', JSON.stringify(ventas));
-                }
 
-                sessionStorage.setItem('pagoExitoso', 'true');
-
-                setTimeout(() => {
-                    // REDIRECCIÓN INTELIGENTE
-                    if (tipoPago === 'entrada') {
-                        window.location.href = 'ticket.html'; // Va a descargar la entrada
+                    const badge = document.getElementById('badgeEstado');
+                    if (tieneDeuda) {
+                        document.getElementById('alarmaDeuda').style.display = "block";
+                        badge.innerText = "CON DEUDA"; badge.className = 'status-badge deuda';
                     } else {
-                        window.location.href = 'cuotas.html'; // Vuelve a ver sus cuotas
+                        document.getElementById('alarmaDeuda').style.display = "none";
+                        badge.innerText = "AL DÍA"; badge.className = 'status-badge';
                     }
-                }, 2000);
 
-            }, 2500);
+                    // --- DETECTAR SI VIENE DE UN PAGO RECIENTE ---
+                    const pagoReciente = sessionStorage.getItem('pagoExitoso');
+                    if (pagoReciente) {
+                        generarTicketUI(socio, JSON.parse(pagoReciente));
+                        sessionStorage.removeItem('pagoExitoso');
+                    }
+                }
+            });
         }
 
-        document.getElementById('form-pago').onsubmit = (e) => {
-            e.preventDefault();
-            iniciarPago('Tarjeta de Crédito/Débito');
-        };
+        function generarTicketUI(socio, datosPago) {
+            const detalle = document.getElementById('ticketDetalle');
+            const fecha = new Date().toLocaleDateString();
+            detalle.innerHTML = `
+                <p><strong>Fecha:</strong> ${fecha}</p>
+                <p><strong>Socio:</strong> ${socio.nombre}</p>
+                <p><strong>DNI:</strong> ${socio.dni}</p>
+                <p><strong>Concepto:</strong> ${datosPago.tipo === 'cuota' ? 'Pago Cuota Mensual' : 'Compra Entrada'}</p>
+                <p><strong>Detalle:</strong> ${datosPago.detalle || 'Varios meses'}</p>
+                <p><strong>Monto:</strong> $${datosPago.monto}</p>
+                <p><strong>Nro Transacción:</strong> #${Math.floor(Math.random()*1000000)}</p>
+            `;
+            document.getElementById('ticketContainer').style.display = 'flex';
+        }
+
+        function descargarTicketImg() {
+            const ticket = document.getElementById('ticketVisual');
+            html2canvas(ticket).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Ticket-Constitucion.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        function cerrarTicket() {
+            document.getElementById('ticketContainer').style.display = 'none';
+        }
+
+        async function subirFoto(event) {
+            const archivo = event.target.files[0];
+            if (!archivo) return;
+            const lector = new FileReader();
+            lector.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = async function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 300; canvas.height = 400;
+                    ctx.drawImage(img, 0, 0, 300, 400);
+                    const base64 = canvas.toDataURL('image/jpeg', 0.7);
+                    const snap = await db.collection("socios").where("dni", "==", dniLogueado).get();
+                    if(!snap.empty) {
+                        await db.collection("socios").doc(snap.docs[0].id).update({ foto: base64 });
+                        alert("Foto actualizada.");
+                    }
+                };
+            };
+            lector.readAsDataURL(archivo);
+        }
+
+        function descargarCarnet() {
+            const area = document.getElementById('areaCarnet');
+            html2canvas(area, { scale: 2, backgroundColor: "#1a1d23", useCORS: true }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Carnet-${dniLogueado}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        function cerrarSesion() {
+            sessionStorage.removeItem('socioLogueado');
+            window.location.href = "socios.html";
+        }
+
+        window.onload = cargarSocio;
     </script>
 </body>
 </html>
