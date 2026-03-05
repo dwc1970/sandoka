@@ -3,150 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tickets Oficiales | Club Constitución</title>
+    <title>Tickets | Club Constitución</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --primary: #fbc02d; --bg: #050505; --glass: rgba(255, 255, 255, 0.05); --text: #ffffff; --negro: #000000; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; }
-        .navbar { background-color: var(--primary); padding: 15px; display: flex; justify-content: center; gap: 20px; position: sticky; top: 0; z-index: 1000; }
-        .navbar a { color: var(--negro); text-decoration: none; font-weight: 900; text-transform: uppercase; font-size: 0.8rem; }
-        .main-container { display: grid; grid-template-columns: 1.2fr 0.8fr; min-height: 85vh; }
-        .hero-info { padding: 60px; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80') center/cover; display: flex; flex-direction: column; justify-content: flex-end; }
-        .checkout-side { padding: 40px; background: #0a0a0a; display: flex; align-items: center; justify-content: center; }
-        .card { background: var(--glass); padding: 30px; border-radius: 20px; width: 100%; border: 1px solid rgba(255,255,255,0.1); }
-        .qty-box { display: flex; justify-content: space-between; align-items: center; background: #000; padding: 15px; border-radius: 10px; margin: 20px 0; }
-        .btn-qty { background: var(--primary); border: none; width: 45px; height: 45px; border-radius: 5px; cursor: pointer; font-weight: 900; font-size: 1.2rem; }
-        .btn-pay { display: block; width: 100%; padding: 20px; background: var(--primary); color: #000; text-decoration: none; text-align: center; border-radius: 10px; font-weight: 900; text-transform: uppercase; font-size: 1rem; margin-bottom: 10px; box-sizing: border-box; border: none; cursor: pointer; }
-        .btn-regresar { display: block; width: 100%; padding: 15px; background: #333; color: white; text-decoration: none; text-align: center; border-radius: 10px; font-weight: 700; text-transform: uppercase; font-size: 0.9rem; box-sizing: border-box; }
-        #ticket-img { background: white; color: black; padding: 25px; border-radius: 5px; text-align: left; margin-bottom: 20px; border: 2px dashed #000; font-family: 'Courier New', Courier, monospace; }
-        @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; } }
+        :root { --gold: #facc15; --bg: #050505; --card: rgba(20, 20, 20, 0.85); }
+        body { margin: 0; font-family: 'Outfit', sans-serif; background: #000; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        .hero-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80'); background-size: cover; z-index: -1; }
+        .header-nav { width: 100%; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; }
+        .logo { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; margin-bottom: 15px; }
+        .navbar { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        .navbar a { color: white; text-decoration: none; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
+        .main-wrapper { width: 100%; max-width: 450px; padding: 0 15px; box-sizing: border-box; display: flex; justify-content: center; }
+        .card { background: var(--card); backdrop-filter: blur(20px); padding: 30px; border-radius: 30px; width: 100%; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        h2 { text-align: center; color: var(--gold); margin-bottom: 20px; text-transform: uppercase; font-size: 1.3rem; }
+        .qty-box { display: flex; justify-content: space-around; align-items: center; background: #111; padding: 15px; border-radius: 20px; margin-bottom: 20px; border: 1px solid #333; }
+        .btn-qty { background: #222; border: none; color: white; width: 40px; height: 40px; border-radius: 12px; cursor: pointer; }
+        .btn-action { width: 100%; padding: 15px; border: none; border-radius: 15px; font-weight: 700; cursor: pointer; margin-top: 10px; text-transform: uppercase; font-size: 0.9rem; }
+        .btn-pay { background: var(--gold); color: black; }
+        .btn-regresar { background: transparent; border: 1px solid #444; color: #888; }
+        #ticket-img { background: white; color: black; padding: 20px; border-radius: 20px; text-align: center; border: 2px dashed #ccc; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <a href="index.html">INICIO</a>
-        <a href="soysocio.html">MI PANEL</a>
-    </nav>
+    <div class="hero-bg"></div>
 
-    <main class="main-container">
-        <section class="hero-info">
-            <h1 id="rival-tit" style="font-family:'Archivo Black'; font-size: 3rem; margin:0; text-transform: uppercase;">CONSTITUCIÓN vs --</h1>
-            <p id="detalle-tit" style="color: var(--primary); font-weight: 900; font-size: 1.1rem;">Cargando partido...</p>
-        </section>
+    <header class="header-nav">
+        <img src="logo.jpg" alt="Logo" class="logo">
+        <nav class="navbar">
+            <a href="index.html">Inicio</a>
+            <a href="SoySocio.html">Mi Panel</a>
+        </nav>
+    </header>
 
-        <section class="checkout-side">
-            <div id="panel-compra" class="card">
-                <h2 style="margin-top:0">SELECCIONAR ENTRADAS</h2>
-                <div class="qty-box">
-                    <button type="button" class="btn-qty" onclick="cambiarCantidad(-1)">-</button>
-                    <span id="cant-display" style="font-size: 1.8rem; font-weight: 900;">1</span>
-                    <button type="button" class="btn-qty" onclick="cambiarCantidad(1)">+</button>
-                </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:900; font-size: 1.2rem;">
-                    <span>TOTAL:</span>
-                    <span style="color:var(--primary)">$<span id="total-display">1500</span></span>
-                </div>
-                
-                <a href="pago_entradas.html" class="btn-pay" onclick="guardarDatosYContinuar(event)">
-                    Pagar con Mercado Pago <i class="fas fa-credit-card"></i>
-                </a>
-                
-                <a href="soysocio.html" class="btn-regresar">REGRESAR</a>
+    <main class="main-wrapper">
+        <div id="panel-compra" class="card">
+            <h2>Entradas</h2>
+            <div class="qty-box">
+                <button type="button" class="btn-qty" onclick="cambiarCantidad(-1)">-</button>
+                <span id="cant-display" style="font-size: 1.8rem; font-weight: 800;">1</span>
+                <button type="button" class="btn-qty" onclick="cambiarCantidad(1)">+</button>
             </div>
+            <p style="text-align: center; color: #aaa;">Total: <strong style="color: white; font-size: 1.3rem;">$<span id="total-display">1500</span></strong></p>
+            
+            <button type="button" class="btn-action btn-pay" onclick="guardarDatosYContinuar()">Pagar Ahora</button>
+            
+            <a href="SoySocio.html" style="text-decoration:none;"><button type="button" class="btn-action btn-regresar">Volver al Panel</button></a>
+        </div>
 
-            <div id="panel-ticket" class="card" style="display:none; text-align:center;">
-                <h2 style="color:var(--primary)">¡PAGO EXITOSO!</h2>
-                <div id="ticket-img">
-                    <h3 style="text-align:center; margin:0;">C.S.D. CONSTITUCIÓN</h3>
-                    <hr style="border: 1px dashed #000;">
-                    <p><strong>SOCIO:</strong> <span id="t-nombre">---</span></p>
-                    <p><strong>DNI:</strong> <span id="t-dni">---</span></p>
-                    <p><strong>RIVAL:</strong> <span id="t-rival">---</span></p>
-                    <p><strong>CANTIDAD:</strong> <span id="t-cant">---</span></p>
-                    <p><strong>ESTADO:</strong> PAGADO ✓</p>
-                    <div style="text-align:center; font-size:80px; margin: 10px 0;"><i class="fas fa-qrcode"></i></div>
-                </div>
-                <button class="btn-pay" onclick="descargarTicket()">DESCARGAR ENTRADA</button>
-                <a href="soysocio.html" class="btn-regresar">VOLVER AL PANEL</a>
+        <div id="panel-ticket" class="card" style="display:none;">
+            <h2 style="color: var(--gold);">¡Pago Exitoso!</h2>
+            <div id="ticket-img">
+                <h3>C.S.D. CONSTITUCIÓN</h3>
+                <p><strong>Cantidad:</strong> <span id="t-cant">---</span></p>
+                <div style="font-size: 40px; margin-top: 15px;"><i class="fas fa-qrcode"></i></div>
             </div>
-        </section>
+            <button type="button" class="btn-action btn-pay" onclick="descargarTicket()">Descargar Entrada</button>
+            <a href="SoySocio.html" style="text-decoration:none;"><button type="button" class="btn-action btn-regresar">Volver al Panel</button></a>
+        </div>
     </main>
 
     <script>
-        const firebaseConfig = { 
-            apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE", 
-            authDomain: "csydconstitucion-8b8bb.firebaseapp.com", 
-            projectId: "csydconstitucion-8b8bb", 
-            appId: "1:363486272350:web:e937e924c4371a3db74dcf" 
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
         let cantidadActual = 1;
         const PRECIO = 1500;
-        const dniLogueado = sessionStorage.getItem('socioLogueado');
-
+        
         function cambiarCantidad(n) {
-            const nuevaCant = cantidadActual + n;
-            if(nuevaCant >= 1 && nuevaCant <= 5) {
-                cantidadActual = nuevaCant;
-                document.getElementById('cant-display').innerText = cantidadActual;
-                document.getElementById('total-display').innerText = cantidadActual * PRECIO;
-            }
+            cantidadActual = Math.max(1, Math.min(5, cantidadActual + n));
+            document.getElementById('cant-display').innerText = cantidadActual;
+            document.getElementById('total-display').innerText = cantidadActual * PRECIO;
         }
 
-        function guardarDatosYContinuar(event) {
-            // Evitamos que navegue antes de guardar
-            event.preventDefault();
-            
-            const total = cantidadActual * PRECIO;
-            sessionStorage.setItem('montoAPagar', total);
+        function guardarDatosYContinuar() {
             sessionStorage.setItem('cantidadComprada', cantidadActual);
-            sessionStorage.setItem('tipoPago', 'entrada');
+            sessionStorage.setItem('totalCompra', cantidadActual * PRECIO);
             
-            // Ahora sí, navegamos manualmente a la pasarela de entradas
-            window.location.href = "pago_entradas.html";
+            // Navegación directa a la pasarela
+            window.location.href = "p_pago.html";
         }
 
         window.onload = function() {
-            // 1. Cargar datos partido
-            const p = JSON.parse(localStorage.getItem('proximoPartido'));
-            if(p) {
-                document.getElementById('rival-tit').innerText = `CONSTITUCIÓN vs ${p.rival}`;
-                document.getElementById('detalle-tit').innerText = `${p.fecha} | ${p.hora} HS`;
-                document.getElementById('t-rival').innerText = p.rival;
-            }
-
-            // 2. Verificar si venimos de un pago aprobado (por URL o por session)
             const urlParams = new URLSearchParams(window.location.search);
-            if(sessionStorage.getItem('pagoExitoso') === 'true' || urlParams.get('status') === 'approved') {
+            // Detecta si viene de la pasarela tras un pago exitoso
+            if(urlParams.get('status') === 'approved') {
                 document.getElementById('panel-compra').style.display = 'none';
                 document.getElementById('panel-ticket').style.display = 'block';
                 document.getElementById('t-cant').innerText = sessionStorage.getItem('cantidadComprada') || "1";
-                
-                if(dniLogueado) {
-                    db.collection("socios").where("dni", "==", dniLogueado).get().then(snap => {
-                        if(!snap.empty) {
-                            const d = snap.docs[0].data();
-                            document.getElementById('t-nombre').innerText = d.nombre.toUpperCase();
-                            document.getElementById('t-dni').innerText = d.dni;
-                        }
-                    });
-                }
-                // Limpiamos para que no se repita el ticket al recargar innecesariamente
-                sessionStorage.removeItem('pagoExitoso');
             }
         };
 
         function descargarTicket() {
             html2canvas(document.getElementById('ticket-img')).then(canvas => {
                 const a = document.createElement('a');
-                a.download = `Entrada_Constitucion_${Date.now()}.png`;
+                a.download = `Entrada_Constitucion.png`;
                 a.href = canvas.toDataURL();
                 a.click();
             });

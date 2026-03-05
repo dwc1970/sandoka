@@ -10,7 +10,6 @@
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--fondo); color: white; margin: 0; padding: 20px; padding-bottom: 120px; }
         .container { max-width: 1100px; margin: 0 auto; }
         
-        /* Estilo para el botón Volver */
         .btn-volver {
             display: inline-flex;
             align-items: center;
@@ -121,7 +120,7 @@
                 card.className = `mes-card ${yaPagoEsteMes ? 'paga' : 'impaga'}`;
                 card.innerHTML = `
                     <p class="mes-nombre">${m.nombre}</p>
-                    <span class="vencimiento">Vence el: ${m.vence}</span>
+                    <span class="vencimiento">Vence el: ${m.vencimiento || m.vence}</span>
                     <span class="monto">$ ${m.monto.toLocaleString()}</span>
                     <button class="btn-accion ${yaPagoEsteMes ? 'btn-pagado' : 'btn-pagar'}" 
                             onclick="${yaPagoEsteMes ? '' : `seleccionar(${i}, this)`}"
@@ -154,14 +153,17 @@
         document.getElementById('monto-total').innerText = `$ ${acumulado.toLocaleString()}`;
     }
 
+    // FUNCIÓN DE REDIRECCIÓN A PASARELA
     function irAPagar() {
         if(acumulado === 0) {
             alert("Por favor, selecciona al menos un mes.");
             return;
         }
-        sessionStorage.setItem('montoAPagar', acumulado);
+        // Guardamos el total en la clave que lee tu pasarela (p_pago.html)
+        sessionStorage.setItem('totalCompra', acumulado);
         sessionStorage.setItem('tipoPago', 'cuota');
         sessionStorage.setItem('mesesAProcesar', JSON.stringify(mesesSeleccionados));
+        
         window.location.href = "p_pago.html";
     }
 

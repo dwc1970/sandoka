@@ -17,10 +17,8 @@
         nav a { text-decoration: none; color: var(--negro); font-weight: 800; text-transform: uppercase; margin: 0 15px; }
         .container { max-width: 800px; margin: 40px auto; padding: 20px; }
         
-        /* Alarma de Deuda */
         .alarma-deuda { display: none; background: #ffebee; color: var(--rojo); border: 2px solid var(--rojo); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: center; font-weight: bold; }
 
-        /* Carnet */
         .carnet { background: var(--negro); color: white; border-radius: 20px; overflow: hidden; position: relative; box-shadow: 0 15px 30px rgba(0,0,0,0.3); display: flex; flex-wrap: wrap; border: 3px solid var(--amarillo); }
         .carnet-header { background: var(--amarillo); width: 100%; padding: 15px; color: var(--negro); text-align: center; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
         .carnet-foto { flex: 1; min-width: 200px; padding: 30px; text-align: center; background: rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
@@ -36,19 +34,14 @@
         .dato-socio { margin: 10px 0; font-size: 1.1rem; border-bottom: 1px solid #333; padding-bottom: 5px; }
         .label { color: var(--amarillo); font-size: 0.8rem; display: block; text-transform: uppercase; }
 
-        /* SECCIÓN: ESTADO DE CUOTAS */
         .seccion-movimientos { margin-top: 30px; background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         .titulo-seccion { font-weight: 900; text-transform: uppercase; color: var(--negro); border-left: 5px solid var(--amarillo); padding-left: 15px; margin-bottom: 20px; }
         
         .grid-meses { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; }
         .mes-card { text-align: center; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
-        
-        /* CUOTA PAGADA (VERDE) */
         .mes-card.pagado { background: var(--verde); color: white; border-color: var(--verde); }
-        /* CUOTA PENDIENTE (ROJO) */
         .mes-card.pendiente { background: #ffebee; color: var(--rojo); border-color: var(--rojo); }
 
-        /* Botones */
         .acciones { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .btn-panel { background: white; padding: 20px; border-radius: 15px; text-align: center; color: var(--negro); font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; border: none; cursor: pointer; font-size: 1rem; }
         .btn-panel:hover { transform: translateY(-5px); background: var(--amarillo); }
@@ -69,7 +62,7 @@
     </header>
 
     <div class="container">
-        <div id="alarmaDeuda" class="alarma-deuda">⚠️ ATENCIÓN: Debes cuotas sociales. Por favor regulariza tu situación para mantener los beneficios.</div>
+        <div id="alarmaDeuda" class="alarma-deuda">⚠️ ATENCIÓN: Debes cuotas sociales. Por favor regulariza tu situación.</div>
 
         <h1 style="text-align: center; text-transform: uppercase;">Mi Panel de Socio</h1>
 
@@ -99,16 +92,15 @@
         </div>
 
         <div class="acciones">
-            <button class="btn-panel" onclick="window.location.href='cuotas.html'"><i class="fas fa-money-check-alt"></i>Pagar Cuota</button>
-            <button class="btn-panel" onclick="window.location.href='ticket.html'"><i class="fas fa-ticket-alt"></i>Comprar Entrada</button>
-            <button class="btn-panel" onclick="descargarCarnet()"><i class="fas fa-id-card"></i>Descargar Carnet</button>
-            <button class="btn-panel" onclick="location.reload()"><i class="fas fa-sync"></i>Actualizar Datos</button>
+            <button type="button" class="btn-panel" onclick="prepararPagoCuota()"><i class="fas fa-money-check-alt"></i>Pagar Cuota</button>
+            <button type="button" class="btn-panel" onclick="window.location.href='ticket.html'"><i class="fas fa-ticket-alt"></i>Comprar Entrada</button>
+            <button type="button" class="btn-panel" onclick="descargarCarnet()"><i class="fas fa-id-card"></i>Descargar Carnet</button>
+            <button type="button" class="btn-panel" onclick="location.reload()"><i class="fas fa-sync"></i>Actualizar Datos</button>
         </div>
         <a href="#" class="cerrar-sesion" onclick="cerrarSesion()">Cerrar Sesión</a>
     </div>
 
     <script>
-        // CONFIGURACIÓN FIREBASE
         const firebaseConfig = { 
             apiKey: "AIzaSyDgg57r83Wxt5COBhKWVfIA1JzlhGmiVaE", 
             authDomain: "csydconstitucion-8b8bb.firebaseapp.com", 
@@ -121,33 +113,30 @@
         const dniLogueado = sessionStorage.getItem('socioLogueado');
         const mesesNombres = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
+        // Lógica de preparación de pago
+        function prepararPagoCuota() {
+            sessionStorage.setItem('totalCompra', '1500'); // Monto de cuota
+            sessionStorage.setItem('tipoPago', 'cuota');
+            window.location.href = "p_pago.html";
+        }
+
         function cargarSocio() {
-            if (!dniLogueado) { 
-                window.location.href = "socios.html"; 
-                return; 
-            }
+            if (!dniLogueado) { window.location.href = "socios.html"; return; }
             
-            // ESCUCHA EN TIEMPO REAL
             db.collection("socios").where("dni", "==", dniLogueado).onSnapshot((snapshot) => {
                 if (!snapshot.empty) {
                     const socio = snapshot.docs[0].data();
-                    const socioId = snapshot.docs[0].id;
-
-                    // Datos básicos
                     document.getElementById('nombreSocio').innerText = socio.nombre || "Socio";
                     document.getElementById('dniSocio').innerText = socio.dni || "---";
                     document.getElementById('nroSocio').innerText = socio.nroSocio || "---";
                     document.getElementById('categoriaSocio').innerText = socio.categoria || "Activo";
 
-                    // Foto
                     if (socio.foto) {
                         const img = document.getElementById('fotoPerfil');
-                        img.src = socio.foto;
-                        img.style.display = "block";
+                        img.src = socio.foto; img.style.display = "block";
                         document.getElementById('iconoDefecto').style.display = "none";
                     }
 
-                    // Cuotas (Solo Firebase)
                     const grid = document.getElementById('gridCuotas');
                     grid.innerHTML = "";
                     const pagos = socio.pagos || {};
@@ -157,25 +146,20 @@
                     mesesNombres.forEach((mes, index) => {
                         const mesKey = mes.toLowerCase();
                         const estaPagado = pagos[mesKey] === true;
-                        
                         const card = document.createElement('div');
                         card.className = `mes-card ${estaPagado ? 'pagado' : 'pendiente'}`;
                         card.innerHTML = `${mes}<br>${estaPagado ? '✓' : 'X'}`;
                         grid.appendChild(card);
-                        
                         if(!estaPagado && index <= mesActual) tieneDeuda = true;
                     });
 
-                    // UI de Estado
                     const badge = document.getElementById('badgeEstado');
                     if (tieneDeuda) {
                         document.getElementById('alarmaDeuda').style.display = "block";
-                        badge.innerText = "CON DEUDA";
-                        badge.className = 'status-badge deuda';
+                        badge.innerText = "CON DEUDA"; badge.className = 'status-badge deuda';
                     } else {
                         document.getElementById('alarmaDeuda').style.display = "none";
-                        badge.innerText = "AL DÍA";
-                        badge.className = 'status-badge';
+                        badge.innerText = "AL DÍA"; badge.className = 'status-badge';
                     }
                 }
             });
@@ -198,7 +182,7 @@
                     const snap = await db.collection("socios").where("dni", "==", dniLogueado).get();
                     if(!snap.empty) {
                         await db.collection("socios").doc(snap.docs[0].id).update({ foto: base64 });
-                        alert("Foto actualizada correctamente.");
+                        alert("Foto actualizada.");
                     }
                 };
             };

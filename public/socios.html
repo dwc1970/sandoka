@@ -53,6 +53,13 @@
         nav a:hover { opacity: 0.6; }
         .admin-btn { background: rgba(0,0,0,0.1); padding: 8px 15px; border-radius: 5px; }
 
+        /* Estilos Dropdown */
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content { display: none; position: absolute; background-color: var(--amarillo); min-width: 160px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; }
+        .dropdown-content a { color: black; padding: 12px 16px; text-decoration: none; display: block; }
+        .dropdown:hover .dropdown-content { display: block; }
+        .dropbtn { background: none; border: none; font-family: inherit; font-weight: 800; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+
         /* --- CONTENEDOR DE IMPACTO --- */
         .hero-section {
             display: flex;
@@ -181,17 +188,28 @@
 </head>
 <body class="mode-login" id="mainBody">
 
-    <header>
-        <nav>
-            <a href="index.html"><i class="fas fa-home"></i> INICIO</a>
-            <a href="el_club.html"><i class="fas fa-shield-alt"></i> EL CLUB</a>
-            <a href="#"><i class="fas fa-list"></i> DIVISIONES <i class="fas fa-caret-down"></i></a>
-            <a href="liga.html"><i class="fas fa-futbol"></i> PRÓXIMO PARTIDO</a>
-            <a href="socios.html"><i class="fas fa-users"></i> SOCIOS</a>
-            <a href="contacto.html"><i class="fas fa-envelope"></i> CONTACTO</a>
-            <a href="admin.html" class="admin-btn"><i class="fas fa-user-cog"></i> ADMIN</a>
-        </nav>
-    </header>
+   <header>
+    <nav class="navbar">
+        <a href="index.html"><i class="fas fa-home"></i> INICIO</a>
+        <a href="el_club.html"><i class="fas fa-shield-alt"></i> EL CLUB</a>
+        <div class="dropdown">
+            <button class="dropbtn"><i class="fas fa-list-ul"></i> DIVISIONES <i class="fas fa-caret-down"></i></button>
+            <div class="dropdown-content">
+                <a href="divisiones/primera.html">Primera División</a>
+                <a href="divisiones/reserva.html">Reserva</a> 
+                <a href="divisiones/inferiores.html">Inferiores</a>
+                <a href="divisiones/fem.html">Canaritas</a>
+            </div>
+        </div>
+        <a href="liga.html"><i class="fas fa-user"></i> PRÓXIMO PARTIDO</a>
+        
+        <a href="socios.html"><i class="fas fa-users"></i> SOCIOS</a>
+        
+        <a href="tienda/e-canario.html"><i class="fas fa-store"></i> TIENDA</a>
+        <a href="contacto.html"><i class="fas fa-envelope"></i> CONTACTO</a>
+        <a href="contiback/admin_login.html"><i class="fas fa-user-cog"></i> ADMIN</a>
+    </nav>
+</header>
 
     <div class="hero-section">
         <div class="main-card">
@@ -331,7 +349,8 @@
 
             if(datos && datos.pass === pass) {
                 sessionStorage.setItem('socioLogueado', dni);
-                window.location.href = "soysocio.html";
+                // REDIRECCIÓN CORREGIDA CON MAYÚSCULAS EXACTAS
+                window.location.href = "SoySocio.html";
             } else {
                 alert("DNI o contraseña incorrectos.");
             }
