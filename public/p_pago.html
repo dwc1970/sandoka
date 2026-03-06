@@ -3,46 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pasarela de Pago - C.S.D. Constitución</title>
+    <title>Pasarela de Pago | Club Constitución</title>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #000; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .pago-box { background: #1a1d23; padding: 40px; border-radius: 20px; text-align: center; border: 2px solid #fbc02d; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { color: #fbc02d; margin-top: 0; }
-        .total-display { font-size: 2.5rem; font-weight: bold; margin: 20px 0; }
-        .btn-confirmar { background: #fbc02d; color: #000; border: none; padding: 15px 30px; border-radius: 10px; font-weight: bold; font-size: 1.2rem; cursor: pointer; transition: 0.3s; width: 100%; }
-        .btn-confirmar:hover { background: #ffd740; transform: scale(1.05); }
+        :root { --oro: #fbc02d; --fondo: #0a0c10; --card: #161b22; --borde: #30363d; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--fondo); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .checkout-container { background: var(--card); border: 1px solid var(--borde); border-radius: 20px; width: 100%; max-width: 500px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .monto-total { font-size: 2.5rem; color: var(--oro); text-align: center; font-weight: bold; margin: 10px 0; }
+        .detalle-pago { background: rgba(251, 192, 45, 0.05); border: 1px dashed var(--oro); padding: 15px; border-radius: 12px; margin-bottom: 25px; text-align: center; }
+        #paymentBricks_container { width: 100%; }
     </style>
 </head>
 <body>
 
-    <div class="pago-box">
-        <h2>Procesando Pago</h2>
-        <div class="total-display" id="montoDisplay">$0</div>
-        <button class="btn-confirmar" onclick="confirmarPago()">CONFIRMAR PAGO</button>
+<div class="checkout-container">
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h2 style="margin:0; letter-spacing: 2px;">PROCESAR PAGO</h2>
+        <div class="monto-total" id="monto-display">$ 0</div>
     </div>
 
-    <script>
-        // Al cargar, recuperamos el monto desde el sessionStorage
-        const total = sessionStorage.getItem('totalCompra') || '0';
-        document.getElementById('montoDisplay').innerText = '$' + total;
+    <div class="detalle-pago">
+        <strong id="tipo-comprobante" style="color: var(--oro); display: block;">DETALLE:</strong>
+        <div id="detalle-items" style="margin-top: 5px;">Cargando...</div>
+    </div>
 
-        function confirmarPago() {
-            // Recuperamos el tipo de pago para saber qué mensaje mostrar o cómo procesar
-            const tipoPago = sessionStorage.getItem('tipoPago') || 'entrada';
-            
-            // Creamos el objeto con los datos que SoySocio.html espera
-            const datosPago = {
-                monto: total,
-                tipo: tipoPago,
-                detalle: "Pago verificado exitosamente"
-            };
+    <div id="paymentBricks_container"></div>
+</div>
 
-            // Guardamos el resultado en sessionStorage para que el panel lo detecte al volver
-            sessionStorage.setItem('pagoExitoso', JSON.stringify(datosPago));
+<script>
+    const mp = new MercadoPago('TU_PUBLIC_KEY_AQUI', { locale: 'es-AR' });
+    
+    // Recuperamos lo que eligió el usuario
+    const total = parseInt(sessionStorage.getItem('totalCompra')) || 0;
+    const tipo = sessionStorage.getItem('tipoPago'); // 'cuota' o 'entrada'
+    const meses = JSON.parse(sessionStorage.getItem('mesesAProcesar') || '[]');
 
-            // Redirigimos de vuelta al panel del socio
-            window.location.href = "SoySocio.html";
-        }
-    </script>
+    document.getElementById('monto-display').innerText = `$ ${total.toLocaleString()}`;
+    document.getElementById('detalle-items').innerText = tipo === 'cuota' ? `Meses: ${meses.join(', ')}` : "Entrada General";
+
+    const renderPaymentBrick = async (bricksBuilder) => {
+        const settings = {
+            initialization: {
+                amount: total,
+                preferenceId: "TU_ID_DE_PREFERENCIA",
+            },
+            customization: {
+                theme: "dark",
+                paymentMethods: { creditCard: "all", debitCard: "all", ticket: "all", mercadoPago: "all" },
+            },
+            callbacks: {
+                onReady: () => { console.log("Pasarela lista"); },
+                onSubmit: ({ selectedPaymentMethod, formData }) => {
+                    // AQUÍ ESTÁ LA MAGIA: Cuando se paga, enviamos los datos para generar el ticket
+                    return new Promise((resolve, reject) => {
+                        fetch("/procesar_y_generar_ticket", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                paymentData: formData,
+                                infoSocio: {
+                                    dni: localStorage.getItem('usuarioDNI'),
+                                    tipo: tipo,
+                                    detalle: meses
+                                }
+                            }),
+                        })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            // SI EL PAGO ES EXITOSO, LO MANDAMOS A LA PÁGINA DEL TICKET
+                            window.location.href = `ticket_final.html?id=${data.ticketID}`;
+                            resolve();
+                        })
+                        .catch((error) => reject());
+                    });
+                },
+                onError: (error) => console.error(error),
+            },
+        };
+        const bricksBuilder = mp.bricks();
+        await bricksBuilder.create("payment", "paymentBricks_container", settings);
+    };
+
+    renderPaymentBrick();
+</script>
 </body>
 </html>
