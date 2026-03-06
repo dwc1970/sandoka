@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Constitución - Simulación de Pago</title>
+    
+<style>
+        :root { 
+            --amarillo: #FFD700; 
+            --negro: #000000; 
+            --gris-oscuro: #121212; 
+            --blanco: #FFFFFF;
+            --gris-claro: #CCCCCC;
+        }
+
+        body { 
+            margin: 0; 
+            background-color: var(--negro); 
+            color: var(--blanco); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            font-family: 'Times New Roman', Times, serif; 
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 450px; 
+        }
+
+        .card { 
+            background: var(--gris-oscuro); 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 1px solid var(--amarillo); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        /* Estilo para el logo circular */
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%; /* Esto hace que la imagen sea circular */
+            object-fit: cover;
+            border: 2px solid var(--amarillo);
+            margin-bottom: 10px;
+        }
+
+        h2 { 
+            color: var(--amarillo); 
+            text-align: center; 
+            text-transform: uppercase; 
+            margin-bottom: 20px;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--gris-claro);
+        }
+
+        .form-group input {
+            width: calc(100% - 20px); 
+            padding: 12px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--amarillo);
+            background-color: var(--negro);
+            color: var(--blanco);
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .card-row {
+            display: flex;
+            gap: 15px; 
+        }
+
+        .btn-pago {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: none;
+            background-color: var(--amarillo);
+            color: var(--negro);
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .separator {
+            text-align: center;
+            margin: 30px 0;
+            color: var(--gris-claro);
+            position: relative;
+        }
+
+        .separator::before, .separator::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background-color: #333;
+        }
+        .separator::before { left: 0; }
+        .separator::after { right: 0; }
+
+        .mercadopago-button {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            background-color: #009EE3;
+            color: var(--blanco);
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <img src="logo.jpg" alt="Logo" class="logo-img">
+            
+            <h2>Pago Seguro</h2>
+
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label>Número de Tarjeta</label>
+                    <input type="text" id="cardNumber" placeholder="•••• •••• •••• ••••" maxlength="19" required>
+                </div>
+                <div class="form-group">
+                    <label>Nombre del Titular</label>
+                    <input type="text" id="cardHolder" placeholder="Como aparece en la tarjeta" required>
+                </div>
+                <div class="card-row">
+                    <div class="form-group">
+                        <label>Vencimiento</label>
+                        <div style="display: flex; gap: 5px;">
+                            <input type="text" id="expiryMonth" placeholder="MM" maxlength="2" required style="width: 50%;">
+                            <input type="text" id="expiryYear" placeholder="AA" maxlength="2" required style="width: 50%;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>CVV</label>
+                        <input type="text" id="cvc" placeholder="•••" maxlength="4" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-pago">Pagar con Tarjeta</button>
+            </form>
+
+            <div class="separator">O</div>
+
+            <button class="mercadopago-button" onclick="simularMercadoPago()">
+                Pagar con Mercado Pago
+            </button>
+        </div>
+    </div>
+
+<script>
+    document.getElementById('paymentForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        alert('Simulación: Pago con tarjeta procesado con éxito!');
+    });
+
+    function simularMercadoPago() {
+        alert('Simulación: Redirigiendo a Mercado Pago...');
+    }
+
+    document.getElementById('cardNumber').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+        e.target.value = value.trim();
+    });
+</script>
+</body>
+</html>
