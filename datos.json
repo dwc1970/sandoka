@@ -1,0 +1,209 @@
+{
+    "cat1": {
+        "nombre": "Vinculación Socio-Productiva",
+        "teorico": [
+            {
+                "name": "_Roles y funciones del equipo de Practicas Profesionalizantes",
+                "url": "../archivos/_Roles y funciones del equipo de Practicas Profesionalizantes.pdf"
+            },
+            {
+                "name": "anexo-i-4056-2019-roles-y-funciones-del-equipo-pp",
+                "url": "../archivos/anexo-i-4056-2019-roles-y-funciones-del-equipo-pp.pdf"
+            },
+            {
+                "name": "Baez",
+                "url": "../archivos/Baez.pdf"
+            },
+            {
+                "name": "DCP TECNICA EN PROGRAMACIÓN (2)",
+                "url": "../archivos/DCP TECNICA EN PROGRAMACIÓN (2).pdf"
+            },
+            {
+                "name": "Diseño de Pasantía Profesionalizante",
+                "url": "../archivos/Diseño de Pasantía Profesionalizante.pptx"
+            },
+            {
+                "name": "EJE 3 EL DOCENTE DE ETP COMO GESTOR PEDAGÓGICO DE LA VINCULACIÓN",
+                "url": "../archivos/EJE 3 EL DOCENTE DE ETP COMO GESTOR PEDAGÓGICO DE LA VINCULACIÓN.pdf"
+            },
+            {
+                "name": "El_Vinculo",
+                "url": "../archivos/El_Vinculo.pdf"
+            },
+            {
+                "name": "La_ETP_enArg_reorido_historico_y_desafios_actuales",
+                "url": "../archivos/La_ETP_enArg_reorido_historico_y_desafios_actuales.pdf"
+            },
+            {
+                "name": "La_identidad_docente (1)",
+                "url": "../archivos/La_identidad_docente (1).pdf"
+            },
+            {
+                "name": "Laescuelatécnicaindustrialenargentinaun_modelo para armar",
+                "url": "../archivos/Laescuelatécnicaindustrialenargentinaun_modelo para armar.pdf"
+            },
+            {
+                "name": "PLANILLA DE OBSERVACION",
+                "url": "../archivos/PLANILLA DE OBSERVACION.pdf"
+            },
+            {
+                "name": "Prácticas Profesionalizantes (1) (2)",
+                "url": "../archivos/Prácticas Profesionalizantes (1) (2).pptx"
+            },
+            {
+                "name": "procesos_de_subjetivacion (1)",
+                "url": "../archivos/procesos_de_subjetivacion (1).pdf"
+            },
+            {
+                "name": "Proyecto de vinculación (1)",
+                "url": "../archivos/Proyecto de vinculación (1).pdf"
+            },
+            {
+                "name": "resol-4056-AcuerdoMarco-PP-pasantias (imprimir)",
+                "url": "../archivos/resol-4056-AcuerdoMarco-PP-pasantias (imprimir).pdf"
+            },
+            {
+                "name": "resolucion-141-2017-pasantias-anexos",
+                "url": "../archivos/resolucion-141-2017-pasantias-anexos.pdf"
+            },
+            {
+                "name": "resolucion-4056-2019-practicas-profesionales mza",
+                "url": "../archivos/resolucion-4056-2019-practicas-profesionales mza.pdf"
+            },
+            {
+                "name": "resolucion-4056-acuerdo-marco-pp-pasantias",
+                "url": "../archivos/resolucion-4056-acuerdo-marco-pp-pasantias.pdf"
+            },
+            {
+                "name": "Respuesta_practico_1_enseñanza",
+                "url": "../archivos/Respuesta_practico_1_enseñanza.pdf"
+            },
+            {
+                "name": "RESPUESTA_TEXTO_BAEZ",
+                "url": "../archivos/RESPUESTA_TEXTO_BAEZ.docx"
+            },
+            {
+                "name": "Respuesta_Texto_Video_Corbetta_Feldman",
+                "url": "../archivos/Respuesta_Texto_Video_Corbetta_Feldman.docx"
+            },
+            {
+                "name": "S. Corbetta",
+                "url": "../archivos/S. Corbetta.pdf"
+            },
+            {
+                "name": "Texto_Ley_Educación_Técnica_2005",
+                "url": "../archivos/Texto_Ley_Educación_Técnica_2005.pdf"
+            },
+            {
+                "name": "Trabajo_Final_Integrador_Ensenanza_Educacion_Tecnica",
+                "url": "../archivos/Trabajo_Final_Integrador_Ensenanza_Educacion_Tecnica.docx"
+            },
+            {
+                "name": "Video explicativo de las Prácticas Profesionalizantes elaborado en conjunto entre la AEA y el INET",
+                "url": "../archivos/Video explicativo de las Prácticas Profesionalizantes elaborado en conjunto entre la AEA y el INET.mp4"
+            }
+        ],
+        "practico": [
+            {
+                "name": "Actividad asincrónica 24_09_2026",
+                "url": "../archivos/Actividad asincrónica 24_09_2026.pdf"
+            },
+            {
+                "name": "Práctico n°3",
+                "url": "../archivos/Práctico  n°3.pdf"
+            },
+            {
+                "name": "PRACTICO_1_Ley_26058",
+                "url": "../archivos/PRACTICO_1_Ley_26058.pdf"
+            },
+            {
+                "name": "Primer_examen_parcial_Vinculacion_sector_socio_productivo_PROTEC (2)",
+                "url": "../archivos/Primer_examen_parcial_Vinculacion_sector_socio_productivo_PROTEC (2).pdf"
+            },
+            {
+                "name": "TRABAJO GRUPAL- Eje N° 2",
+                "url": "../archivos/TRABAJO GRUPAL- Eje N° 2.pdf"
+            },
+            {
+                "name": "TRABAJO PRÁCTICO FINAL (1)",
+                "url": "../archivos/TRABAJO PRÁCTICO FINAL (1).pdf"
+            },
+            {
+                "name": "TRABAJO PRÁCTICO FINAL",
+                "url": "../archivos/TRABAJO PRÁCTICO FINAL.docx"
+            },
+            {
+                "name": "Trabajo_Practio_2",
+                "url": "../archivos/Trabajo_Practio_2.pdf"
+            }
+        ]
+    },
+    "cat2": {
+        "nombre": "Enseñanza Esc. Técnica 2",
+        "teorico": [
+            {
+                "name": "Baez",
+                "url": "../archivos/Baez.pdf"
+            },
+            {
+                "name": "La_ETP_enArg_reorido_historico_y_desafios_actuales",
+                "url": "../archivos/La_ETP_enArg_reorido_historico_y_desafios_actuales.pdf"
+            },
+            {
+                "name": "Laescuelatécnicaindustrialenargentinaun_modelo para armar",
+                "url": "../archivos/Laescuelatécnicaindustrialenargentinaun_modelo para armar.pdf"
+            },
+            {
+                "name": "S. Corbetta",
+                "url": "../archivos/S. Corbetta.pdf"
+            }
+        ],
+        "practico": [
+            {
+                "name": "RESPUESTA_TEXTO_BAEZ",
+                "url": "../archivos/RESPUESTA_TEXTO_BAEZ.docx"
+            },
+            {
+                "name": "Respuesta_Texto_Video_Corbetta_Feldman",
+                "url": "../archivos/Respuesta_Texto_Video_Corbetta_Feldman.docx"
+            }
+        ]
+    },
+    "cat3": {
+        "nombre": "Práctica 2",
+        "teorico": [
+            {
+                "name": "procesos_de_subjetivacion (1)",
+                "url": "../archivos/procesos_de_subjetivacion (1).pdf"
+            },
+            {
+                "name": "La_identidad_docente (1)",
+                "url": "../archivos/La_identidad_docente (1).pdf"
+            },
+            {
+                "name": "El_Vinculo",
+                "url": "../archivos/El_Vinculo.pdf"
+            }
+        ],
+        "practico": [
+            {
+                "name": "PLANILLA DE OBSERVACION",
+                "url": "../archivos/PLANILLA DE OBSERVACION.pdf"
+            }
+        ]
+    },
+    "cat4": {
+        "nombre": "Actualización Científico Tecnológica",
+        "teorico": [
+            {
+                "name": "DCP TECNICA EN PROGRAMACIÓN (2)",
+                "url": "../archivos/DCP TECNICA EN PROGRAMACIÓN (2).pdf"
+            },
+            {
+                "name": "Texto_Ley_Educación_Técnica_2005",
+                "url": "../archivos/Texto_Ley_Educación_Técnica_2005.pdf"
+            }
+        ],
+        "practico": []
+    }
+}

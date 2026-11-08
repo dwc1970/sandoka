@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archivos - Repositorio Protec</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="moon.css">
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-title">
+            <a href="../index.html" class="back-link" title="Volver al inicio"><i class="fa-solid fa-arrow-left"></i></a>
+            <i class="fa-solid fa-graduation-cap"></i> <span id="header-title-text">Repositorio Protec</span>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div id="status-msg" class="message"></div>
+
+        <!-- Formulario para Cargar Archivos (Solo visible si ingresó la clave) -->
+        <div id="upload-section" class="upload-section" style="display: none;">
+            <label><i class="fa-solid fa-cloud-arrow-up"></i> Cargar archivo en <span id="upload-cat-name">esta sección</span></label>
+            <div style="margin-top: 12px;">
+                <div class="file-input-wrapper">
+                    <input type="file" id="file-input">
+                </div>
+                
+                <button onclick="uploadFile()">
+                    <i class="fa-solid fa-plus"></i> Guardar en el Repositorio
+                </button>
+            </div>
+        </div>
+
+        <!-- Pestañas Internas de la Materia: Material Teórico y Trabajos Prácticos -->
+        <div class="tabs">
+            <button class="tab-button active" id="tab-teorico" onclick="switchSubTab('teorico')">
+                <i class="fa-solid fa-book"></i> Material Teórico
+            </button>
+            <button class="tab-button" id="tab-practico" onclick="switchSubTab('practico')">
+                <i class="fa-solid fa-file-pen"></i> Trabajos Prácticos
+            </button>
+        </div>
+
+        <!-- Área donde se cargan los archivos de la subsección activa -->
+        <h3 style="font-size: 18px; margin-bottom: 15px; color: var(--accent-lila);">
+            <i class="fa-solid fa-folder-open"></i> <span id="subtab-title">Material Teórico</span>
+        </h3>
+        <div class="file-grid" id="file-grid"></div>
+
+    </div>
+
+    <script src="moon.js"></script>
+</body>
+</html>

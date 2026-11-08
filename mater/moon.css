@@ -1,0 +1,275 @@
+:root {
+    --bg-body: #F8F9FA;
+    --card-bg: #FFFFFF;
+    --header-bg: #FFFFFF;
+    --primary-blue: #1A73E8;
+    --primary-blue-hover: #1557B0;
+    --gray-header: #5F6368;
+    --gray-box: #F1F3F4;
+    --border-color: #DADCE0;
+    --text-color: #202124;
+    --text-muted: #5F6368;
+    
+    --bar-orange: #F4A261;
+    --bar-lila: #B39DDB;
+    --bar-red: #E57373;
+    --bar-green: #81C784;
+}
+
+body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 16px;
+    background-color: var(--bg-body);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+}
+
+/* Franja superior institucional */
+.top-color-bar {
+    display: flex;
+    height: 10px;
+    width: 100%;
+}
+.bar-segment { flex: 1; height: 100%; }
+.seg-1 { background-color: var(--bar-orange); }
+.seg-2 { background-color: var(--bar-lila); }
+.seg-3 { background-color: var(--bar-red); }
+.seg-4 { background-color: var(--bar-green); }
+
+.header {
+    background-color: var(--header-bg);
+    color: var(--text-color);
+    padding: 16px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--primary-blue);
+}
+
+.back-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 18px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background: #FFFFFF;
+    transition: all 0.2s ease;
+}
+
+.back-link:hover {
+    background: var(--gray-box);
+    color: var(--text-color);
+}
+
+.container {
+    max-width: 1100px;
+    margin: 35px auto;
+    background: var(--card-bg);
+    padding: 35px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+button {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 15px;
+    background-color: var(--primary-blue);
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+    background-color: var(--primary-blue-hover);
+}
+
+/* Pestañas internas */
+.tabs {
+    display: flex;
+    border: 1px solid var(--border-color);
+    background-color: var(--gray-box);
+    margin-bottom: 25px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.tab-button {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 15px;
+    background: transparent;
+    color: var(--gray-header);
+    border: none;
+    border-right: 1px solid var(--border-color);
+    padding: 14px 24px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.tab-button:hover {
+    background: rgba(0,0,0,0.04);
+    color: var(--text-color);
+}
+
+.tab-button.active {
+    background: var(--primary-blue);
+    color: #FFFFFF;
+}
+
+/* Panel de Carga */
+.upload-section {
+    background-color: var(--gray-box);
+    padding: 22px;
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--primary-blue);
+    border-radius: 6px;
+    margin-bottom: 25px;
+}
+
+.upload-section label {
+    font-weight: bold;
+    font-size: 16px;
+    color: var(--gray-header);
+}
+
+.file-input-wrapper {
+    margin: 15px 0;
+}
+
+input[type="file"] {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 15px;
+}
+
+/* Tarjetas de Archivos con animación sutil */
+.file-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 15px;
+}
+
+.file-card {
+    border: 1px solid var(--border-color);
+    background: #FFFFFF;
+    padding: 16px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.file-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    border-color: #BCC1C4;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+}
+
+.file-icon {
+    font-size: 24px;
+    width: 30px;
+    text-align: center;
+}
+
+.icon-pdf { color: #D32F2F; }
+.icon-word { color: #082f56; }
+.icon-image { color: #388E3C; }
+.icon-video { color: #7B1FA2; }
+.icon-generic { color: var(--gray-header); }
+
+.file-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 170px;
+    cursor: pointer;
+}
+
+.file-link:hover {
+    color: var(--primary-blue);
+    text-decoration: underline;
+}
+
+.file-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 4px;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+}
+
+.action-btn:hover {
+    color: var(--primary-blue);
+}
+
+.action-btn.delete {
+    display: none;
+}
+
+.action-btn.delete:hover {
+    color: #D32F2F;
+}
+
+.message {
+    font-size: 15px;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+    display: none;
+}
+
+.message.error {
+    color: #C62828;
+    background-color: #FFEBEE;
+    border: 1px solid #FFCDD2;
+}
+
+.message.success {
+    color: #2E7D32;
+    background-color: #E8F5E9;
+    border: 1px solid #C8E6C9;
+}

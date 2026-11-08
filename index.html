@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repositorio Protec</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Pantalla de Inicio / Splash Screen -->
+    <div id="splash-screen">
+        <img src="icono.png" alt="Repositorio Protec" class="splash-logo">
+    </div>
+
+    <div class="header">
+        <div class="header-title">
+            <i class="fa-solid fa-graduation-cap"></i> Repositorio Protec
+        </div>
+        <div class="admin-access">
+            <button id="auth-btn" onclick="toggleAuthModal()">
+                <i class="fa-solid fa-lock"></i> Acceso Contribuidor
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal para ingresar la clave -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="toggleAuthModal()">&times;</span>
+            <h2><i class="fa-solid fa-key"></i> Clave de Contribuidor</h2>
+            <div id="login-msg" class="message error"></div>
+            <input type="password" id="password-input" placeholder="Ingrese la clave">
+            <button onclick="checkPassword()" style="width: 100%; margin-top: 10px;">
+                <i class="fa-solid fa-right-to-bracket"></i> Habilitar Modificación
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="status-msg" class="message"></div>
+
+        <h2 style="margin-top: 0; color: var(--purple-dark); text-align: center;">
+            <i class="fa-solid fa-book-bookmark"></i> Selecciona una Materia
+        </h2>
+        <p style="text-align: center; color: #555; margin-bottom: 30px;">
+            Hacé clic en cualquiera de los botones para ingresar al espacio de gestión de archivos.
+        </p>
+
+        <!-- Botones de Pestañas hacia mater/moon.html -->
+        <div class="tabs-nav">
+            <button class="nav-card" onclick="goToCategory('cat1')">
+                <i class="fa-solid fa-handshake"></i>
+                <span>Vinculación Socio-Productiva</span>
+            </button>
+            <button class="nav-card" onclick="goToCategory('cat2')">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                <span>Enseñanza Esc. Técnica 2</span>
+            </button>
+            <button class="nav-card" onclick="goToCategory('cat3')">
+                <i class="fa-solid fa-book-open-reader"></i>
+                <span>Práctica 2</span>
+            </button>
+            <button class="nav-card" onclick="goToCategory('cat4')">
+                <i class="fa-solid fa-microchip"></i>
+                <span>Actualización Científico Tecnológica</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
