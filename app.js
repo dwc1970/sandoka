@@ -1,7 +1,7 @@
 // Clave protegida en Base64 ('protec_2' codificado)
 const ACCESO_HASH = "cHJvdGVjXzI=";
 
-// Control del Splash Screen de 3 segundos
+// Control del Splash Screen de 1 segundos
 window.addEventListener('DOMContentLoaded', () => {
     const splash = document.getElementById('splash-screen');
     if (splash) {
@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 splash.style.display = 'none';
             }, 800); // Tiempo de la transición de opacidad
-        }, 3000); // Se mantiene visible por 3 segundos exactos
+        }, 1000); // Se mantiene visible por 1 segundos exactos
     }
 });
 
